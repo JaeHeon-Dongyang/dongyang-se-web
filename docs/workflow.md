@@ -23,7 +23,7 @@ Claude  →  main 직접 커밋 ─┘
 | 오류 처리 | **Claude** | `app/error.tsx`, `app/global-error.tsx`, `app/not-found.tsx` |
 | 빌드/CI/문서 | **Claude** | `next.config.ts`, `tsconfig.json`, `package.json`, `.github/**`, `docs/**`, `AGENTS.md` |
 | 콘텐츠 원고 | **Claude** | `content/**` |
-| 로고 컴포넌트 | **Claude** | `components/logo.tsx` (실제 에셋 참조 — V0가 인라인 SVG로 되돌리지 않도록) |
+| 로고 컴포넌트 | **V0** | `components/logo.tsx` — V0 인라인 SVG 마크 사용 (사용자 선택, 2026-08-28). `public/logo/**` 실제 에셋은 favicon 등에만 사용 |
 | 문의 폼 로직 | **Claude** | `components/contact/contact-form.tsx` (검증·전송). 스타일은 V0 |
 
 ## 설정 (1회)

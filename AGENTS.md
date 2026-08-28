@@ -77,7 +77,8 @@ V0 diff 가 `app/about/page.tsx` 를 "2012년 설립/480건+" 로 되돌리면 �
 - **PF3D** = 자체 개발한 PERFORM-3D 전처리·후처리 프로그램. PERFORM-3D 는 CSI 의 외부 제품이며
   항상 CSI 제품으로 표기하고 CSI 콘텐츠를 복제하지 않는다.
 - 지도는 **네이버 지도**. API 키 없이 주소 링크로 위치 확인 가능해야 한다 (`components/contact/contact-info.tsx`).
-- 로고 에셋은 `public/logo/` (`components/logo.tsx` 에서 사용).
+- 로고: `components/logo.tsx` 는 **V0 인라인 SVG 마크**를 쓴다 (사용자 선택). `public/logo/**` 의
+  실제 에셋은 favicon/아이콘(`app/favicon.ico`·`icon.png`·`apple-icon.png`)에만 사용.
 - 회사소개 원고: `content/company/company-introduction.md` (임의 수정 금지). 공공 자문 이력 중
   검증된 항목(2021 대전광역시 건설기술심의위원회)만 노출.
 - 개인정보처리방침(`/privacy`)·PF3D 매뉴얼은 초안 검증 전까지 내비/푸터 링크 없음 + `noindex`.

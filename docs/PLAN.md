@@ -262,7 +262,7 @@ tests/                  unit/ integration/ e2e/
 - `lib/site.ts`(회사 상수 + `siteUrl` Vercel 폴백), `lib/seo.ts`(`buildMetadata`, Organization JSON-LD)
 - `app/sitemap.ts`, `app/robots.ts`(privacy·pf3d 제외), `app/error.tsx`, `app/global-error.tsx`
 - `app/layout.tsx` = V0 베이스 + metadataBase/OG/robots/JSON-LD/스킵 링크, `generator: v0.app` 제거
-- `components/logo.tsx` → 실제 로고 에셋(`public/logo/`) 사용 (V0 인라인 SVG 대체)
+- `components/logo.tsx` → V0 인라인 SVG 마크 유지 (사용자 선택). `public/logo/**` 는 favicon/아이콘에만 사용
 - `components/contact/contact-info.tsx` → Google 지도 iframe 대신 네이버 지도 링크
 - 아이콘: `app/{favicon.ico,icon.png,apple-icon.png}` = 로고 심벌
 
