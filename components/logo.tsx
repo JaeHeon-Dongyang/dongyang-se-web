@@ -1,33 +1,44 @@
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
  * (주)동양구조엔지니어링 로고.
- * 심벌은 실제 제공 에셋(`public/logo/`), 가로형은 심벌 + 워드마크 조합.
- * 워드마크 폰트/크기는 유지, 심벌만 실제 로고로 교체.
+ * 심벌은 제공 에셋 `public/logo/dongyang-symbol.svg` 를 인라인한 것 (여백 없이 박스를 꽉 채움).
+ * 워드마크 폰트/크기는 유지.
  */
 function Mark({ className }: { className?: string }) {
   return (
-    <Image
-      src="/logo/dongyang-symbol-512.png"
-      alt=""
-      width={512}
-      height={512}
-      priority
+    <svg
+      viewBox="0 0 207 224"
+      className={cn("w-auto shrink-0", className)}
       aria-hidden="true"
-      className={cn("shrink-0", className)}
-    />
+      focusable="false"
+    >
+      <mask
+        id="dy-symbol-mask"
+        maskUnits="userSpaceOnUse"
+        x="0"
+        y="0"
+        width="207"
+        height="224"
+      >
+        <rect width="207" height="224" fill="white" />
+        <path d="M132 0 L149 21 L166 0 Z" fill="black" />
+        <path d="M0 63 H110 L151 108 L110 161 H55 V82 H0 Z" fill="black" />
+        <path d="M141 224 L207 158 V176 L159 224 Z" fill="black" />
+      </mask>
+      <rect width="207" height="224" fill="#0B6C43" mask="url(#dy-symbol-mask)" />
+    </svg>
   );
 }
 
 export function LogoSymbol({ className }: { className?: string }) {
-  return <Mark className={cn("h-8 w-8", className)} />;
+  return <Mark className={cn("h-9", className)} />;
 }
 
 export function LogoHorizontal({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-3.5", className)}>
-      <Mark className="h-9 w-9" />
+    <span className={cn("inline-flex items-center gap-3", className)}>
+      <Mark className="h-10" />
       <span className="flex flex-col leading-none">
         <span className="text-heading text-[15px] font-bold tracking-tight whitespace-nowrap">
           (주)동양구조엔지니어링

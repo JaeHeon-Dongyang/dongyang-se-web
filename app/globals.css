@@ -160,3 +160,19 @@
     max-width: 68ch;
   }
 }
+
+/* 히어로 이미지 느린 줌 (ken-burns). 모션 최소화 설정 시 비활성. */
+@keyframes hero-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-kenburns {
+    animation: hero-kenburns 24s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+}

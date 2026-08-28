@@ -43,7 +43,7 @@ export function HeroSection() {
             fill
             priority
             sizes="(min-width: 1024px) 45vw, 100vw"
-            className="object-cover"
+            className="hero-kenburns object-cover"
           />
         </div>
       </div>
