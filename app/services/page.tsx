@@ -5,6 +5,7 @@ import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
 import { ProcessSteps } from "@/components/services/process-steps";
 import { ServiceDetailSection } from "@/components/services/service-detail-section";
+import { ServiceIndex } from "@/components/services/service-index";
 import { serviceGroups } from "@/lib/services-data";
 
 export const metadata: Metadata = {
@@ -42,14 +43,17 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <div className="flex flex-col gap-16 md:gap-20">
-        {serviceGroups.map((service, index) => (
-          <ServiceDetailSection
-            key={service.slug}
-            service={service}
-            reversed={index % 2 === 1}
-          />
-        ))}
+      <div>
+        <ServiceIndex />
+        <div className="mt-16 flex flex-col gap-16 md:mt-20 md:gap-20">
+          {serviceGroups.map((service, index) => (
+            <ServiceDetailSection
+              key={service.slug}
+              service={service}
+              reversed={index % 2 === 1}
+            />
+          ))}
+        </div>
       </div>
 
       <section className="container-site">

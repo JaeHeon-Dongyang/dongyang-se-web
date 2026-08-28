@@ -14,7 +14,7 @@ export function ServiceDetailSection({
   return (
     <section
       id={service.slug}
-      className="container-site border-border grid scroll-mt-20 grid-cols-1 gap-10 border-t pt-14 first:border-t-0 first:pt-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:gap-16"
+      className="container-site border-border grid scroll-mt-32 grid-cols-1 gap-10 border-t pt-14 first:border-t-0 first:pt-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:gap-16"
     >
       <div className={cn("flex flex-col gap-5", reversed && "md:order-2")}>
         <span className="bg-accent-green-light text-brand flex h-12 w-12 items-center justify-center rounded-xl">

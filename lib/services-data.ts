@@ -13,7 +13,7 @@ export type ServiceGroup = {
 
 export const serviceGroups: ServiceGroup[] = [
   {
-    slug: "design",
+    slug: "structural-design",
     icon: PencilRuler,
     title: "구조설계",
     shortDescription: "안전성과 시공성을 함께 고려한 합리적인 구조설계를 제공합니다.",
@@ -29,7 +29,7 @@ export const serviceGroups: ServiceGroup[] = [
       "구조 계획 수립, 구조해석 및 부재 설계, 설계도면 작성, 구조감리, 보강 설계 및 시공 자문을 포함합니다.",
   },
   {
-    slug: "inspection",
+    slug: "safety-inspection",
     icon: ShieldCheck,
     title: "안전진단·점검",
     shortDescription: "시설물의 상태를 정확히 진단하고 유지관리 방향을 제시합니다.",
