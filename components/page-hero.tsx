@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export function PageHero({
@@ -8,7 +9,7 @@ export function PageHero({
 }: {
   eyebrow: string;
   title: string;
-  description?: string;
+  description?: ReactNode;
   className?: string;
 }) {
   return (

@@ -6,7 +6,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/privacy", "/resources/pf3d-manual"],
+      // /privacy 는 초안이라 색인 제외. 기술자료는 예시지만 링크되어 있어 허용.
+      disallow: ["/api/", "/privacy"],
     },
     sitemap: `${siteUrl}/sitemap.xml`,
     host: siteUrl,

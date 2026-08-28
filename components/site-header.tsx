@@ -16,7 +16,7 @@ export function SiteHeader() {
         <Link
           href="/"
           className="focus-visible:ring-focus-ring flex items-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
-          aria-label="동양구조엔지니어링 홈"
+          aria-label="(주)동양구조엔지니어링 홈"
         >
           <LogoHorizontal className="hidden sm:flex" />
           <LogoSymbol className="sm:hidden" />
@@ -30,7 +30,7 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "text-body-text hover:text-heading focus-visible:ring-focus-ring rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                  "text-body-text hover:text-heading focus-visible:ring-focus-ring rounded-md px-4 py-2 text-base font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
                   active && "text-brand",
                 )}
               >

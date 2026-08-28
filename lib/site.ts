@@ -6,7 +6,7 @@
  */
 
 export const company = {
-  name: "동양구조엔지니어링",
+  name: "(주)동양구조엔지니어링",
   representative: "김용철",
   businessRegistrationNumber: "314-81-44186",
   tel: "042-472-9782",

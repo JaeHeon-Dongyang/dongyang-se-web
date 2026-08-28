@@ -15,8 +15,8 @@ export default function ContactPage() {
     <>
       <PageHero
         eyebrow="문의하기"
-        title="프로젝트를 알려주세요"
-        description="구조설계, 안전진단, 해체공사 구조검토 등 어떤 단계에 있든 편하게 문의해 주세요. 담당 기술사가 프로젝트 개요를 검토한 뒤 신속하게 회신드립니다."
+        title="안전한 건축을 위한 첫 상담"
+        description="구조설계부터 안전진단·점검, 공사 중 안전관리, 해체공사 구조검토까지 필요한 사항을 남겨주세요. 담당 기술자가 문의 내용을 검토한 후 안내해 드리겠습니다."
       />
 
       <section className="border-border bg-background border-b py-16 md:py-24">

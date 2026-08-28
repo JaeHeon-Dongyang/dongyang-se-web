@@ -11,9 +11,9 @@ export function SiteFooter() {
           <div className="flex max-w-sm flex-col gap-4">
             <LogoHorizontal />
             <p className="text-body-text text-sm leading-relaxed">
-              동양구조엔지니어링은 구조설계부터 안전진단, 공사 중 안전관리, 해체공사
-              구조검토까지 건축물의 생애주기 전반을 책임지는 구조 엔지니어링 전문
-              기업입니다.
+              동양구조엔지니어링은 구조설계, 안전진단·점검, 공사 중 안전관리, 해체공사
+              구조검토 분야에서 안전하고 신뢰할 수 있는 전문 엔지니어링 서비스를
+              제공합니다.
             </p>
           </div>
 
@@ -66,7 +66,7 @@ export function SiteFooter() {
 
         <div className="border-border text-body-text/80 flex flex-col gap-4 border-t pt-6 text-xs md:flex-row md:items-center md:justify-between">
           <p>
-            동양구조엔지니어링 · 대표 김용철 · 사업자등록번호 314-81-44186 · 팩스
+            (주)동양구조엔지니어링 · 대표 김용철 · 사업자등록번호 314-81-44186 · 팩스
             042-482-9782
           </p>
           <div className="flex items-center gap-4">

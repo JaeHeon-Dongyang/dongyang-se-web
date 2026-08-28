@@ -269,9 +269,11 @@ tests/                  unit/ integration/ e2e/
 **제거한 V0 생성 가짜 콘텐츠 (중요)**
 - `app/about/page.tsx`: "2012년 설립", 통계(12년+/480건+/6인/0건), 연혁 타임라인, 보유 인증
   → `content/company/company-introduction.md` 기반으로 재작성. `components/about/{timeline,certifications}.tsx` 삭제.
-- `lib/resources-data.ts`: 가짜 자료 목록(가짜 날짜/PDF/버전) → **빈 배열**. `/resources` 는 빈 상태,
-  홈의 기술자료 섹션은 자료 없으면 숨김.
+- `lib/resources-data.ts`: 가짜 자료 목록 → 처음엔 빈 배열로 뒀다가, 사용자 요청으로 **예시 카드 복원**
+  (2026-08-28). 날짜/첨부/버전은 여전히 가짜 — **대외 공개 전 실자료로 교체 필수**. PF3D 항목의
+  잘못된 "구조해석 프로그램" 표현은 중립 문구로 수정.
 - `app/privacy/page.tsx`: AI 생성 방침 문안 → "준비 중" 플레이스홀더 + `noindex`.
+- 회사명: `company.name` = `(주)동양구조엔지니어링` (로고·푸터·메타). 산문은 `동양구조엔지니어링`.
 
 **Vercel 배포**: 저장소를 public 으로 전환해 Hobby 배포 차단 해소. 커밋에 Claude
 공동작성자 트레일러를 더 이상 넣지 않는다.

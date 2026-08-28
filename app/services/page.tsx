@@ -18,8 +18,15 @@ export default function ServicesPage() {
     <div className="flex flex-col gap-20 pb-24 md:gap-28">
       <PageHero
         eyebrow="OUR SERVICES"
-        title="건축물의 생애주기 전 과정을 다루는 구조 엔지니어링"
-        description="설계 단계의 구조 계획부터 사용 중 안전진단, 시공 중 안전관리, 해체 단계의 구조검토까지, 필요한 시점에 필요한 전문성으로 대응합니다."
+        title="건축물의 일생을 함께합니다"
+        description={
+          <>
+            설계 단계의 구조 계획부터 사용 중 안전진단, 시공 중 안전관리, 해체 단계의
+            구조검토까지, 필요한 시점에
+            <br />
+            필요한 전문성으로 대응합니다.
+          </>
+        }
       />
 
       <section className="container-site">

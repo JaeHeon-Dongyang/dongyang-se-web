@@ -27,7 +27,10 @@ export function ValuesGrid() {
           key={value.title}
           className="border-border flex flex-col gap-3 border-t pt-5"
         >
-          <span className="text-accent-green font-mono text-xs font-medium tabular-nums">
+          <span
+            className="text-accent-green text-[24px] font-bold tabular-nums"
+            style={{ fontFamily: "system-ui, sans-serif" }}
+          >
             {String(index + 1).padStart(2, "0")}
           </span>
           <h3 className="text-heading text-xl font-bold">{value.title}</h3>

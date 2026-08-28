@@ -116,8 +116,9 @@ export function ContactForm() {
         <div className="flex flex-col gap-2">
           <h3 className="text-heading text-xl font-bold">문의가 접수되었습니다</h3>
           <p className="text-body-text max-w-sm text-sm leading-relaxed">
-            남겨주신 내용을 확인한 뒤 담당자가 순차적으로 연락드리겠습니다. 급하신 경우{" "}
-            {company.tel} 로 전화 주세요.
+            남겨주신 내용을 확인한 뒤 담당자가 순차적으로 연락드리겠습니다.
+            <br />
+            급하신 경우 {company.tel} 로 전화 주세요.
           </p>
         </div>
         <Button variant="outline" onClick={() => setState("idle")}>
