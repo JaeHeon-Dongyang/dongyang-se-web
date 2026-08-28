@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import { HeroSlideshow } from "@/components/home/hero-slideshow";
 
 export function HeroSection() {
   return (
@@ -36,16 +36,7 @@ export function HeroSection() {
             </Link>
           </div>
         </div>
-        <div className="bg-surface-muted relative aspect-[4/3] w-full overflow-hidden rounded-2xl lg:aspect-[5/4]">
-          <Image
-            src="/images/hero-structural-frame.png"
-            alt="시공 중인 건축물의 노출된 철근콘크리트 구조 프레임"
-            fill
-            priority
-            sizes="(min-width: 1024px) 45vw, 100vw"
-            className="hero-kenburns object-cover"
-          />
-        </div>
+        <HeroSlideshow />
       </div>
     </section>
   );
