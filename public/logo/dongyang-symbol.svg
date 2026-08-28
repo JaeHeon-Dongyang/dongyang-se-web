@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 207 224" role="img" aria-labelledby="title desc">
+  <title id="title">동양구조엔지니어링 심벌</title>
+  <desc id="desc">동양구조엔지니어링의 녹색 기하학 심벌</desc>
+  <defs>
+    <mask id="symbol-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="207" height="224">
+      <rect width="207" height="224" fill="white"/>
+      <path d="M132 0 L149 21 L166 0 Z" fill="black"/>
+      <path d="M0 63 H110 L151 108 L110 161 H55 V82 H0 Z" fill="black"/>
+      <path d="M141 224 L207 158 V176 L159 224 Z" fill="black"/>
+    </mask>
+  </defs>
+  <rect width="207" height="224" fill="#0B6C43" mask="url(#symbol-mask)"/>
+</svg>

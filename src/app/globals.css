@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/*
+ * 동양구조엔지니어링 디자인 토큰
+ * - 마스터 프롬프트 6장 기준. Tailwind v4 `@theme` 로 선언하면
+ *   `bg-primary`, `text-heading` 등 유틸리티와 `var(--color-primary)` 를 함께 사용할 수 있다.
+ * - MVP 는 라이트 단일 테마로 확정한다(다크 모드는 후속 검토, docs/PLAN.md 참고).
+ */
+@theme {
+  /* --- Color: brand --- */
+  --color-primary: #47b089;
+  --color-primary-light: #ecf7f3;
+  --color-primary-hover: #3a9c77;
+  --color-primary-active: #2f8063;
+
+  /* --- Color: surface / text --- */
+  --color-background: #f9fafb;
+  --color-surface: #ffffff;
+  --color-heading: #16181d;
+  --color-text: #686f7d;
+  --color-muted: #9aa1ad;
+  --color-border: #e5e7eb;
+
+  /* --- Color: status --- */
+  --color-success: #2f8f5b;
+  --color-warning: #b7791f;
+  --color-error: #c0392b;
+  --color-info: #2563eb;
+
+  /* --- Color: interaction --- */
+  --color-disabled-surface: #eef0f3;
+  --color-disabled-text: #b5bac2;
+  --color-focus-ring: #1f7a5c;
+
+  /* --- Typography --- */
+  --font-sans:
+    "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", Roboto,
+    "Helvetica Neue", sans-serif;
+  --font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-display: 3rem;
+  --text-display--line-height: 1.15;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 700;
+
+  --text-h1: 2.25rem;
+  --text-h1--line-height: 1.2;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h1--font-weight: 700;
+
+  --text-h2: 1.75rem;
+  --text-h2--line-height: 1.25;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h2--font-weight: 700;
+
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.35;
+  --text-h3--font-weight: 600;
+
+  --text-h4: 1.125rem;
+  --text-h4--line-height: 1.4;
+  --text-h4--font-weight: 600;
+
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.7;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.7;
+
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.6;
+
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.4;
+  --text-label--font-weight: 600;
+
+  /* --- Radius / layout --- */
+  --radius-card: 0.875rem;
+  --radius-control: 0.625rem;
+
+  /* 일관된 최대 콘텐츠 폭 (마스터 프롬프트 6.3) */
+  --container-content: 72rem;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-heading);
+    text-wrap: balance;
+  }
+
+  /* 키보드 포커스만 링을 노출 (마스터 프롬프트 14장 접근성) */
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-light);
+    color: var(--color-heading);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
