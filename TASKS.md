@@ -47,7 +47,7 @@
 - [x] `POST /api/contact` — 검증(422) · honeypot(silent 200) · IP rate limit(429) · Resend fetch 전송
       · 키 없으면 503 `not_configured` + 서버 로그(유실 방지)
 - [x] `components/contact/contact-form.tsx` — 목업 제거, `/api/contact` 연결, 상태(submitting/success/error)
-- [ ] `docs/deployment.md` — env 주입, Resend 계정·발신 도메인 인증 절차
+- [x] `docs/deployment.md` — env 주입, Resend 설정(도메인 유무별), 배포·롤백
 - [ ] `lib/content` — MDX + front matter 로더/타입 (services·resources 공용)
 - [ ] 테스트 환경: Vitest + Playwright 설정, 스모크 각 1개
 - [ ] `/api/contact` 검증 로직 유닛테스트
