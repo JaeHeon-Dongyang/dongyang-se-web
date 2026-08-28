@@ -1,0 +1,9 @@
+# 모든 텍스트 파일 LF 로 정규화 (Prettier / CI 일관성)
+* text=auto eol=lf
+
+# 바이너리
+*.woff2 binary
+*.png binary
+*.jpg binary
+*.webp binary
+*.ico binary

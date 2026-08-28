@@ -19,24 +19,34 @@
 - [x] 프로젝트 스캐폴드 생성 (`create-next-app`, 폴더 구조, 토큰, Header/Footer/Button/Container, 홈 스캐폴드)
 - [x] `lint` + `build` 통과 확인
 - [x] `docs/PLAN.md` 13장 항목 회신 (배포 도메인만 미확정)
-- [~] 회사소개 `/about` 페이지 구현 (M2 항목 선진행 — 원고 확보되어 먼저 완료)
-- [ ] **사용자 검토 · M1 승인**
+- [x] 회사소개 `/about` 페이지 구현 (원고 확보되어 선진행)
+- [x] 색 체계 `#47b089` 단일 재확인 / v0 디자인 프롬프트 미채택 (V0 디자인 추후 수령)
+- [x] 배포 도메인 확정: https://dongyang-web-nine.vercel.app
 
-## M1 — 프로젝트 기반
+## M1 — 프로젝트 기반 (디자인 무관 작업만)
 
-- [ ] Prettier 설정 + `format` 스크립트, `lint` 규칙 확정
-- [ ] `typecheck` 스크립트(`tsc --noEmit`) 추가
-- [ ] GitHub Actions: install → lint → typecheck → build (E2E 제외)
-- [ ] `docs/screens.md` — 9개 화면 상세 명세 (목적·데이터·컴포넌트·반응형·상태·SEO·접근권한)
+> 사용자 V0 디자인 대기 중 → 페이지 비주얼·컴포넌트 확장은 디자인 수령 후로 보류.
+
+- [ ] Prettier 설정 + `format` 스크립트
+- [ ] `typecheck` 스크립트(`tsc --noEmit`)
+- [ ] GitHub Actions: install → lint → typecheck → build
 - [ ] Pretendard `next/font/local` 셀프호스팅 전환, layout `<link>` 제거
-- [ ] 공통 컴포넌트 확장 + 상태 정의: Section, Card(사업분야/기술자료), Breadcrumb, Badge, Tag,
-      Input/Textarea/Select/FileInput, FormField, Pagination, EmptyState, ErrorState, LoadingState,
-      SearchInput, FilterBar, CTASection
-- [ ] `src/lib/seo` — 페이지별 metadata 헬퍼, JSON-LD(Organization) 생성기
+- [ ] favicon / 로고 배치 (`public/logo/favicon.ico` → app, 헤더·푸터 로고 이미지)
+- [ ] `src/lib/seo` — metadata 헬퍼, JSON-LD(Organization)
 - [ ] `app/sitemap.ts` · `app/robots.ts`
-- [ ] 샘플 콘텐츠 1건씩 (`content/services`, `content/resources`) — placeholder 명시
-- [ ] 테스트 환경: Vitest(unit/integration) + Playwright(e2e) 설정, 스모크 1개씩
-- [ ] 완료 조건: CI 그린, Storybook 없이도 컴포넌트 상태 확인 페이지(`/_dev` 또는 문서) 존재
+- [ ] `not-found.tsx` · `error.tsx` · `global-error.tsx` (최소 스타일)
+- [ ] `src/lib/content` — MDX + front matter 로더/타입 (services·resources 공용)
+- [ ] `src/lib/validation` — Zod `inquirySchema` (클라/서버 공용)
+- [ ] `POST /api/contact` — 검증 · honeypot · rate limit · Resend 인터페이스 (키 대기 시 명확한 실패)
+- [ ] `docs/deployment.md` 초안 (env 주입, Resend 도메인 인증 절차)
+- [ ] 테스트 환경: Vitest + Playwright 설정, 스모크 각 1개
+- [ ] 완료 조건: CI 그린, `/api/contact` 검증 로직 유닛테스트 통과
+
+## M1.5 — 콘텐츠 반영 (UTF-8 원고 수령 후)
+
+- [ ] `content/services/*` — 사업분야 원고 배치, `/services` 페이지에 반영 (임시 레이아웃)
+- [ ] `content/legal/privacy-policy*` — `/privacy` 페이지 (내비/푸터 링크 없음)
+- [ ] `content/resources/pf3d-manual/*` — `/resources/pf3d-manual` (내비/링크 없음, 초안 배지)
 
 ## M2 — 기술 사이트 MVP
 
