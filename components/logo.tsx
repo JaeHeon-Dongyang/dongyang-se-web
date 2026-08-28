@@ -40,10 +40,10 @@ export function LogoHorizontal({ className }: { className?: string }) {
     <span className={cn("inline-flex items-center gap-2", className)}>
       <Mark className="h-[30px] w-[30px]" />
       <span className="flex flex-col gap-[6px] leading-none">
-        <span className="text-heading text-[15px] font-bold tracking-tight whitespace-nowrap">
+        <span className="text-heading text-[16px] font-bold tracking-tight whitespace-nowrap">
           (주)동양구조엔지니어링
         </span>
-        <span className="text-body-text text-[9px] font-medium tracking-[0.14em] whitespace-nowrap">
+        <span className="text-body-text text-[8px] font-medium tracking-[0.14em] whitespace-nowrap">
           DONGYANG STRUCTURAL ENGINEERING
         </span>
       </span>

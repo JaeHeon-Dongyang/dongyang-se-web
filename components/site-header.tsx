@@ -30,7 +30,7 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "text-body-text hover:text-heading focus-visible:ring-focus-ring rounded-md px-4 py-2 text-base font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                  "text-body-text hover:text-brand focus-visible:ring-focus-ring rounded-md px-4 py-2 text-base font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
                   active && "text-brand",
                 )}
               >
