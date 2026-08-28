@@ -23,30 +23,40 @@
 - [x] 색 체계 `#47b089` 단일 재확인 / v0 디자인 프롬프트 미채택 (V0 디자인 추후 수령)
 - [x] 배포 도메인 확정: https://dongyang-web-nine.vercel.app
 
-## M1 — 프로젝트 기반 (디자인 무관 작업만)
+## M0.5 — V0 디자인 채택 (완료)
 
-> 사용자 V0 디자인 대기 중 → 페이지 비주얼·컴포넌트 확장은 디자인 수령 후로 보류.
+- [x] V0 프로젝트를 베이스로 병합 (src/ → 루트 app/·components/·lib/)
+- [x] V0 생성 가짜 콘텐츠 제거 (about 통계·연혁·인증, resources 가짜 목록, privacy AI 문안)
+- [x] 인프라 재적용: lib/site.ts·seo.ts, sitemap.ts·robots.ts, error/global-error, layout 메타·JSON-LD
+- [x] 2톤 그린 색 체계(V0), Pretendard next/font/local, favicon/아이콘(로고 심벌)
+- [x] 로고: V0 인라인 SVG 마크 (사용자 선택)
+- [x] 네이버 지도 링크(contact-info)
+- [x] 브랜치 분리: main(프로덕션) / design(V0) / dev(Claude)
+- [x] Vercel Hobby 배포: 저장소 public 전환
 
-- [ ] Prettier 설정 + `format` 스크립트
-- [ ] `typecheck` 스크립트(`tsc --noEmit`)
-- [ ] GitHub Actions: install → lint → typecheck → build
-- [ ] Pretendard `next/font/local` 셀프호스팅 전환, layout `<link>` 제거
-- [ ] favicon / 로고 배치 (`public/logo/favicon.ico` → app, 헤더·푸터 로고 이미지)
-- [ ] `src/lib/seo` — metadata 헬퍼, JSON-LD(Organization)
-- [ ] `app/sitemap.ts` · `app/robots.ts`
-- [ ] `not-found.tsx` · `error.tsx` · `global-error.tsx` (최소 스타일)
-- [ ] `src/lib/content` — MDX + front matter 로더/타입 (services·resources 공용)
-- [ ] `src/lib/validation` — Zod `inquirySchema` (클라/서버 공용)
-- [ ] `POST /api/contact` — 검증 · honeypot · rate limit · Resend 인터페이스 (키 대기 시 명확한 실패)
-- [ ] `docs/deployment.md` 초안 (env 주입, Resend 도메인 인증 절차)
+## M1 — 프로젝트 기반
+
+- [x] Prettier(+tailwind plugin), `format`/`typecheck` 스크립트
+- [x] GitHub Actions CI: format → lint → typecheck → build
+- [x] Pretendard `next/font/local` 셀프호스팅
+- [x] favicon / icon / apple-icon (로고 심벌)
+- [x] `lib/seo.ts` — `buildMetadata` 헬퍼, Organization JSON-LD
+- [x] `app/sitemap.ts` · `app/robots.ts` (privacy·pf3d 제외)
+- [x] `not-found.tsx` · `error.tsx` · `global-error.tsx`
+- [x] `lib/validation/inquiry.ts` — Zod `inquirySchema` (클라/서버 공용, honeypot·동의 포함)
+- [x] `POST /api/contact` — 검증(422) · honeypot(silent 200) · IP rate limit(429) · Resend fetch 전송
+      · 키 없으면 503 `not_configured` + 서버 로그(유실 방지)
+- [x] `components/contact/contact-form.tsx` — 목업 제거, `/api/contact` 연결, 상태(submitting/success/error)
+- [ ] `docs/deployment.md` — env 주입, Resend 계정·발신 도메인 인증 절차
+- [ ] `lib/content` — MDX + front matter 로더/타입 (services·resources 공용)
 - [ ] 테스트 환경: Vitest + Playwright 설정, 스모크 각 1개
-- [ ] 완료 조건: CI 그린, `/api/contact` 검증 로직 유닛테스트 통과
+- [ ] `/api/contact` 검증 로직 유닛테스트
 
 ## M1.5 — 콘텐츠 반영 (UTF-8 원고 수령 후)
 
-- [ ] `content/services/*` — 사업분야 원고 배치, `/services` 페이지에 반영 (임시 레이아웃)
-- [ ] `content/legal/privacy-policy*` — `/privacy` 페이지 (내비/푸터 링크 없음)
-- [ ] `content/resources/pf3d-manual/*` — `/resources/pf3d-manual` (내비/링크 없음, 초안 배지)
+- [ ] `content/services/*` — 사업분야 원고 → `lib/services-data.ts` 정교화 / `/services` 반영
+- [ ] `content/legal/privacy-policy*` — `/privacy` 실문안 (내비/푸터 링크·색인은 검증 후)
+- [ ] `content/resources/pf3d-manual/*` — `lib/resources-data.ts` + `/resources/pf3d-manual` (내비/링크 없음)
 
 ## M2 — 기술 사이트 MVP
 
@@ -56,14 +66,10 @@
       · 콘텐츠 미비 항목은 "콘텐츠 준비 중"
 - [ ] 홈 세부 카피 반영 (사용자 제공 시)
 - [ ] 네이버 지도 연동 (`/contact`) — API 키 없을 때 주소 링크 폴백
-- [ ] `/contact` — 통합 문의 폼 UI + 회사정보 + 주소(외부 지도 링크)
-- [ ] `src/lib/validation` — Zod `inquirySchema` (클라이언트/서버 공유)
-- [ ] `POST /api/contact` Route Handler — 검증 · honeypot · rate limit · Resend 발송 인터페이스
-      · 키 없을 때 명확한 실패 응답 + 로그
-- [ ] `.env.local` 연동 문서화 (`docs/deployment.md` 초안)
-- [ ] `/privacy` — 개인정보처리방침 (사용자 제공 문구)
-- [ ] `not-found.tsx` · `error.tsx` · `global-error.tsx`
-- [ ] 완료 조건: 키보드만으로 전 페이지 탐색 가능, 폼 검증 동작(발송은 테스트 주소), Lighthouse a11y ≥ 95
+- [x] `/contact` — 통합 문의 폼 UI + 회사정보 + 네이버 지도 링크 (V0 + 백엔드 연결)
+- [x] `/privacy`, `not-found`/`error`/`global-error` (M0.5·M1 에서 완료)
+- [ ] 첨부파일 지원 (현재는 "회신 이메일로 별도 전달" 안내) — 후순위
+- [ ] 완료 조건: 키보드만으로 전 페이지 탐색, 폼 검증 동작, 실제 수신 테스트(키 주입 후), Lighthouse a11y ≥ 95
 
 ## M3 — 기술자료 & PF3D 매뉴얼
 
