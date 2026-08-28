@@ -61,7 +61,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 디자인은 V0, 기능은 Claude. 파일 담당 표와 병합 규칙은 [`docs/workflow.md`](docs/workflow.md).
 요약: V0 = `app/globals.css` + `components/**` 스타일 + `public/images/**`.
 Claude = `app/api/**`, `lib/**`, `app/sitemap.ts`·`robots.ts`, `metadata`, `content/**`, `docs/**`.
-V0 는 `design` 브랜치(또는 PR)로만 들어오고, 디자인 diff 만 `main` 에 반영한다.
+브랜치: `main` 직접 커밋 금지. V0 → `design`, Claude → `dev`, 둘 다 `main` 으로 병합.
+V0 는 디자인 diff 만 `main` 에 반영한다.
 V0 diff 가 `app/about/page.tsx` 를 "2012년 설립/480건+" 로 되돌리면 병합 금지 (가짜 콘텐츠).
 
 ## 디자인

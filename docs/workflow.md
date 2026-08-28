@@ -5,9 +5,13 @@
 
 ```
 V0      →  design 브랜치  ─┐
-                           ├─→  main  →  Vercel(프로덕션)
-Claude  →  main 직접 커밋 ─┘
+                           ├─→  main  →  Vercel(프로덕션, 프로젝트: dongyang-se-web-tu)
+Claude  →  dev 브랜치     ─┘
 ```
+
+- `main` 은 아무도 직접 커밋하지 않는다. `design`(V0)·`dev`(Claude)에서만 병합.
+- Claude: `dev` 에서 작업 → 기능 단위가 끝나면 `dev` → `main` 병합(fast-forward 우선) → `dev` 는 계속 사용.
+- 병합 후 `design` 이 뒤처지면 V0에서 `main` 을 pull 해 `design` 을 최신화.
 
 ## 파일 담당
 
@@ -36,9 +40,9 @@ Claude  →  main 직접 커밋 ─┘
 
 ## 평소 리듬
 
-- **디자인 변경:** 사용자가 V0에서 작업 → "V0에서 ○○ 수정" 알림 → Claude가 `design` 브랜치(또는 PR)에서
-  디자인 diff만 추려 `main` 에 반영. `globals.css` + `components/**` 변경은 충돌 거의 없음.
-- **기능 개발:** Claude가 `main` 에 직접 커밋 (API, 폼, SEO, 콘텐츠).
+- **디자인 변경:** 사용자가 V0에서 작업 → `design` 브랜치에 push → "V0에서 ○○ 수정" 알림 →
+  Claude가 `design` 의 디자인 diff만 추려 `main` 에 반영. `globals.css` + `components/**` 변경은 충돌 거의 없음.
+- **기능 개발:** Claude가 `dev` 브랜치에서 커밋 (API, 폼, SEO, 콘텐츠) → 단위 완료 시 `main` 병합.
 - **위험 신호:** V0 diff에 `app/api/**`, `lib/**`, `app/sitemap.ts` 등이 삭제/변경으로 뜨면
   그 부분은 버리고 디자인만 취한다. 특히 `app/about/page.tsx` 가 "2012년 설립 / 480건+" 로
   되돌아가면 병합하지 않는다 (V0 생성 가짜 콘텐츠).
