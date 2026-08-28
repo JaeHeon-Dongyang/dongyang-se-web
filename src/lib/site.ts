@@ -23,9 +23,18 @@ export const contactLinks = {
   mailto: `mailto:${company.email}`,
 } as const;
 
-/** 사이트 배포 URL. 배포 시 NEXT_PUBLIC_SITE_URL 로 주입한다. */
-export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
+/**
+ * 사이트 절대 URL. 우선순위:
+ * 1. NEXT_PUBLIC_SITE_URL — 실제 도메인 연결 시 명시적으로 지정
+ * 2. VERCEL_PROJECT_PRODUCTION_URL — Vercel 이 배포마다 자동 주입 (무료 플랜 포함, 설정 불필요)
+ * 3. 로컬 개발 기본값
+ */
+export const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000")
+).replace(/\/$/, "");
 
 export const siteMeta = {
   title: company.name,
