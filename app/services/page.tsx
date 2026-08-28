@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { ContactCta } from "@/components/contact-cta";
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
@@ -31,27 +30,24 @@ export default function ServicesPage() {
       />
 
       <section className="container-site">
-        <div className="bg-surface-muted relative aspect-[16/6] w-full overflow-hidden rounded-3xl">
-          <Image
-            src="/images/services-drawing-detail.png"
-            alt="구조도면의 부재 상세와 치수선을 검토하는 모습"
-            fill
-            className="object-cover"
-            sizes="100vw"
-            priority
-          />
+        <div className="content-measure flex flex-col gap-4">
+          <p className="text-body-text text-base leading-relaxed text-pretty">
+            동양구조엔지니어링은 구조설계부터 안전진단·점검, 공사 중 안전관리, 해체공사
+            구조검토까지 건축물의 생애주기 전반에 필요한 구조 엔지니어링 서비스를
+            제공합니다.
+          </p>
+          <p className="text-body-text text-base leading-relaxed text-pretty">
+            관련 기준과 현장 조건을 면밀히 검토하고, 프로젝트 관계자와 지속적으로 소통하며
+            안전성과 실현 가능성을 함께 고려한 기술적 해답을 제시합니다.
+          </p>
         </div>
       </section>
 
       <div>
         <ServiceIndex />
         <div className="mt-16 flex flex-col gap-16 md:mt-20 md:gap-20">
-          {serviceGroups.map((service, index) => (
-            <ServiceDetailSection
-              key={service.slug}
-              service={service}
-              reversed={index % 2 === 1}
-            />
+          {serviceGroups.map((service) => (
+            <ServiceDetailSection key={service.slug} service={service} />
           ))}
         </div>
       </div>
