@@ -11,6 +11,11 @@
 - 원격: `github.com/JaeHeon-Dongyang/dongyang-se-web`.
 - 이번 작업으로 Next.js 16 프로젝트 스캐폴드를 생성했다(아래 6장).
 
+> **2026-08-28 대규모 변경 — V0 디자인 채택.** 사용자가 V0(vercel)에서 완성한 디자인
+> 프로젝트(`dongyang-structural-engineering/`)를 **새 베이스로 채택**. 저장소 구조를
+> `src/` → 루트 `app/`·`components/`·`lib/` 로 전환하고, 우리가 만든 인프라(SEO·sitemap·
+> robots·오류 페이지·CI·회사 상수·JSON-LD)를 그 위에 다시 얹었다. 아래 15장 참고.
+
 ## 2. 확정된 결정 (사용자 확인 완료)
 
 | 항목 | 결정 |
@@ -107,9 +112,9 @@ MVP에서 만들지 않음: 프로젝트/실적, 진행중 프로젝트, 채용,
   - 폰트: Pretendard Variable + 시스템 폴백 (현재 CDN, 후속 셀프호스팅)
 - **라이트 단일 테마로 확정.** 요청서에 다크 모드 요구가 없고, 기업 브로슈어 사이트에서
   반쪽짜리 다크 테마는 유지보수 부담만 크다. 필요 시 후속에 토큰 레이어 추가.
-- **브랜드 기준색: `#47b089` 로 확정** (2026-08-28, 사용자 "일단 이 색"). 요청서 6장 값 그대로 유지.
-  제공된 로고 에셋은 짙은 녹색 `#0B6C43` 기반이라 로고와 UI 액센트 톤이 다소 다르지만
-  현 단계에서는 수용한다. 추후 로고 리컬러 또는 토큰 조정으로 재검토 가능.
+- ~~브랜드 기준색 `#47b089` 단일~~ → **15장 참고: V0 디자인의 2톤 그린 채택**
+  (`#0b6c43` 주색 + `#47b089` 보조). 이 절의 나머지 토큰 설명은 초기 스캐폴드 기준이며
+  현행 토큰은 `app/globals.css` 를 본다.
 - CTA 기본형: `#16181D` 배경 + 흰색 텍스트 (WCAG AA). primary 배경 위 흰 텍스트는 대비 미달이라 사용 안 함.
 - 컴포넌트 상태 규약: Default / Hover / Focus / Active / Disabled (+ 폼은 Loading / Error).
 - 스캐폴드 완료 컴포넌트: `Container`, `Button`, `Header`(모바일 내비 포함), `Footer`.
@@ -222,25 +227,51 @@ tests/                  unit/ integration/ e2e/
 - 배포 도메인 = `https://dongyang-web-nine.vercel.app` (Vercel 배포 완료)
 - 로고 에셋 → `public/logo/`. 헤더/푸터/파비콘 적용은 M1.
 
-2026-08-28 추가 결정:
-- **색 체계 = `#47b089` 단일 유지** (재확인). v0 프롬프트의 2톤 그린은 채택하지 않음.
-- **`dongyang-v0-design-prompt-en.md` 는 무시.** 사용자가 V0에서 웹 디자인을 별도 진행 중이며
-  추후 확정 디자인을 전달할 예정. 그때까지 **페이지 비주얼·레이아웃 작업은 최소화**하고,
-  디자인과 무관한 기반 작업(인프라/콘텐츠 파이프라인/문의 폼 백엔드/SEO)을 우선한다.
-- **개인정보처리방침·PF3D 매뉴얼: 라우트/페이지는 만들되 내비·푸터에서 링크하지 않는다.**
+2026-08-28 추가 결정 (일부는 15장에서 갱신됨):
+- ~~색 체계 = `#47b089` 단일~~ → **15장: V0 디자인의 2톤 그린(`#0b6c43` + `#47b089`) 채택**.
+- ~~`dongyang-v0-design-prompt-en.md` 무시~~ → **V0 디자인 프로젝트 자체를 베이스로 채택** (15장).
+- **개인정보처리방침·PF3D 매뉴얼: 라우트/페이지는 만들되 내비·푸터에서 링크하지 않는다.** (유효)
   둘 다 초안이며 미확정 항목(법정 보존기간, 위탁업체, 내부 도구 상세)을 검증한 뒤 노출.
 - 사업분야·개인정보처리방침·PF3D 매뉴얼 원고는 **인코딩 깨짐 상태로 수령** — UTF-8 재저장 대기.
-  받는 즉시 `content/` 에 배치하고 페이지에 반영.
 
-## 14. 다음 단계
+## 14. 다음 단계 (15장 이후 순서)
 
-사용자가 V0 웹 디자인을 별도 진행 중 → **디자인 확정 전까지 비주얼 작업 보류**, 아래 순서로 진행:
+1. **문의 폼 백엔드** — Zod `inquirySchema`, `POST /api/contact`, Resend 인터페이스(키 대기).
+   `components/contact/contact-form.tsx` 는 현재 목업(실제 전송 안 함) → 연결.
+2. **콘텐츠 반영** — 사업분야·개인정보·PF3D UTF-8 원고 수령 시 `content/` 배치 후
+   `lib/services-data.ts` 정교화 / `/privacy` 실문안 / `lib/resources-data.ts` + PF3D 상세.
+3. **테스트 환경** — Vitest + Playwright, 핵심 플로우 스모크.
+4. **접근성·성능·SEO 점검** → 배포.
 
-1. **M1 (디자인 무관 기반)** — Prettier/typecheck/CI, `next/font/local` Pretendard,
-   favicon·로고 배치, `sitemap.ts`/`robots.ts`, SEO 메타 헬퍼, `not-found`/`error`,
-   MDX 콘텐츠 파이프라인(`src/lib/content`), 테스트 환경.
-2. **문의 폼 백엔드** — Zod `inquirySchema`, `POST /api/contact`, Resend 인터페이스(키 대기).
-3. **콘텐츠 반영** — 사업분야·개인정보·PF3D UTF-8 원고 수령 시 `content/` 배치 +
-   기존 임시 레이아웃에 채움(디자인은 추후 교체).
-4. **디자인 적용** — 사용자 확정 디자인 수령 후 컴포넌트/페이지 리스타일.
-5. **M5 검증·출시**.
+## 15. V0 디자인 채택 (2026-08-28, 현행)
+
+사용자가 V0에서 완성한 Next.js 프로젝트를 받아 **저장소의 새 프론트엔드 베이스**로 삼았다.
+
+**구조 변경**
+- `src/app|components|lib` → 루트 `app/`·`components/`·`lib/`. `@/*` alias → 루트.
+- 스택 추가: shadcn/ui(`@base-ui/react`), `lucide-react`, `class-variance-authority`,
+  `tailwind-merge`, `tw-animate-css`, `@vercel/analytics`.
+- `app/globals.css` = V0 토큰 시스템(shadcn 변수 + 브랜드 팔레트).
+
+**색 체계 (V0 대로)** — 2톤 그린:
+- `--brand` / `--primary` = `#0b6c43` (로고색): primary 버튼, 중요 링크, 활성 메뉴, 강한 강조
+- `--accent-green` = `#47b089`: 아이콘, 선택된 필터, 작은 강조, 포커스 링
+- primary 버튼은 `#0b6c43` 배경 + 흰 텍스트. 라이트 단일 테마.
+
+**우리 인프라 재적용**
+- `lib/site.ts`(회사 상수 + `siteUrl` Vercel 폴백), `lib/seo.ts`(`buildMetadata`, Organization JSON-LD)
+- `app/sitemap.ts`, `app/robots.ts`(privacy·pf3d 제외), `app/error.tsx`, `app/global-error.tsx`
+- `app/layout.tsx` = V0 베이스 + metadataBase/OG/robots/JSON-LD/스킵 링크, `generator: v0.app` 제거
+- `components/logo.tsx` → 실제 로고 에셋(`public/logo/`) 사용 (V0 인라인 SVG 대체)
+- `components/contact/contact-info.tsx` → Google 지도 iframe 대신 네이버 지도 링크
+- 아이콘: `app/{favicon.ico,icon.png,apple-icon.png}` = 로고 심벌
+
+**제거한 V0 생성 가짜 콘텐츠 (중요)**
+- `app/about/page.tsx`: "2012년 설립", 통계(12년+/480건+/6인/0건), 연혁 타임라인, 보유 인증
+  → `content/company/company-introduction.md` 기반으로 재작성. `components/about/{timeline,certifications}.tsx` 삭제.
+- `lib/resources-data.ts`: 가짜 자료 목록(가짜 날짜/PDF/버전) → **빈 배열**. `/resources` 는 빈 상태,
+  홈의 기술자료 섹션은 자료 없으면 숨김.
+- `app/privacy/page.tsx`: AI 생성 방침 문안 → "준비 중" 플레이스홀더 + `noindex`.
+
+**Vercel 배포**: 저장소를 public 으로 전환해 Hobby 배포 차단 해소. 커밋에 Claude
+공동작성자 트레일러를 더 이상 넣지 않는다.

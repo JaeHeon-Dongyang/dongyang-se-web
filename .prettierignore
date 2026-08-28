@@ -2,6 +2,6 @@
 node_modules
 package-lock.json
 public/logo
-src/app/fonts
+app/fonts
+components/ui
 *.md
-docs/master-prompt-source.md
