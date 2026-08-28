@@ -290,19 +290,26 @@ export function ContactForm() {
         </div>
       ) : null}
 
-      <Button
-        type="submit"
-        size="lg"
-        disabled={state === "submitting"}
-        className="w-full sm:w-fit"
-      >
-        {state === "submitting" ? (
-          <Loader2 className="animate-spin" data-icon="inline-start" />
-        ) : (
-          <Send data-icon="inline-start" />
-        )}
-        {state === "submitting" ? "전송 중..." : "문의 보내기"}
-      </Button>
+      <div className="flex flex-col gap-2">
+        <Button
+          type="submit"
+          size="lg"
+          disabled={state === "submitting" || !consent}
+          className="w-full sm:w-fit"
+        >
+          {state === "submitting" ? (
+            <Loader2 className="animate-spin" data-icon="inline-start" />
+          ) : (
+            <Send data-icon="inline-start" />
+          )}
+          {state === "submitting" ? "전송 중..." : "문의 보내기"}
+        </Button>
+        {!consent ? (
+          <p className="text-muted-foreground text-xs">
+            개인정보 수집·이용에 동의하시면 문의를 보낼 수 있습니다.
+          </p>
+        ) : null}
+      </div>
     </form>
   );
 }
