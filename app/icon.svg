@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#0B6C43" />
+  <g transform="translate(6 5.2) scale(0.0965)">
+    <mask id="dy-icon" maskUnits="userSpaceOnUse" x="0" y="0" width="207" height="224">
+      <rect width="207" height="224" fill="#fff" />
+      <path d="M132 0 L149 21 L166 0 Z" fill="#000" />
+      <path d="M0 63 H110 L151 108 L110 161 H55 V82 H0 Z" fill="#000" />
+      <path d="M141 224 L207 158 V176 L159 224 Z" fill="#000" />
+    </mask>
+    <rect width="207" height="224" fill="#fff" mask="url(#dy-icon)" />
+  </g>
+</svg>
