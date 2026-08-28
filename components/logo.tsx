@@ -32,13 +32,13 @@ function Mark({ className }: { className?: string }) {
 }
 
 export function LogoSymbol({ className }: { className?: string }) {
-  return <Mark className={cn("h-9", className)} />;
+  return <Mark className={cn("h-[30px] w-[30px]", className)} />;
 }
 
 export function LogoHorizontal({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-3", className)}>
-      <Mark className="h-10" />
+    <span className={cn("inline-flex items-center gap-3.5", className)}>
+      <Mark className="h-[30px] w-[30px]" />
       <span className="flex flex-col leading-none">
         <span className="text-heading text-[15px] font-bold tracking-tight whitespace-nowrap">
           (주)동양구조엔지니어링
