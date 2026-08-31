@@ -143,7 +143,11 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
             return (
               <figure key={index} className="flex flex-col items-center gap-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={block.src} alt={block.alt} className="w-full rounded-xl" />
+                <img
+                  src={block.src}
+                  alt={block.alt}
+                  className="border-border w-full rounded-xl border"
+                />
                 {block.caption ? (
                   <figcaption className="text-body-text/70 text-center text-xs">
                     {block.caption}

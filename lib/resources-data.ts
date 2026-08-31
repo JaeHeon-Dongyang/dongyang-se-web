@@ -1,9 +1,8 @@
 /**
  * 기술자료 데이터.
  *
- * ⚠️ 현재 항목은 레이아웃 확인용 예시(placeholder)다. 실제 기술문서·PF3D 사용 매뉴얼은
- * 사용자 제공 예정이며 수령 시 교체한다. 날짜·첨부·버전은 가짜 값이므로 대외 공개 전
- * 반드시 실제 자료로 대체할 것. (docs/PLAN.md — M1.5)
+ * PF3D 매뉴얼은 원본 설명서 한 편을 카드 1건으로 옮긴다. 편이 늘어나면 카드를 추가하고
+ * 카테고리 "PF3D 매뉴얼" 로 묶어 필터에서 함께 정렬되게 한다.
  */
 
 export type ContentBlock =
@@ -48,158 +47,434 @@ export type Resource = {
   version?: string;
 };
 
-export const resourceCategories = [
-  "전체",
-  "기술 문서",
-  "기술 가이드",
-  "참고자료",
-  "프로그램 매뉴얼",
-] as const;
+export const resourceCategories = ["전체", "PF3D 매뉴얼", "기술 가이드"] as const;
 
 export const resources: Resource[] = [
   {
-    slug: "pf3d-manual",
-    category: "프로그램 매뉴얼",
-    title: "PF3D 사용 매뉴얼",
-    summary: "PF3D의 설치, 모델링, 해석 및 결과 확인 방법을 안내합니다.",
-    updatedAt: "2025-03-12",
-    version: "v3.2",
-    attachments: [{ name: "PF3D_사용매뉴얼_v3.2.pdf", size: "8.4MB", type: "PDF" }],
+    slug: "pf3d-ads-to-gen",
+    category: "PF3D 매뉴얼",
+    title: "01 · ADS·Gen·BeST에서 파일 뽑기",
+    summary:
+      "ADS 해석 모델을 midas Gen으로 옮기고, PF3D 입력에 맞게 정리한 뒤 BeST에서 벽체 배근 리스트를 뽑기까지의 전 과정입니다.",
+    updatedAt: "2026-08-31",
     body: [
       {
         type: "paragraph",
-        text: "본 매뉴얼은 PF3D 사용 절차를 안내하기 위한 예시 문서입니다. 정식 매뉴얼은 준비 중이며, 수령 후 이 자리에 게시됩니다.",
-      },
-      { type: "heading", text: "설치 및 초기 설정", id: "install" },
-      {
-        type: "paragraph",
-        text: "프로그램 설치 파일을 실행한 뒤 안내에 따라 설치를 완료합니다. 최초 실행 시 단위계와 기본 재료 물성을 확인하고 프로젝트 저장 경로를 지정합니다.",
-      },
-      {
-        type: "list",
-        items: [
-          "설치 파일 실행 및 사용권 계약 확인",
-          "단위계(SI/일반) 및 기본 설정 확인",
-          "재료 물성 데이터베이스 확인",
-          "프로젝트 저장 경로 지정",
-        ],
-      },
-      { type: "heading", text: "모델링", id: "modeling" },
-      {
-        type: "paragraph",
-        text: "절점과 부재를 정의하여 구조 모델을 구성합니다. 하중 조건과 지지 조건은 실제 설계 조건과 일치하도록 신중히 입력해야 합니다.",
-      },
-      {
-        type: "callout",
-        tone: "info",
-        text: "모델링 단계에서 지지 조건과 하중 조합을 실제 설계 기준과 다시 한 번 대조하는 것을 권장합니다.",
-      },
-      { type: "heading", text: "해석 실행 및 결과 확인", id: "analysis" },
-      {
-        type: "paragraph",
-        text: "해석을 실행한 뒤 변위, 부재력, 응력 결과를 확인합니다. 결과 값이 예상 범위를 벗어나는 경우 모델링 조건을 재검토합니다.",
+        text: "PF3D 작업의 첫 단계는 입력 파일 세 개를 만드는 일입니다. ADS 해석 모델을 midas Gen으로 변환해 정리하고(mgt), 지진하중을 정의해 저장하고(spf), BeST Pro에서 벽체 배근 리스트를 뽑습니다(TXT). 이 문서는 그 순서를 화면 그대로 따라갑니다.",
       },
       {
         type: "table",
-        headers: ["확인 항목", "점검 내용"],
+        headers: ["산출물", "만드는 곳", "쓰이는 곳"],
         rows: [
-          ["변위", "허용 변위 기준 대비 결과 검토"],
-          ["부재력", "주요 부재의 축력·전단력·모멘트 검토"],
-          ["응력", "재료 허용응력 대비 여유율 검토"],
-        ],
-      },
-    ],
-    related: ["seismic-guide", "field-inspection-checklist"],
-  },
-  {
-    slug: "inspection-cycle-guide",
-    category: "기술 문서",
-    title: "3종시설물 정기안전점검 주기 안내",
-    summary: "시설물 종류별 정기안전점검 및 정밀안전점검 주기를 정리했습니다.",
-    updatedAt: "2025-01-20",
-    body: [
-      {
-        type: "paragraph",
-        text: "시설물의 안전 및 유지관리에 관한 특별법에 따라 시설물의 종류와 등급에 따라 점검 주기가 다르게 적용됩니다. 아래는 대표적인 점검 유형과 주기를 정리한 참고 자료입니다.",
-      },
-      {
-        type: "table",
-        headers: ["점검 유형", "점검 주기(참고)"],
-        rows: [
-          ["정기안전점검", "반기 1회 이상"],
-          ["정밀안전점검", "시설물 등급에 따라 상이"],
-          ["정밀안전진단", "시설물 등급에 따라 상이"],
+          ["◯◯동.mgt", "midas Gen — 모델링 정리 후 Export", "PF3D 모델 입력"],
+          ["◯◯동.spf", "midas Gen — 지진하중 Seismic Load Profile", "지진하중 정보"],
+          ["◯◯동 TEXT.TXT", "BeST Pro — 벽부호별 요약 계산결과 출력", "벽체 배근 정보"],
         ],
       },
       {
         type: "callout",
         tone: "warning",
-        text: "실제 점검 주기와 세부 기준은 관련 법령 및 시설물 등급에 따라 달라질 수 있으므로, 정확한 적용을 위해 사전 확인이 필요합니다.",
+        text: "이름 규칙과 Wall Mark 두 가지에서 실수가 가장 많이 납니다. 부재·재료 Name은 영문과 언더바(_)만 사용하고, Wall Mark는 BeST의 Story Name·벽부호와 정확히 일치시켜야 합니다.",
       },
-    ],
-    related: ["seismic-guide"],
-  },
-  {
-    slug: "seismic-guide",
-    category: "기술 가이드",
-    title: "내진성능평가 기본 절차 가이드",
-    summary: "기존 건축물의 내진성능평가 절차와 검토 항목을 소개합니다.",
-    updatedAt: "2024-11-08",
-    body: [
-      {
-        type: "paragraph",
-        text: "내진성능평가는 기존 건축물이 지진에 대해 갖는 저항 능력을 확인하고, 필요한 경우 보강 방향을 제시하기 위한 절차입니다.",
-      },
-      { type: "heading", text: "평가 절차", id: "process" },
+      { type: "heading", text: "1. ADS → Gen 변환", id: "ads-to-gen" },
       {
         type: "list",
         items: [
-          "기초 자료 조사 및 현장조사",
-          "구조 모델링 및 내진성능 해석",
-          "성능 평가 및 취약부 판정",
-          "보강 필요성 검토 및 방향 제시",
+          "1-1. 슬라브 Plate Bending 해제 — [Plan] > [Plan Name] 에서 [Diaphragm + Plate Bending] 체크 해제. Slab 은 제외하고 Level 만 해제합니다.",
+          "1-2. F5 로 해석한 뒤 [File] > [Export] > [Frame Model to MIDAS/Gen…] 으로 mgt 파일 Export.",
         ],
       },
-    ],
-    related: ["pf3d-manual", "inspection-cycle-guide"],
-  },
-  {
-    slug: "field-inspection-checklist",
-    category: "참고자료",
-    title: "공사 중 현장 안전점검 체크리스트",
-    summary: "공사 단계별 구조 안전점검 시 확인해야 할 주요 항목을 정리했습니다.",
-    updatedAt: "2024-09-02",
-    attachments: [{ name: "현장안전점검_체크리스트.pdf", size: "1.2MB", type: "PDF" }],
-    body: [
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/01-plate-bending.webp",
+        alt: "ADS 의 Define Plan Name 창에서 Diaphragm + Plate Bending 체크를 해제하는 화면",
+        caption: "1-1. Slab 은 그대로 두고 Level 만 체크 해제",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/02-ads-export-mgt.webp",
+        alt: "ADS 의 File > Export > Frame Model to MIDAS/Gen 메뉴 위치",
+        caption: "1-2. 해석 후 mgt 파일로 Export",
+      },
+      { type: "heading", text: "2. Gen 모델링 수정", id: "gen-modeling" },
       {
         type: "paragraph",
-        text: "공사 중 안전점검은 가설구조물과 위험공사 구간을 중심으로 진행됩니다. 아래 항목은 현장점검 시 참고할 수 있는 주요 확인 사항입니다.",
+        text: "변환된 모델은 그대로 쓸 수 없습니다. 지하외벽을 만들고, ADS 에서 따라온 불필요한 데이터를 지우고, 하중·질량·이름·단위를 PF3D 가 읽을 수 있는 형태로 맞춥니다.",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/03-gen-import.webp",
+        alt: "midas Gen 의 Import > midas Gen MGT File 메뉴 위치",
+        caption: "2-1. ADS 에서 뽑은 mgt 파일 Import",
+      },
+      { type: "heading", text: "2-2. 지하외벽 생성", id: "basement-wall" },
+      {
+        type: "list",
+        items: [
+          "골조에서 1스팬(8m) 이격해 생성합니다.",
+          "다만 최외곽 구조체가 인접하는 경우, 해당 지하외벽은 도면대로 모델링합니다.",
+          "두께는 최하층 지하외벽체 두께를 적용합니다.",
+        ],
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/04-basement-wall.webp",
+        alt: "지하외벽을 생성한 평면 모델 화면",
+        caption: "2-2. 지하외벽 생성",
+      },
+      { type: "heading", text: "2-3. 불필요한 데이터 정리", id: "cleanup" },
+      {
+        type: "list",
+        items: [
+          "① Boundaries — 모두 삭제한 뒤 다시 생성합니다.",
+          "② Rigid link 삭제",
+          "③ Nodal mass 삭제",
+          "④ 골조 부분의 Nodal loads 삭제 (방법은 아래 참고)",
+          "⑤ 지진하중·풍하중 제거",
+          "⑥ 노드 정리 — F12 로 불필요한 노드를 삭제합니다.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "순서는 중요하지 않지만 노드 정리는 반드시 마지막에 합니다. F12 로도 지워지지 않는 노드는 충분히 확인한 뒤 삭제하세요.",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/05-cleanup-tree.webp",
+        alt: "midas Gen 트리 메뉴에서 삭제 대상 항목을 표시한 화면",
+        caption: "2-3. 트리에서 확인하며 정리",
+      },
+      {
+        type: "paragraph",
+        text: "Nodal Loads 삭제는 전이층 아래 골조 부분을 선택한 뒤 [Load] 탭 > [Static Loads] > [Nodal Loads] 에서 Delete 로 Apply 하고, Load Case 를 LL 로 바꿔 한 번 더 Apply 합니다.",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/06-nodal-loads-delete.webp",
+        alt: "Nodal Loads 대화상자에서 Delete 옵션으로 DL·LL 하중을 삭제하는 화면",
+        caption: "2-3 ④. DL 로 한 번, LL 로 한 번 Apply",
+      },
+      { type: "heading", text: "2-4. 골조부분 Floor Beam Loads 입력", id: "floor-loads" },
+      {
+        type: "list",
+        items: [
+          "① [Load] 탭 > [Static Loads] > [Assign Floor Loads]",
+          "② 실별에 맞는 설계하중을 입력합니다.",
+          "③ Allow Polygon Type Unit Area 체크 — 다각형 영역으로 하중을 넣기 위함입니다.",
+          "④ Convert to Beam Load Type 체크 — Floor Loads 를 Beam Loads 로 변환합니다. 이 체크가 있어야 다른 프로그램에서 읽을 수 있습니다.",
+          "⑤ Nodes Defining Loading Area 를 누르고 평면에서 영역을 선택한 뒤 ⑥ Apply.",
+        ],
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/07-floor-beam-loads.webp",
+        alt: "Assign Floor Loads 대화상자 설정과 하중이 입력된 3차원 모델",
+        caption: "2-4. Convert to Beam Load Type 체크를 빠뜨리지 않도록 주의",
+      },
+      { type: "heading", text: "2-5. Story 정리 (F10)", id: "story" },
+      {
+        type: "list",
+        items: [
+          "① Auto Generate Story Data 클릭 후 ② OK — Seismic·Wind Eccentricity 는 체크된 상태로 둡니다.",
+          "③ 층 이름을 BeST 이름과 일치시킵니다. 한글은 영문으로 바꿉니다 (예: 2F상부 → 2FUP).",
+          "④ Ground Level 옆 […] 클릭.",
+          "⑤ Consider Underground Seismic Loads 체크 후 Bedrock Level 에 최하층 높이를 확인해 기입합니다.",
+        ],
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/08-story-data.webp",
+        alt: "Story Data 창과 Automatic Generation of Story Data 창",
+        caption: "2-5 ①②. Story Data 자동 생성",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/09-story-name-bedrock.webp",
+        alt: "Story Data 의 층 이름 수정과 Building Control 의 Bedrock Level 입력 화면",
+        caption: "2-5 ③④⑤. 층 이름 일치와 Bedrock Level 입력",
+      },
+      { type: "heading", text: "2-6. Name 정리", id: "naming" },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "Name 은 무조건 영문과 언더바(_)만 사용합니다. 한글·괄호·하이픈이 남아 있으면 이후 단계에서 읽히지 않습니다.",
+      },
+      {
+        type: "table",
+        headers: ["구분", "규칙", "예"],
+        rows: [
+          [
+            "비탄성 부재 (인방보)",
+            "fck + 부재명, 강도별로 분리",
+            "17층~옥상층 강도 C30 인 aB101 → 30aB101",
+          ],
+          [
+            "탄성 부재 (기둥·보 등)",
+            "fck_하부층_상부층부재명. 배근 리스트에 맞춰 수정하고, 강도가 모두 같으면 fck 는 생략 가능",
+            "27_B1_2TC1, 24_2UPTC1",
+          ],
+          ["한 층에만 있는 부재 (전이보 등)", "부재만 나누면 됨", "TG1, TB1, TCB1"],
+          ["재료명", "C 뒤에 바로 강도", "C24, C27, C30"],
+        ],
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/10-name-coupling-beam.webp",
+        alt: "인방보 이름을 강도별로 분리해 정리한 목록",
+        caption: "2-6-1. 비탄성 부재인 인방보 — 강도별 분리",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/11-name-column.webp",
+        alt: "기둥 일람표와 그에 맞춰 수정한 Gen 부재 이름 목록",
+        caption: "2-6-2. 배근 리스트에 맞춰 fck_하부층_상부층부재명 형식으로",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/12-name-transfer-beam.webp",
+        alt: "전이보처럼 한 층에만 있는 부재의 이름 목록",
+        caption: "2-6-2. 한 층에만 있는 부재는 부재만 나누면 됨",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/13-material-unused-delete.webp",
+        alt: "재료 목록의 이름 통일과 사용되지 않아 파란 글자로 표시된 항목",
+        caption: "2-6-3·4. 재료명 통일, 사용되지 않는 부재·재료(파란 글자)는 모두 삭제",
+      },
+      { type: "heading", text: "팁 · 부재 Name 한 번에 만들기", id: "naming-tip" },
+      {
+        type: "list",
+        items: [
+          "① 아무 mgt 파일이나 열어 Ctrl+F 로 *SECTION 을 찾습니다.",
+          "② 한두 줄을 복사해 엑셀에 붙여넣습니다 (세로줄이 맞는 것으로 복사).",
+          "③ [데이터] > [텍스트 나누기](Alt+D+E) 에서 '너비가 일정함' 체크 후 마침.",
+          "④ 칸이 나뉘면 필요한 개수만큼 복사해 Section ID·Name·단면 정보를 수정합니다. 쉼표는 지우면 안 됩니다.",
+          "⑤ 전체를 복사해 Gen 의 [Tools] > [MGT Command Shell] 로 옮깁니다.",
+          "⑥ Command or Data 에 *SECTION 을 정확히 입력하고 Insert Command → 아래에 엑셀 내용 붙여넣기 → Run.",
+        ],
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/14-tip-mgt-section.webp",
+        alt: "MIDAS Text Editor 에서 SECTION 항목을 찾은 화면",
+        caption: "① mgt 파일에서 *SECTION 찾기",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/15-tip-excel-split.webp",
+        alt: "엑셀에 붙여넣은 SECTION 데이터와 텍스트 나누기 메뉴",
+        caption: "②③ 엑셀에 붙여넣고 텍스트 나누기",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/16-tip-text-wizard.webp",
+        alt: "텍스트 마법사에서 너비가 일정함을 선택한 화면",
+        caption: "③ '너비가 일정함' 선택 후 마침",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/17-tip-excel-columns.webp",
+        alt: "칸이 나뉜 엑셀 데이터",
+        caption: "④ 나뉜 칸을 필요한 개수만큼 복사",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/18-tip-section-edit.webp",
+        alt: "Section ID, Name, 단면 정보를 수정한 엑셀 화면",
+        caption: "④ Section ID · Name · 단면 정보 수정 (쉼표 유지)",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/19-tip-command-shell.webp",
+        alt: "midas Gen 의 MGT Command Shell 에서 SECTION 데이터를 실행하는 화면",
+        caption: "⑤⑥ MGT Command Shell 에 붙여넣고 Run",
+      },
+      { type: "heading", text: "2-7. 질량 부여", id: "mass" },
+      {
+        type: "list",
+        items: [
+          "Load to Mass — [Load] 탭 > [Static Loads] > [Nodal Masses] > [Loads to Masses]. Mass Direction 은 X, Y, Load Case 는 DL, Scale Factor 1 로 Add.",
+          "Self Weight 를 질량으로 — [Structure] 탭 > [Structure Type] 에서 Convert Self-weight into Masses 체크 (Convert to X, Y).",
+        ],
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/20-loads-to-masses.webp",
+        alt: "Loads to Masses 대화상자에서 DL 하중을 질량으로 변환하는 화면",
+        caption: "2-7-1. Load to Mass",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/21-self-weight-mass.webp",
+        alt: "Structure Type 대화상자의 Convert Self-weight into Masses 체크 화면",
+        caption: "2-7-2. Self Weight 를 질량으로 변환",
+      },
+      { type: "heading", text: "2-8. Wall Mark 생성", id: "wall-mark" },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "여기서 실수가 가장 많이 납니다. BeST 의 Story Name·벽부호와 Wall Mark 를 일치시키고, 지하외벽에는 Wall Mark 를 지정하지 않습니다.",
       },
       {
         type: "list",
         items: [
-          "가설구조물(비계, 동바리 등)의 설치 상태",
-          "흙막이 및 굴착 구간의 변위 계측 결과",
-          "인접 구조물에 대한 영향 여부",
-          "안전관리계획서와 실제 시공 현황의 일치 여부",
+          "[Design] 탭 > [RC Design] > [Modify Wall Mark Data] 를 엽니다.",
+          "① 벽체 리스트와 같은 위치의 Name 을 적고 ② 해당 위치의 벽을 선택한 뒤 ③ Add.",
+          "지하외벽과 다른 벽체의 Wall ID 가 겹칠 때는 [Alt+9] > [Change Element Parameters] 에서 Wall ID 를 선택하고, 전혀 겹치지 않는 번호(예: 5000, 777)를 Fixed No. 로 입력합니다.",
         ],
       },
-    ],
-    related: ["pf3d-manual"],
-  },
-  {
-    slug: "reinforcement-methods",
-    category: "기술 문서",
-    title: "구조 보강 공법 개요",
-    summary: "노후 구조물에 적용되는 대표적인 보강 공법의 개념을 소개합니다.",
-    updatedAt: "2024-06-14",
-    body: [
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/22-wall-mark.webp",
+        alt: "Modify Wall Mark Data 대화상자에서 Wall Mark 를 추가하는 화면",
+        caption: "2-8. Wall Mark 추가",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/23-wall-id-change.webp",
+        alt: "Change Element Parameters 에서 Wall ID 를 Fixed No. 로 바꾸는 화면",
+        caption: "2-8. Wall ID 가 겹칠 때",
+      },
+      { type: "heading", text: "2-9. 단위·좌표 정리", id: "units" },
+      {
+        type: "list",
+        items: [
+          "① 단위를 kN, cm 로 변환합니다.",
+          "② Node Table 을 엽니다 (Ctrl+Alt+N).",
+          "③④ 전체를 선택해 복사한 뒤 엑셀에 붙여넣습니다.",
+          "⑤⑥ 전체 선택 후 '자릿수 늘림'을 클릭하고 이어서 '자릿수 줄임'을 클릭합니다. 곧바로 줄임만 누르면 반응하지 않습니다.",
+        ],
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/24-units-coordinates.webp",
+        alt: "단위 변경, Node Table, 엑셀 자릿수 조정 화면",
+        caption: "2-9. 단위 kN·cm 변환과 좌표 자릿수 정리",
+      },
+      { type: "heading", text: "2-10. 지진하중", id: "seismic" },
+      {
+        type: "list",
+        items: [
+          "① [Load] 탭 > [Lateral] 그룹 > [Seismic Loads] > ② Add.",
+          "③ 해당 건물 설계개요의 지진하중 파트를 보고 값을 입력합니다 — 지진구역·지역계수·지반계수·중요도계수·감쇠비·고유주기·반응수정계수.",
+          "Load Case Name 은 EX 로 두고, X-Direction 1 / Y-Direction 0 을 기입한 뒤 Apply.",
+          "이어서 Load Case Name 을 EY 로, X-Direction 0 / Y-Direction 1 로만 바꿔 OK.",
+          "④ Seismic Load Profile 에서 Make Seismic Load Calc. Sheet 로 spf 파일을 저장합니다.",
+        ],
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/25-seismic-load-add.webp",
+        alt: "Seismic Loads 메뉴 위치와 Static Seismic Loads 창의 Add 버튼",
+        caption: "2-10 ①②. 지진하중 추가",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/26-seismic-input.webp",
+        alt: "설계개요 지진하중 표와 Add/Modify Seismic Load Specification 입력 화면",
+        caption: "2-10 ③. 설계개요 값을 그대로 입력, EX·EY 두 케이스 생성",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/27-seismic-spf-save.webp",
+        alt: "Seismic Load Profile 창에서 계산 시트를 저장하는 화면",
+        caption: "2-10 ④. spf 파일로 저장",
+      },
+      { type: "heading", text: "2-11. 모델링 mgt 파일 Export", id: "gen-export" },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/28-gen-export-mgt.webp",
+        alt: "midas Gen 의 Export > midas Gen MGT File 메뉴 위치",
+        caption: "2-11. 정리된 모델을 mgt 로 Export",
+      },
+      { type: "heading", text: "3. Wall 배근 리스트", id: "wall-rebar" },
+      {
+        type: "callout",
+        tone: "info",
+        text: "BeST Pro 작업에는 Lock key 가 필요합니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "① BeST Pro 에서 [RC] > [batch Wall] 클릭.",
+          "② Excel 로 출력 → ③ 출력할 벽체 선택 창에서 바로 OK.",
+          "④ Excel 파일을 저장한 뒤 열어 ⑤ 배근이 '개수'로 표현된 부재를 찾습니다 (예: 14-D10).",
+        ],
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/29-best-batch-wall.webp",
+        alt: "BeST Pro 의 batch Wall 메뉴와 출력할 벽체 선택 창",
+        caption: "3-1 ①②③. batch Wall 을 Excel 로 출력",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/30-wall-excel-save.webp",
+        alt: "출력한 Excel 파일을 저장하는 화면",
+        caption: "3-1 ④. Excel 파일 저장",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/31-rebar-count-find.webp",
+        alt: "배근이 개수로 표현된 벽체 부재를 찾은 표",
+        caption: "3-1 ⑤. 개수로 표현된 배근 찾기 (예: 14-D10)",
+      },
+      { type: "heading", text: "3-2. 벽체 배근 수정", id: "wall-rebar-edit" },
+      {
+        type: "list",
+        items: [
+          "① [배근형식 변경] 에서 '간격으로 입력(단부보강근 사용)' 선택.",
+          "② 철근 개수를 0 으로 만듭니다 (Alt+Enter 를 누르면 아래 박스에 복사됩니다).",
+          "③ 간격을 계산해 입력합니다.",
+        ],
+      },
       {
         type: "paragraph",
-        text: "구조 보강은 기존 부재의 성능을 높이거나 새로운 부재를 추가하여 구조물 전체의 안전성을 확보하는 것을 목표로 합니다. 보강 공법의 선택은 구조물의 상태와 사용 조건에 따라 달라집니다.",
+        text: "간격 = { L − (2dc + df) } ÷ (N/2 − 1). 여기서 L 은 벽 길이, dc 는 피복 두께, df 는 전단 철근 직경, N 은 수직 철근 개수입니다. 철근이 2줄로 배근되므로 개수를 2로 나눕니다.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "예) 길이 1,000mm 벽에 14-D10, 피복 40mm, 전단철근 직경 10mm 이면 {1,000 − (2×40 + 10)} ÷ (14/2 − 1) = 151.666mm.",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/32-wall-rebar-edit.webp",
+        alt: "BeST 벽체 배근 화면과 배근 형식 변경 대화상자, 간격 계산식",
+        caption: "3-2. 개수 배근을 간격 배근으로 변경",
+      },
+      { type: "heading", text: "3-3. 벽체 배근 리스트 Export", id: "wall-rebar-export" },
+      {
+        type: "list",
+        items: [
+          "① [출력] > [요약 계산결과 출력(벽부호별)] 클릭 — 벽부호별 TXT 로 출력합니다.",
+          "② 출력할 벽체 선택 창에서 OK 후 저장.",
+        ],
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/33-wall-list-export.webp",
+        alt: "BeST 의 출력 메뉴에서 요약 계산결과 출력(벽부호별)을 선택한 화면",
+        caption: "3-3 ①. 벽부호별 요약 계산결과 출력",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/34-wall-export-save.webp",
+        alt: "출력할 벽체 선택 창과 TXT 파일 저장 화면",
+        caption: "3-3 ②. TXT 파일로 저장",
+      },
+      {
+        type: "paragraph",
+        text: "아래 세 파일이 모두 준비되면 이 단계는 완료입니다.",
+      },
+      {
+        type: "image",
+        src: "/images/resources/pf3d-ads-to-gen/35-final-files.webp",
+        alt: "완성된 TEXT.TXT, mgt, spf 세 파일 목록",
+        caption: "완료 — ◯◯동 TEXT.TXT · ◯◯동.mgt · ◯◯동.spf",
       },
     ],
-    related: ["seismic-guide"],
   },
   {
     slug: "ai-adoption-concept",
