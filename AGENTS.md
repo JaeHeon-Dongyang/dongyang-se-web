@@ -62,11 +62,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## 작업 분담 (Claude 단독, 2026-08-31~)
 
-**V0 무료 플랜은 더 이상 편집 불가 — V0 단계 폐기.** 이제 Claude가 디자인·기능 모두 담당하며,
-파일 영역이 아니라 **요청 종류**로 브랜치를 가른다. 상세 기준은 [`docs/workflow.md`](docs/workflow.md).
-요약: 디자인 관련 요청(레이아웃·스타일·문구 톤 등) → `design` 브랜치 커밋.
-기능 관련 요청(API·데이터·SEO·빌드 등) → `dev` 브랜치 커밋.
-브랜치: `main` 직접 커밋 금지. `design`·`dev` 모두 `main` 으로 병합.
+**V0 무료 플랜은 더 이상 편집 불가 — V0 단계 폐기.** Claude가 디자인·기능 모두 담당하므로
+요청 종류로 브랜치를 가르지 않는다. **`design` 브랜치는 2026-08-31 삭제**(모든 커밋이 이미
+`main`·`dev` 에 병합된 상태였음). 상세는 [`docs/workflow.md`](docs/workflow.md).
+브랜치: 디자인·기능 모두 `dev` 에 커밋 → `main` 으로 병합. `main` 직접 커밋 금지.
 `app/about/page.tsx` 를 "2012년 설립/480건+" 같은 가짜 콘텐츠로 되돌리지 않는다.
 
 ## 디자인
@@ -75,7 +74,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   `--brand`/`--primary` = `#0b6c43` (로고색, primary 버튼·링크·활성 메뉴),
   `--accent-green` = `#47b089` (아이콘·필터·강조·포커스 링).
 - 라이트 단일 테마. Pretendard Variable (`next/font/local`, `app/fonts/`).
-- 이후 디자인 다듬기는 Claude가 `design` 브랜치에서 진행 → 큰 레이아웃 변경은 합의 후.
+- 이후 디자인 다듬기는 Claude가 `dev` 브랜치에서 진행 → 큰 레이아웃 변경은 합의 후.
 
 ## 도메인 메모
 
