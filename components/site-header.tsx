@@ -45,9 +45,9 @@ export function SiteHeader() {
             href={contactNav.href}
             aria-label={contactNav.label}
             title={contactNav.label}
-            className="bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring hidden size-11 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-none md:inline-flex"
+            className="bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring hidden items-center justify-center rounded-full p-3 transition-colors focus-visible:ring-2 focus-visible:outline-none md:inline-flex"
           >
-            <Mail className="size-5" aria-hidden="true" />
+            <Mail className="size-5 shrink-0" aria-hidden="true" />
           </Link>
           <MobileNav />
         </div>
