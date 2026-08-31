@@ -1,6 +1,7 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Info } from "lucide-react";
 import type { Metadata } from "next";
 import { PageHero } from "@/components/page-hero";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { askGroups } from "@/lib/ask-data";
 import { buildMetadata } from "@/lib/seo";
 
@@ -27,11 +28,14 @@ export default function AskPage() {
       />
 
       <section className="container-site">
-        <p className="border-accent-green bg-accent-green-light text-body-text content-measure rounded-lg border-l-4 px-5 py-4 text-sm leading-relaxed">
-          AI 답변은 참고용입니다. 성과품에 반영하기 전 반드시 원문을 대조하세요. 노트북은
-          초대받은 사내 계정만 열람할 수 있으며, 발주처 자료를 노트북에 추가로 올리지
-          않습니다.
-        </p>
+        <Alert className="border-border bg-surface-muted content-measure flex items-center gap-2.5 [&>svg]:translate-y-0">
+          <Info className="text-brand shrink-0" />
+          <AlertDescription className="text-body-text text-sm leading-relaxed text-pretty">
+            AI 답변은 참고용입니다. 성과품에 반영하기 전 반드시 원문을 대조하세요.
+            노트북은 초대받은 사내 계정만 열람할 수 있으며, 발주처 자료를 노트북에 추가로
+            올리지 않습니다.
+          </AlertDescription>
+        </Alert>
       </section>
 
       <div className="container-site flex flex-col gap-14">
