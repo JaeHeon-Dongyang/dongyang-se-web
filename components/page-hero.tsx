@@ -14,7 +14,7 @@ export function PageHero({
 }) {
   return (
     <section className={cn("container-site pt-14 pb-10 md:pt-20 md:pb-14", className)}>
-      <div className="flex max-w-2xl flex-col gap-4">
+      <div className="flex max-w-2xl flex-col gap-4 lg:max-w-4xl">
         <span className="text-brand text-xs font-semibold tracking-[0.14em] uppercase">
           {eyebrow}
         </span>
