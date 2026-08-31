@@ -6,11 +6,11 @@
 | --- | --- |
 | 호스팅 | Vercel — 프로젝트 `dongyang-se-web-tu` |
 | 프로덕션 브랜치 | `main` (자동 배포) |
-| 프리뷰 | `dev`, `design` 및 PR — 브랜치별 프리뷰 URL 자동 생성 |
+| 프리뷰 | `dev` 및 PR — 브랜치별 프리뷰 URL 자동 생성 |
 | 프로덕션 URL | `https://dongyang-se-web-tu.vercel.app` (실제 도메인 연결 전) |
 
-브랜치 역할은 [`workflow.md`](workflow.md) 참고. `main` 에는 아무도 직접 커밋하지 않고
-`design`(V0) · `dev`(Claude) 에서 병합한다.
+브랜치 역할은 [`workflow.md`](workflow.md) 참고. `main` 에는 직접 커밋하지 않고 `dev` 에서
+병합한다. (`design` 브랜치는 2026-08-31 삭제 — 디자인·기능 모두 `dev` 로 통합)
 
 ## 환경변수
 

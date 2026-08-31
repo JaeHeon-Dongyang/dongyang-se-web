@@ -23,7 +23,7 @@ export default function HomePage() {
       <HeroSection />
 
       <section className="container-site py-16 md:py-20">
-        <div className="border-border grid grid-cols-1 gap-10 border-t pt-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+        <div className="border-border grid grid-cols-1 gap-10 border-t pt-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <SectionHeading eyebrow="회사 소개" title="구조안전을 위한 정확한 판단" />
           <p className="text-body-text max-w-2xl text-base leading-relaxed text-pretty">
             동양구조엔지니어링은 구조기술사와 시공기술사를 포함한 전문 인력, 체계적인 협업
@@ -50,7 +50,23 @@ export default function HomePage() {
 
       <section className="container-site py-16 md:py-20">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-          <SectionHeading eyebrow="핵심 가치" title="동양구조엔지니어링이 일하는 방식" />
+          <div className="flex flex-col gap-6">
+            <SectionHeading
+              eyebrow="핵심 가치"
+              title="동양구조엔지니어링이 일하는 방식"
+            />
+            <p className="text-body-text border-border border-t pt-6 text-sm leading-relaxed text-pretty">
+              김용철 대표는 2021년 대전광역시 건설기술심의위원회 건축구조 분야 위원으로
+              위촉되어 콘크리트구조 및 내진·구조해석 분야의 전문성을 인정받았습니다.
+              <br />
+              <Link
+                href="/about"
+                className="text-brand hover:text-brand-hover font-semibold"
+              >
+                회사 소개에서 더 알아보기
+              </Link>
+            </p>
+          </div>
           <ValuesGrid />
         </div>
       </section>
