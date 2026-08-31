@@ -54,6 +54,23 @@ export function HeroSlideshow() {
           />
         ),
       )}
+      {available.length > 1 ? (
+        <div className="absolute right-0 bottom-4 left-0 flex justify-center gap-2">
+          {available.map(({ i }) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setIndex(i)}
+              aria-label={`${i + 1}번째 이미지 보기`}
+              aria-current={i === index}
+              className={cn(
+                "h-2 w-2 rounded-full transition-colors",
+                i === index ? "bg-white" : "bg-white/50 hover:bg-white/75",
+              )}
+            />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

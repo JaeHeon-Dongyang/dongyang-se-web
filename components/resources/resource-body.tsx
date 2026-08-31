@@ -75,6 +75,7 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                   render={
                     <a href={block.url} target="_blank" rel="noopener noreferrer" />
                   }
+                  nativeButton={false}
                   className="h-16 w-fit"
                 >
                   <Play />
@@ -132,6 +133,7 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                   render={
                     <a href={block.video.url} target="_blank" rel="noopener noreferrer" />
                   }
+                  nativeButton={false}
                   className="h-12 w-fit"
                 >
                   <Play fill="currentColor" />
