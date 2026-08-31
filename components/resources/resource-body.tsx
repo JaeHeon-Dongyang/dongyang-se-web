@@ -62,20 +62,20 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
             );
           case "video":
             return (
-              <div
-                key={index}
-                className="border-border bg-surface-muted flex flex-col items-start gap-3 rounded-xl border p-5 sm:flex-row sm:items-center sm:justify-between"
-              >
+              <div key={index} className="flex flex-col gap-3">
                 {block.description ? (
-                  <p className="text-body-text text-sm leading-relaxed text-pretty">
-                    {block.description}
-                  </p>
+                  <Alert className="border-border bg-surface-muted flex items-center gap-2.5 [&>svg]:translate-y-0">
+                    <Info className="text-brand shrink-0" />
+                    <AlertDescription className="text-body-text text-sm leading-relaxed text-pretty">
+                      {block.description}
+                    </AlertDescription>
+                  </Alert>
                 ) : null}
                 <Button
                   render={
                     <a href={block.url} target="_blank" rel="noopener noreferrer" />
                   }
-                  className="shrink-0"
+                  className="h-16 w-fit"
                 >
                   <Play />
                   {block.label}
