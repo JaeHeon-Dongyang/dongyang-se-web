@@ -56,14 +56,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 회사소개·사업분야는 하위 메뉴 없는 단일 딥페이지. PF3D 매뉴얼은 별도 메뉴가 아니라
 기술자료 게시물 1건으로 취급한다.
 
-## 작업 분담 (V0 + Claude, 같은 저장소)
+## 작업 분담 (Claude 단독, 2026-08-31~)
 
-디자인은 V0, 기능은 Claude. 파일 담당 표와 병합 규칙은 [`docs/workflow.md`](docs/workflow.md).
-요약: V0 = `app/globals.css` + `components/**` 스타일 + `public/images/**`.
-Claude = `app/api/**`, `lib/**`, `app/sitemap.ts`·`robots.ts`, `metadata`, `content/**`, `docs/**`.
-브랜치: `main` 직접 커밋 금지. V0 → `design`, Claude → `dev`, 둘 다 `main` 으로 병합.
-V0 는 디자인 diff 만 `main` 에 반영한다.
-V0 diff 가 `app/about/page.tsx` 를 "2012년 설립/480건+" 로 되돌리면 병합 금지 (가짜 콘텐츠).
+**V0 무료 플랜은 더 이상 편집 불가 — V0 단계 폐기.** 이제 Claude가 디자인·기능 모두 담당하며,
+파일 영역이 아니라 **요청 종류**로 브랜치를 가른다. 상세 기준은 [`docs/workflow.md`](docs/workflow.md).
+요약: 디자인 관련 요청(레이아웃·스타일·문구 톤 등) → `design` 브랜치 커밋.
+기능 관련 요청(API·데이터·SEO·빌드 등) → `dev` 브랜치 커밋.
+브랜치: `main` 직접 커밋 금지. `design`·`dev` 모두 `main` 으로 병합.
+`app/about/page.tsx` 를 "2012년 설립/480건+" 같은 가짜 콘텐츠로 되돌리지 않는다.
 
 ## 디자인
 
@@ -71,7 +71,7 @@ V0 diff 가 `app/about/page.tsx` 를 "2012년 설립/480건+" 로 되돌리면 �
   `--brand`/`--primary` = `#0b6c43` (로고색, primary 버튼·링크·활성 메뉴),
   `--accent-green` = `#47b089` (아이콘·필터·강조·포커스 링).
 - 라이트 단일 테마. Pretendard Variable (`next/font/local`, `app/fonts/`).
-- 사용자가 V0에서 디자인을 계속 다듬어 추후 재전달 가능 → 큰 레이아웃 변경은 합의 후.
+- 이후 디자인 다듬기는 Claude가 `design` 브랜치에서 진행 → 큰 레이아웃 변경은 합의 후.
 
 ## 도메인 메모
 
