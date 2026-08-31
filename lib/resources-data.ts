@@ -429,14 +429,20 @@ export const resources: Resource[] = [
   {
     slug: "ai-adoption-practice",
     category: "기술 가이드",
-    title: "Claude로 실무 시작하기",
+    title: "AI로 실무 시작하기",
     summary:
-      "설계기준 조회, 보고서 초안, 검토 시트 자동화까지 — Claude를 우리 업무에 붙이는 실전 가이드입니다.",
+      "설계기준 조회, 보고서 초안, 검토 시트 자동화까지 — AI를 우리 업무에 붙이는 실전 가이드입니다.",
     updatedAt: "2026-08-31",
     body: [
       {
         type: "paragraph",
-        text: "앞선 글 '개발이란 무엇인가'에서 일을 잘게 쪼개고 확인하는 기본 원리를 다뤘습니다. 이번 글은 그 원리를 AI, 특히 Claude를 이용해 우리 업무에 실제로 적용하는 방법입니다.",
+        text: "앞선 글 '개발이란 무엇인가'에서 일을 잘게 쪼개고 확인하는 기본 원리를 다뤘습니다. 이번 글은 그 원리를 AI를 이용해 우리 업무에 실제로 적용하는 방법입니다.",
+      },
+      {
+        type: "link",
+        label: "이전 글 · 개발이란 무엇인가",
+        url: "/resources/ai-adoption-concept",
+        description: "일을 잘게 쪼개고 확인하는 기본 원리를 먼저 다룬 글입니다.",
       },
       { type: "heading", text: "AI가 하는 일, 내가 하는 일", id: "roles" },
       {
@@ -454,7 +460,6 @@ export const resources: Resource[] = [
           "서술부·개요 초안, 반복 문장 정리",
           "설계기준 조항 검색과 개정 이력 정리",
           "검토 시트·자동화 스크립트의 코드 작성",
-          "완료라고 말한 것에 대한 재확인 요청",
         ],
       },
       { type: "heading", text: "사람이 반드시 하는 부분", id: "keep-human" },
@@ -505,7 +510,7 @@ export const resources: Resource[] = [
       {
         type: "callout",
         tone: "warning",
-        text: "편하게 쓰되, 아래 세 가지는 예외 없이 지킵니다. 위반 시 사용이 중지됩니다.",
+        text: "편하게 쓰되, 아래 세 가지는 예외 없이 지킵니다.",
       },
       {
         type: "table",
@@ -528,7 +533,7 @@ export const resources: Resource[] = [
       { type: "heading", text: "오늘의 실습", id: "practice" },
       {
         type: "paragraph",
-        text: "본인 업무에서 가장 짜증나는 반복 작업 하나를 정하고, 앞선 글의 '받는 것 / 내놓는 것 / 확인' 표를 채워보세요. 거창할 필요 없습니다 — 작을수록 좋습니다. 다음 주간회의에서 무엇을 시켰고 결과가 쓸 만했는지 1인 3분씩 공유합니다. 이 공유가 우리 팀 전체의 자산이 됩니다.",
+        text: "본인 업무에서 가장 짜증나는 반복 작업 하나를 정하고, 앞선 글의 '단계 / 입력 / 출력 / 확인' 표를 채워보세요. 거창할 필요 없습니다 — 작을수록 좋습니다.",
       },
     ],
     related: ["ai-adoption-concept"],
