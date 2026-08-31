@@ -1,8 +1,9 @@
 "use client";
 
+import { Mail } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogoHorizontal, LogoSymbol } from "@/components/logo";
+import { LogoHorizontal } from "@/components/logo";
 import { MobileNav } from "@/components/mobile-nav";
 import { contactNav, primaryNav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
@@ -18,8 +19,7 @@ export function SiteHeader() {
           className="focus-visible:ring-focus-ring flex items-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
           aria-label="(주)동양구조엔지니어링 홈"
         >
-          <LogoHorizontal className="hidden sm:flex" />
-          <LogoSymbol className="sm:hidden" />
+          <LogoHorizontal />
         </Link>
 
         <nav aria-label="주요 내비게이션" className="hidden items-center gap-1 md:flex">
@@ -43,9 +43,11 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <Link
             href={contactNav.href}
-            className="bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring hidden items-center rounded-full px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none md:inline-flex"
+            aria-label={contactNav.label}
+            title={contactNav.label}
+            className="bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring hidden size-11 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-none md:inline-flex"
           >
-            {contactNav.label}
+            <Mail className="size-5" aria-hidden="true" />
           </Link>
           <MobileNav />
         </div>

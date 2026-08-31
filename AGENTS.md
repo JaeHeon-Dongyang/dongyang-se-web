@@ -52,7 +52,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## 정보 구조 (변경 시 합의 필요)
 
-글로벌 메뉴는 **홈 / 회사소개 / 사업분야 / 기술자료 / 문의하기** 5개로 고정 (`lib/nav.ts`).
+글로벌 메뉴는 **홈 / 회사소개 / 사업분야 / 기술자료 / 질문하기** 5개 + 문의하기(우측 CTA
+아이콘 버튼)로 고정 (`lib/nav.ts`). **질문하기(`/ask`)는 사내 전용** — Gemini Notebook
+(구 NotebookLM) 노트북 9개로 이동하는 링크 페이지이며, 노트북은 전부 비공개 + 이메일 초대
+상태다. 외부망에서는 `middleware.ts`(`ASK_ALLOWED_IPS`)가 not-found 로 차단하고 robots 에서도
+제외한다. 노트북에 발주처 원본 자료를 올리지 않는다.
 회사소개·사업분야는 하위 메뉴 없는 단일 딥페이지. PF3D 매뉴얼은 별도 메뉴가 아니라
 기술자료 게시물 1건으로 취급한다.
 

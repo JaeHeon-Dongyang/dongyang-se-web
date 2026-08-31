@@ -1,8 +1,13 @@
+/**
+ * "질문하기"(/ask)는 사내 전용 AI 노트북 창구다. 외부망에서는 middleware.ts 가
+ * not-found 를 반환하므로 메뉴를 눌러도 열리지 않는다.
+ */
 export const primaryNav = [
   { label: "홈", href: "/" },
   { label: "회사소개", href: "/about" },
   { label: "사업분야", href: "/services" },
   { label: "기술자료", href: "/resources" },
+  { label: "질문하기", href: "/ask" },
 ] as const;
 
 export const contactNav = { label: "문의하기", href: "/contact" } as const;
