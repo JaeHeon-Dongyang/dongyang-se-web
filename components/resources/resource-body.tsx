@@ -1,4 +1,4 @@
-import { AlertTriangle, Info, Play } from "lucide-react";
+import { AlertTriangle, ExternalLink, Info, Play } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import type { ContentBlock } from "@/lib/resources-data";
@@ -80,6 +80,94 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                   <Play />
                   {block.label}
                 </Button>
+              </div>
+            );
+          case "video-story":
+            return (
+              <div
+                key={index}
+                className="border-border bg-surface-muted flex flex-col gap-5 rounded-xl border p-6"
+              >
+                <span className="text-brand text-xs font-semibold tracking-wide uppercase">
+                  {block.eyebrow}
+                </span>
+                <h3 className="text-heading text-xl font-bold tracking-tight text-balance">
+                  {block.title}
+                </h3>
+                {block.paragraphs.map((text, i) => (
+                  <p
+                    key={i}
+                    className="text-body-text text-sm leading-relaxed text-pretty"
+                  >
+                    {text}
+                  </p>
+                ))}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="border-border bg-surface rounded-lg border p-4">
+                    <p className="text-body-text/80 mb-1.5 text-xs font-semibold">
+                      {block.comparison.leftLabel}
+                    </p>
+                    <p className="text-body-text text-sm leading-relaxed text-pretty">
+                      {block.comparison.leftText}
+                    </p>
+                  </div>
+                  <div className="border-border bg-surface rounded-lg border p-4">
+                    <p className="text-body-text/80 mb-1.5 text-xs font-semibold">
+                      {block.comparison.rightLabel}
+                    </p>
+                    <p className="text-body-text text-sm leading-relaxed text-pretty">
+                      {block.comparison.rightText}
+                    </p>
+                  </div>
+                </div>
+                {block.note ? (
+                  <Alert className="border-border bg-surface flex items-center gap-2.5 [&>svg]:translate-y-0">
+                    <Info className="text-brand shrink-0" />
+                    <AlertDescription className="text-body-text text-sm leading-relaxed text-pretty">
+                      {block.note}
+                    </AlertDescription>
+                  </Alert>
+                ) : null}
+                <Button
+                  render={
+                    <a href={block.video.url} target="_blank" rel="noopener noreferrer" />
+                  }
+                  className="h-12 w-fit"
+                >
+                  <Play fill="currentColor" />
+                  {block.video.label}
+                </Button>
+              </div>
+            );
+          case "image":
+            return (
+              <figure key={index} className="flex flex-col items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={block.src} alt={block.alt} className="w-full rounded-xl" />
+                {block.caption ? (
+                  <figcaption className="text-body-text/70 text-center text-xs">
+                    {block.caption}
+                  </figcaption>
+                ) : null}
+              </figure>
+            );
+          case "link":
+            return (
+              <div key={index} className="flex flex-col gap-2">
+                {block.description ? (
+                  <p className="text-body-text/80 text-sm leading-relaxed text-pretty">
+                    {block.description}
+                  </p>
+                ) : null}
+                <a
+                  href={block.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand hover:text-brand-hover inline-flex w-fit items-center gap-1.5 text-sm font-semibold"
+                >
+                  <ExternalLink className="size-4" />
+                  {block.label}
+                </a>
               </div>
             );
           case "table":
