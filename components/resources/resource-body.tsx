@@ -1,5 +1,6 @@
-import { AlertTriangle, Info } from "lucide-react";
+import { AlertTriangle, Info, Play } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import type { ContentBlock } from "@/lib/resources-data";
 
 export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
@@ -47,17 +48,39 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
             return (
               <Alert
                 key={index}
-                className="border-border bg-surface-muted items-start gap-2.5"
+                className="border-border bg-surface-muted flex items-center gap-2.5 [&>svg]:translate-y-0"
               >
                 {block.tone === "warning" ? (
-                  <AlertTriangle className="text-warning" />
+                  <AlertTriangle className="text-warning shrink-0" />
                 ) : (
-                  <Info className="text-brand" />
+                  <Info className="text-brand shrink-0" />
                 )}
                 <AlertDescription className="text-body-text text-sm leading-relaxed text-pretty">
                   {block.text}
                 </AlertDescription>
               </Alert>
+            );
+          case "video":
+            return (
+              <div
+                key={index}
+                className="border-border bg-surface-muted flex flex-col items-start gap-3 rounded-xl border p-5 sm:flex-row sm:items-center sm:justify-between"
+              >
+                {block.description ? (
+                  <p className="text-body-text text-sm leading-relaxed text-pretty">
+                    {block.description}
+                  </p>
+                ) : null}
+                <Button
+                  render={
+                    <a href={block.url} target="_blank" rel="noopener noreferrer" />
+                  }
+                  className="shrink-0"
+                >
+                  <Play />
+                  {block.label}
+                </Button>
+              </div>
             );
           case "table":
             return (
