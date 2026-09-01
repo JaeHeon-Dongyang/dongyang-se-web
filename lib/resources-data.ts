@@ -13,20 +13,36 @@ export type ContentBlock =
   | { type: "table"; headers: string[]; rows: string[][] }
   | { type: "video"; label: string; url: string; description?: string }
   | {
-      type: "video-story";
-      eyebrow: string;
-      title: string;
-      paragraphs: string[];
-      comparison: {
-        leftLabel: string;
-        leftText: string;
-        rightLabel: string;
-        rightText: string;
-      };
-      note?: string;
-      video: { label: string; url: string };
-    }
+    type: "video-story";
+    eyebrow: string;
+    title: string;
+    paragraphs: string[];
+    comparison: {
+      leftLabel: string;
+      leftText: string;
+      rightLabel: string;
+      rightText: string;
+    };
+    note?: string;
+    video: { label: string; url: string };
+  }
   | { type: "image"; src: string; alt: string; caption?: string }
+  | {
+    // 주석 없는 원본 스크린샷 위에 번호를 CSS 로 얹는다. x·y 는 이미지 기준 백분율.
+    type: "annotated-image";
+    src: string;
+    alt: string;
+    width: number;
+    caption?: string;
+    markers: {
+      n: number;
+      x: number;
+      y: number;
+      note: string;
+      // 번호 원 대신/추가로 영역을 감싸는 테두리 박스. w·h 는 이미지 기준 백분율, x·y 는 박스 중심.
+      box?: { w: number; h: number };
+    }[];
+  }
   | { type: "link"; label: string; url: string; description?: string };
 
 export type Attachment = {
@@ -76,25 +92,68 @@ export const resources: Resource[] = [
         tone: "warning",
         text: "이름 규칙과 Wall Mark 두 가지에서 실수가 가장 많이 납니다. 부재·재료 Name은 영문과 언더바(_)만 사용하고, Wall Mark는 BeST의 Story Name·벽부호와 정확히 일치시켜야 합니다.",
       },
-      { type: "heading", text: "1. ADS → Gen 변환", id: "ads-to-gen" },
+      { type: "heading", text: "1-1. 슬라브 Plate Bending 해제", id: "plate-bending" },
       {
-        type: "list",
-        items: [
-          "1-1. 슬라브 Plate Bending 해제 — [Plan] > [Plan Name] 에서 [Diaphragm + Plate Bending] 체크 해제. Slab 은 제외하고 Level 만 해제합니다.",
-          "1-2. F5 로 해석한 뒤 [File] > [Export] > [Frame Model to MIDAS/Gen…] 으로 mgt 파일 Export.",
+        type: "paragraph",
+        text: "먼저 슬라브의 Plate Bending 을 해제합니다. [Plan] 메뉴에서 Plan Name 창을 엽니다.",
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s1-1-plan-menu.webp",
+        alt: "ADS 의 Plan 메뉴에서 Plan > Plan Name 을 선택하는 화면",
+        width: 287,
+        markers: [
+          { n: 1, x: 4.4, y: 27, note: "[Plan] 메뉴를 엽니다." },
+          { n: 2, x: 5.4, y: 60.5, note: "[Plan] 하위 메뉴로 들어갑니다." },
+          { n: 3, x: 95, y: 60.5, note: "[Plan Name…] 을 클릭합니다." },
         ],
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/01-plate-bending.webp",
-        alt: "ADS 의 Define Plan Name 창에서 Diaphragm + Plate Bending 체크를 해제하는 화면",
-        caption: "1-1. Slab 은 그대로 두고 Level 만 체크 해제",
+        type: "paragraph",
+        text: "Plan Name 창에서 Level 층만 Plate Bending 을 해제합니다. Slab 층(Slab Type 이 Diaphragm(Slab) 인 층)은 그대로 둡니다.",
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/02-ads-export-mgt.webp",
-        alt: "ADS 의 File > Export > Frame Model to MIDAS/Gen 메뉴 위치",
-        caption: "1-2. 해석 후 mgt 파일로 Export",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s1-1-define-plan-name.webp",
+        alt: "Define Plan Name 창의 Diaphragm + Plate Bending 체크박스와 층별 Slab Type 목록",
+        width: 418,
+        markers: [
+          {
+            n: 1,
+            x: 18.5,
+            y: 38,
+            note: "[Diaphragm + Plate Bending] 체크를 해제합니다. 층을 하나씩 선택해 해제한 뒤 Modify 로 반영합니다.",
+          },
+          {
+            n: 2,
+            x: 41,
+            y: 71.5,
+            note: "Slab Type 이 Diaphragm(Slab) 인 층은 건드리지 않습니다. Diaphragm(Level) 인 층만 해제 대상입니다.",
+          },
+        ],
+      },
+      { type: "heading", text: "1-2. 해석 후 mgt 파일 Export", id: "ads-export" },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "반드시 해석(F5)을 먼저 돌린 뒤 Export 합니다. 해석하지 않으면 Export가 불가능합니다.",
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s1-2-export-menu.webp",
+        alt: "ADS 의 File 메뉴에서 Export > Frame Model to MIDAS/Gen 을 선택하는 화면",
+        width: 462,
+        markers: [
+          { n: 1, x: 4.2, y: 4, note: "[File] 탭을 엽니다.", box: { w: 7.6, h: 7 } },
+          { n: 2, x: 27, y: 67, note: "[Export] 로 들어갑니다.", box: { w: 53, h: 7 } },
+          {
+            n: 3,
+            x: 75,
+            y: 81,
+            note: "[Frame Model to MIDAS/Gen…] 을 클릭해 mgt 파일로 저장합니다.",
+            box: { w: 44, h: 7 }
+          },
+        ],
       },
       { type: "heading", text: "2. Gen 모델링 수정", id: "gen-modeling" },
       {

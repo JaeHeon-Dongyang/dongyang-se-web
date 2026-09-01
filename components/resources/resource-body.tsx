@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { AlertTriangle, ExternalLink, Info, Play } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -150,6 +151,62 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                   alt={block.alt}
                   className="border-border w-full rounded-xl border"
                 />
+                {block.caption ? (
+                  <figcaption className="text-body-text/70 text-center text-xs">
+                    {block.caption}
+                  </figcaption>
+                ) : null}
+              </figure>
+            );
+          case "annotated-image":
+            return (
+              <figure key={index} className="flex flex-col gap-4">
+                <div
+                  className="border-border bg-surface relative mx-auto w-full overflow-hidden rounded-xl border"
+                  style={{ maxWidth: block.width }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={block.src} alt={block.alt} className="block w-full" />
+                  {block.markers.map((marker) => (
+                    <Fragment key={marker.n}>
+                      {marker.box ? (
+                        <span
+                          aria-hidden="true"
+                          className="border-destructive absolute -translate-x-1/2 -translate-y-1/2 rounded-md border-2"
+                          style={{
+                            left: `${marker.x}%`,
+                            top: `${marker.y}%`,
+                            width: `${marker.box.w}%`,
+                            height: `${marker.box.h}%`,
+                          }}
+                        />
+                      ) : null}
+                      <span
+                        aria-hidden="true"
+                        className="bg-destructive absolute flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xs leading-none font-bold text-white ring-2 [box-shadow:0_1px_4px_rgb(0_0_0_/_0.5)] ring-white"
+                        style={{
+                          left: `${marker.x + (marker.box ? marker.box.w / 2 : 0)}%`,
+                          top: `${marker.y + (marker.box ? marker.box.h / 2 : 0)}%`,
+                        }}
+                      >
+                        {marker.n}
+                      </span>
+                    </Fragment>
+                  ))}
+                </div>
+                <ol className="flex flex-col gap-2.5">
+                  {block.markers.map((marker) => (
+                    <li
+                      key={marker.n}
+                      className="text-body-text flex items-start gap-2.5 text-sm"
+                    >
+                      <span className="bg-destructive mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full text-[11px] leading-none font-bold text-white">
+                        {marker.n}
+                      </span>
+                      <span className="leading-relaxed text-pretty">{marker.note}</span>
+                    </li>
+                  ))}
+                </ol>
                 {block.caption ? (
                   <figcaption className="text-body-text/70 text-center text-xs">
                     {block.caption}
