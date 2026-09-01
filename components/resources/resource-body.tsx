@@ -4,16 +4,73 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import type { ContentBlock, ImageMarker } from "@/lib/resources-data";
 
+// "**굵게**" 구간만 <strong> 으로 바꾼다. 본문·목록·콜아웃·마커 설명에 쓰는 최소 파서.
+function renderWithBold(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") ? (
+      <strong key={i} className="font-semibold">
+        {part.slice(2, -2)}
+      </strong>
+    ) : (
+      <Fragment key={i}>{part}</Fragment>
+    ),
+  );
+}
+
+/**
+ * 마커 번호를 본문 순서대로 매긴다.
+ * heading 을 만나면 1 로 초기화하고, 같은 heading 안에서는 이미지가 바뀌어도 이어서 증가한다.
+ * 마커 객체를 키로 쓰므로 데이터에 번호를 적어둘 필요가 없다.
+ */
+function assignMarkerNumbers(blocks: ContentBlock[]) {
+  const numbers = new Map<ImageMarker, number>();
+  let next = 1;
+  for (const block of blocks) {
+    if (block.type === "heading") {
+      next = 1;
+    } else if (block.type === "annotated-image") {
+      for (const marker of block.markers) numbers.set(marker, next++);
+    } else if (block.type === "image-pair") {
+      for (const marker of block.left.markers) numbers.set(marker, next++);
+      for (const marker of block.right.markers) numbers.set(marker, next++);
+    }
+  }
+  return numbers;
+}
+
+// 번호 배지 위치를 박스 중심 기준 오프셋(%)으로 계산한다. 박스가 없으면 x·y 그 자리.
+function numberOffset(marker: ImageMarker) {
+  if (!marker.box) return { dx: 0, dy: 0 };
+  const { w, h } = marker.box;
+  switch (marker.numberCorner ?? "bottom-right") {
+    case "top-left":
+      return { dx: -w / 2, dy: -h / 2 };
+    case "top-center":
+      return { dx: 0, dy: -h / 2 };
+    case "top-right":
+      return { dx: w / 2, dy: -h / 2 };
+    case "bottom-left":
+      return { dx: -w / 2, dy: h / 2 };
+    case "bottom-center":
+      return { dx: 0, dy: h / 2 };
+    case "bottom-right":
+      return { dx: w / 2, dy: h / 2 };
+  }
+}
+
 function MarkedImage({
   src,
   alt,
   width,
   markers,
+  numbers,
 }: {
   src: string;
   alt: string;
   width: number;
   markers: ImageMarker[];
+  numbers: Map<ImageMarker, number>;
 }) {
   return (
     <div
@@ -22,47 +79,60 @@ function MarkedImage({
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={src} alt={alt} className="block w-full" />
-      {markers.map((marker) => (
-        <Fragment key={marker.n}>
-          {marker.box ? (
-            <span
-              aria-hidden="true"
-              className="border-destructive absolute -translate-x-1/2 -translate-y-1/2 rounded-md border-2"
-              style={{
-                left: `${marker.x}%`,
-                top: `${marker.y}%`,
-                width: `${marker.box.w}%`,
-                height: `${marker.box.h}%`,
-              }}
-            />
-          ) : null}
-          {marker.hideNumber ? null : (
-            <span
-              aria-hidden="true"
-              className="bg-destructive absolute flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xs leading-none font-bold text-white ring-2 [box-shadow:0_1px_4px_rgb(0_0_0_/_0.5)] ring-white"
-              style={{
-                left: `${marker.x + (marker.box ? marker.box.w / 2 : 0)}%`,
-                top: `${marker.y + (marker.box ? marker.box.h / 2 : 0)}%`,
-              }}
-            >
-              {marker.n}
-            </span>
-          )}
-        </Fragment>
-      ))}
+      {markers.map((marker, i) => {
+        const { dx, dy } = numberOffset(marker);
+        return (
+          <Fragment key={i}>
+            {marker.box ? (
+              <span
+                aria-hidden="true"
+                className="border-destructive absolute -translate-x-1/2 -translate-y-1/2 rounded-md"
+                style={{
+                  left: `${marker.x}%`,
+                  top: `${marker.y}%`,
+                  width: `${marker.box.w}%`,
+                  height: `${marker.box.h}%`,
+                  borderWidth: marker.box.borderWidth ?? 2,
+                }}
+              />
+            ) : null}
+            {marker.hideNumber ? null : (
+              <span
+                aria-hidden="true"
+                className="bg-destructive absolute flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xs leading-none font-bold text-white ring-2 [box-shadow:0_1px_4px_rgb(0_0_0_/_0.5)] ring-white"
+                style={{
+                  left: `${marker.x + dx}%`,
+                  top: `${marker.y + dy}%`,
+                }}
+              >
+                {numbers.get(marker)}
+              </span>
+            )}
+          </Fragment>
+        );
+      })}
     </div>
   );
 }
 
-function MarkerList({ markers }: { markers: ImageMarker[] }) {
+function MarkerList({
+  markers,
+  numbers,
+}: {
+  markers: ImageMarker[];
+  numbers: Map<ImageMarker, number>;
+}) {
   return (
     <ol className="flex flex-col gap-2.5">
-      {markers.map((marker) => (
-        <li key={marker.n} className="text-body-text flex items-start gap-2.5 text-sm">
-          <span className="bg-destructive mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full text-[11px] leading-none font-bold text-white">
-            {marker.n}
+      {markers.map((marker, i) => (
+        <li key={i} className="text-body-text flex items-start gap-2.5 text-sm">
+          {/* 이미지 위 배지(size-6 / text-xs)보다 20% 큰 크기 */}
+          <span className="bg-destructive flex size-[1.6rem] shrink-0 items-center justify-center rounded-full text-[0.9rem] leading-none font-bold text-white">
+            {numbers.get(marker)}
           </span>
-          <span className="leading-relaxed text-pretty">{marker.note}</span>
+          <span className="leading-relaxed text-pretty">
+            {renderWithBold(marker.note)}
+          </span>
         </li>
       ))}
     </ol>
@@ -70,6 +140,7 @@ function MarkerList({ markers }: { markers: ImageMarker[] }) {
 }
 
 export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
+  const numbers = assignMarkerNumbers(blocks);
   return (
     <div className="flex flex-col gap-6">
       {blocks.map((block, index) => {
@@ -80,7 +151,7 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                 key={index}
                 className="text-body-text text-base leading-relaxed text-pretty"
               >
-                {block.text}
+                {renderWithBold(block.text)}
               </p>
             );
           case "heading":
@@ -105,7 +176,9 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                       className="bg-accent-green mt-2 h-1 w-1 shrink-0 rounded-full"
                       aria-hidden="true"
                     />
-                    <span className="leading-relaxed text-pretty">{item}</span>
+                    <span className="leading-relaxed text-pretty">
+                      {renderWithBold(item)}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -122,7 +195,7 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                   <Info className="text-brand shrink-0" />
                 )}
                 <AlertDescription className="text-body-text text-sm leading-relaxed text-pretty">
-                  {block.text}
+                  {renderWithBold(block.text)}
                 </AlertDescription>
               </Alert>
             );
@@ -231,8 +304,9 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                   alt={block.alt}
                   width={block.width}
                   markers={block.markers}
+                  numbers={numbers}
                 />
-                <MarkerList markers={block.markers} />
+                <MarkerList markers={block.markers} numbers={numbers} />
                 {block.caption ? (
                   <figcaption className="text-body-text/70 text-center text-xs">
                     {block.caption}
@@ -250,6 +324,7 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                       alt={block.left.alt}
                       width={block.left.width}
                       markers={block.left.markers}
+                      numbers={numbers}
                     />
                   </div>
                   <ArrowRight
@@ -268,16 +343,17 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                       alt={block.right.alt}
                       width={block.right.width}
                       markers={block.right.markers}
+                      numbers={numbers}
                     />
                   </div>
                 </div>
                 <div className="flex flex-col items-start gap-3 sm:flex-row sm:justify-center">
                   <div className="w-full sm:w-auto sm:flex-1">
-                    <MarkerList markers={block.left.markers} />
+                    <MarkerList markers={block.left.markers} numbers={numbers} />
                   </div>
                   <div aria-hidden="true" className="hidden w-9 shrink-0 sm:block" />
                   <div className="w-full sm:w-auto sm:flex-1">
-                    <MarkerList markers={block.right.markers} />
+                    <MarkerList markers={block.right.markers} numbers={numbers} />
                   </div>
                 </div>
               </figure>
