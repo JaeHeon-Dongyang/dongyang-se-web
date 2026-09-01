@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { ContactCta } from "@/components/contact-cta";
 import { HeroSection } from "@/components/home/hero-section";
@@ -6,6 +7,7 @@ import { ValuesGrid } from "@/components/home/values-grid";
 import { ResourceCard } from "@/components/resource-card";
 import { SectionHeading } from "@/components/section-heading";
 import { ServiceCard } from "@/components/service-card";
+import { isIntranetRequest } from "@/lib/intranet";
 import { resources } from "@/lib/resources-data";
 import { buildMetadata } from "@/lib/seo";
 import { serviceGroups } from "@/lib/services-data";
@@ -15,8 +17,9 @@ export const metadata: Metadata = buildMetadata({
     "동양구조엔지니어링은 구조설계, 안전진단·점검, 공사 중 안전관리, 해체공사 구조검토까지 건축물의 생애주기 전반에 필요한 구조 엔지니어링 서비스를 제공합니다.",
 });
 
-export default function HomePage() {
-  const featuredResources = resources.slice(0, 3);
+export default async function HomePage() {
+  const intranet = isIntranetRequest(await headers());
+  const featuredResources = intranet ? resources.slice(0, 3) : [];
 
   return (
     <>

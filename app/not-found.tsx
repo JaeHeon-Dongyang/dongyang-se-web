@@ -6,7 +6,7 @@ import { LogoSymbol } from "@/components/logo";
 export default function NotFound() {
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center px-6 py-24 text-center">
-      <LogoSymbol className="mb-8" />
+      <LogoSymbol className="mb-8 h-[90px] w-[90px]" />
       <span className="text-brand text-sm font-semibold tracking-[0.15em]">
         ERROR 404
       </span>

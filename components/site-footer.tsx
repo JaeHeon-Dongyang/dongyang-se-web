@@ -1,9 +1,13 @@
 import { Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { LogoHorizontal } from "@/components/logo";
-import { footerLegalNav, primaryNav } from "@/lib/nav";
+import { footerLegalNav, type primaryNav } from "@/lib/nav";
 
-export function SiteFooter() {
+export function SiteFooter({
+  navItems,
+}: {
+  navItems: ReadonlyArray<(typeof primaryNav)[number]>;
+}) {
   return (
     <footer className="border-border bg-surface border-t">
       <div className="container-site flex flex-col gap-10 py-12 md:py-16">
@@ -22,7 +26,7 @@ export function SiteFooter() {
               <span className="text-heading text-xs font-semibold tracking-[0.1em] uppercase">
                 메뉴
               </span>
-              {primaryNav.map((item) => (
+              {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}

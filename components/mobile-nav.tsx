@@ -14,10 +14,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { contactNav, primaryNav } from "@/lib/nav";
+import { contactNav, type primaryNav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
-export function MobileNav() {
+export function MobileNav({
+  navItems,
+}: {
+  navItems: ReadonlyArray<(typeof primaryNav)[number]>;
+}) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -38,7 +42,7 @@ export function MobileNav() {
           aria-label="모바일 내비게이션"
           className="flex flex-1 flex-col gap-1 px-3 py-4"
         >
-          {primaryNav.map((item) => {
+          {navItems.map((item) => {
             const active = pathname === item.href;
             return (
               <SheetClose

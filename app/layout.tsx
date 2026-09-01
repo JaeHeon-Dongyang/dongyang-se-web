@@ -1,8 +1,11 @@
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import localFont from "next/font/local";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { isIntranetRequest } from "@/lib/intranet";
+import { primaryNav } from "@/lib/nav";
 import { organizationJsonLd } from "@/lib/seo";
 import { siteMeta, siteUrl } from "@/lib/site";
 import "./globals.css";
@@ -39,9 +42,12 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const intranet = isIntranetRequest(await headers());
+  const navItems = primaryNav.filter((item) => intranet || !item.intranetOnly);
+
   return (
     <html lang="ko" className={`${pretendard.variable} bg-background`}>
       <body className="font-sans antialiased">
@@ -56,11 +62,11 @@ export default function RootLayout({
           본문으로 건너뛰기
         </a>
         <div className="flex min-h-screen flex-col">
-          <SiteHeader />
+          <SiteHeader navItems={navItems} />
           <main id="main" className="flex-1">
             {children}
           </main>
-          <SiteFooter />
+          <SiteFooter navItems={navItems} />
         </div>
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
