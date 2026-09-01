@@ -24,7 +24,7 @@ export default function AskPage() {
       <PageHero
         eyebrow="사내 전용"
         title="질문하기"
-        description="분야를 고르면 해당 노트북으로 이동합니다. 설계기준·점검 절차·사내 규정을 자연어로 물어볼 수 있습니다."
+        description="분야를 고르면 해당 노트북으로 이동합니다. 설계기준·점검 절차·사내 규정을 물어볼 수 있습니다."
       />
 
       <section className="container-site">
