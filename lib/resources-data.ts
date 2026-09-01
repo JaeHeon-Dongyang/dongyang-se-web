@@ -44,13 +44,23 @@ export type ContentBlock =
     }
   | { type: "link"; label: string; url: string; description?: string };
 
+// 번호(n)는 데이터에 적지 않는다. 렌더링 시 heading 을 만날 때마다 1 로 초기화하고,
+// 같은 heading 안에서는 이미지가 바뀌어도 이어서 증가한다 (resource-body.tsx).
 export type ImageMarker = {
-  n: number;
   x: number;
   y: number;
   note: string;
   // 번호 원 대신/추가로 영역을 감싸는 테두리 박스. w·h 는 이미지 기준 백분율, x·y 는 박스 중심.
-  box?: { w: number; h: number };
+  // borderWidth 는 테두리 굵기(px), 생략 시 기본 2px.
+  box?: { w: number; h: number; borderWidth?: number };
+  // 번호 배지가 박스의 어느 모서리·변에 붙을지. 기본값은 우하단(bottom-right).
+  numberCorner?:
+    | "top-left"
+    | "top-center"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-center"
+    | "bottom-right";
   // 이미지가 이미 한 동작만 보여주도록 잘려있어 번호 배지가 불필요할 때 이미지 위 배지만 숨김 (목록의 번호는 유지).
   hideNumber?: boolean;
 };
@@ -100,7 +110,7 @@ export const resources: Resource[] = [
       {
         type: "callout",
         tone: "warning",
-        text: "이름 규칙과 Wall Mark 두 가지에서 실수가 가장 많이 납니다. 부재·재료 Name은 영문과 언더바(_)만 사용하고, Wall Mark는 BeST의 Story Name·벽부호와 정확히 일치시켜야 합니다.",
+        text: "**이름 규칙과 Wall Mark 두 가지에서 실수가 가장 많이 납니다.** 부재·재료 Name은 **영문과 언더바(_)만** 사용하고, Wall Mark는 **BeST의 Story Name·벽부호와 정확히 일치**시켜야 합니다.",
       },
       { type: "heading", text: "1-1. 슬라브 Plate Bending 해제", id: "plate-bending" },
       {
@@ -113,14 +123,14 @@ export const resources: Resource[] = [
         alt: "ADS 의 Plan 메뉴에서 Plan > Plan Name 을 선택하는 화면",
         width: 287,
         markers: [
-          { n: 1, x: 4.4, y: 27, note: "[Plan] 메뉴를 엽니다." },
-          { n: 2, x: 5.4, y: 60.5, note: "[Plan] 하위 메뉴로 들어갑니다." },
-          { n: 3, x: 95, y: 60.5, note: "[Plan Name…] 을 클릭합니다." },
+          { x: 4.4, y: 27, note: "[Plan] 메뉴를 엽니다." },
+          { x: 5.4, y: 60.5, note: "[Plan] 하위 메뉴로 들어갑니다." },
+          { x: 95, y: 60.5, note: "[Plan Name…] 을 클릭합니다." },
         ],
       },
       {
         type: "paragraph",
-        text: "Plan Name 창에서 Level 층만 Plate Bending 을 해제합니다. Slab 층(Slab Type 이 Diaphragm(Slab) 인 층)은 그대로 둡니다.",
+        text: "Plan Name 창에서 **Level 층만** Plate Bending 을 해제합니다. **Slab 층(Slab Type 이 Diaphragm(Slab) 인 층)은 그대로 둡니다.**",
       },
       {
         type: "annotated-image",
@@ -129,16 +139,14 @@ export const resources: Resource[] = [
         width: 418,
         markers: [
           {
-            n: 1,
-            x: 18.5,
+            x: 20,
             y: 38,
             note: "[Diaphragm + Plate Bending] 체크를 해제합니다. 층을 하나씩 선택해 해제한 뒤 Modify 로 반영합니다.",
           },
           {
-            n: 2,
-            x: 41,
+            x: 65,
             y: 71.5,
-            note: "Slab Type 이 Diaphragm(Slab) 인 층은 건드리지 않습니다. Diaphragm(Level) 인 층만 해제 대상입니다.",
+            note: "**Slab Type 이 Diaphragm(Slab) 인 층은 건드리지 않습니다.** Diaphragm(Level) 인 층만 해제 대상입니다.",
           },
         ],
       },
@@ -146,7 +154,7 @@ export const resources: Resource[] = [
       {
         type: "callout",
         tone: "warning",
-        text: "반드시 해석(F5)을 먼저 돌린 뒤 Export 합니다. 해석하지 않으면 Export가 불가능합니다.",
+        text: "**반드시 해석(F5)을 먼저 돌린 뒤** Export 합니다. 해석하지 않으면 Export가 불가능합니다.",
       },
       {
         type: "annotated-image",
@@ -154,14 +162,17 @@ export const resources: Resource[] = [
         alt: "ADS 의 File 메뉴에서 Export > Frame Model to MIDAS/Gen 을 선택하는 화면",
         width: 462,
         markers: [
-          { n: 1, x: 4.2, y: 4, note: "[File] 탭을 엽니다.", box: { w: 7.6, h: 7 } },
-          { n: 2, x: 27, y: 67, note: "[Export] 로 들어갑니다.", box: { w: 53, h: 7 } },
           {
-            n: 3,
-            x: 75,
-            y: 80.5,
+            x: 4.4,
+            y: 3.8,
+            note: "[File] 탭을 엽니다.",
+            box: { w: 7.8, h: 7, borderWidth: 2 },
+          },
+          { x: 18, y: 66, note: "[Export] 로 들어갑니다." },
+          {
+            x: 95,
+            y: 79.5,
             note: "[Frame Model to MIDAS/Gen…] 을 클릭해 mgt 파일로 저장합니다.",
-            box: { w: 44, h: 7 },
           },
         ],
       },
@@ -177,18 +188,14 @@ export const resources: Resource[] = [
         width: 500,
         markers: [
           {
-            n: 1,
             x: 17.5,
-            y: 42.6,
+            y: 41.5,
             note: "[Import] 를 클릭합니다.",
-            box: { w: 35, h: 4 },
           },
           {
-            n: 2,
-            x: 67,
-            y: 12.6,
+            x: 88,
+            y: 10,
             note: "[MGT or MGTX file (for GEN/GEN NX)] 을 클릭해 mgt 파일을 Import 합니다.",
-            box: { w: 62, h: 4 },
           },
         ],
       },
@@ -222,7 +229,7 @@ export const resources: Resource[] = [
       {
         type: "callout",
         tone: "info",
-        text: "순서는 중요하지 않지만 노드 정리는 반드시 마지막에 합니다. F12 로도 지워지지 않는 노드는 충분히 확인한 뒤 삭제하세요.",
+        text: "순서는 중요하지 않지만 **노드 정리는 반드시 마지막에** 합니다. F12 로도 지워지지 않는 노드는 충분히 확인한 뒤 삭제하세요.",
       },
       {
         type: "annotated-image",
@@ -231,11 +238,16 @@ export const resources: Resource[] = [
         width: 807,
         markers: [
           {
-            n: 1,
-            x: 28.5,
-            y: 62,
-            note: "Supports·Rigid Link 를 모두 삭제한 뒤 다시 생성합니다.",
-            box: { w: 57, h: 60 },
+            x: 40,
+            y: 49,
+            note: "Supports 를 삭제한 뒤 다시 생성합니다.",
+            box: { w: 57, h: 26 },
+          },
+          {
+            x: 40,
+            y: 81,
+            note: "Rigid Link 를 삭제합니다.",
+            box: { w: 57, h: 26 },
           },
         ],
       },
@@ -250,11 +262,9 @@ export const resources: Resource[] = [
         width: 700,
         markers: [
           {
-            n: 1,
-            x: 62.5,
-            y: 59.5,
+            x: 66,
+            y: 28,
             note: "[Nodal Loads] 를 클릭합니다.",
-            box: { w: 7, h: 71 },
           },
         ],
       },
@@ -265,11 +275,11 @@ export const resources: Resource[] = [
         width: 400,
         markers: [
           {
-            n: 2,
             x: 43,
-            y: 71,
+            y: 70,
             note: "Load Case 를 DL 로 두고 Options 에서 Delete 를 선택해 Apply 합니다.",
-            box: { w: 80, h: 54 },
+            box: { w: 80, h: 56 },
+            numberCorner: "top-right",
           },
         ],
       },
@@ -280,11 +290,10 @@ export const resources: Resource[] = [
         width: 400,
         markers: [
           {
-            n: 3,
-            x: 42.5,
-            y: 51,
+            x: 42,
+            y: 16,
             note: "Load Case 를 LL 로 바꾸고 Delete 로 한 번 더 Apply 합니다.",
-            box: { w: 79, h: 94 },
+            box: { w: 82, h: 30 },
           },
         ],
       },
@@ -295,7 +304,7 @@ export const resources: Resource[] = [
           "① [Load] 탭 > [Static Loads] > [Assign Floor Loads]",
           "② 실별에 맞는 설계하중을 입력합니다.",
           "③ Allow Polygon Type Unit Area 체크 — 다각형 영역으로 하중을 넣기 위함입니다.",
-          "④ Convert to Beam Load Type 체크 — Floor Loads 를 Beam Loads 로 변환합니다. 이 체크가 있어야 다른 프로그램에서 읽을 수 있습니다.",
+          "④ **Convert to Beam Load Type 체크** — Floor Loads 를 Beam Loads 로 변환합니다. **이 체크가 있어야 다른 프로그램에서 읽을 수 있습니다.**",
           "⑤ Nodes Defining Loading Area 를 누르고 평면에서 영역을 선택한 뒤 ⑥ Apply.",
         ],
       },
@@ -310,7 +319,7 @@ export const resources: Resource[] = [
         type: "list",
         items: [
           "① Auto Generate Story Data 클릭 후 ② OK — Seismic·Wind Eccentricity 는 체크된 상태로 둡니다.",
-          "③ 층 이름을 BeST 이름과 일치시킵니다. 한글은 영문으로 바꿉니다 (예: 2F상부 → 2FUP).",
+          "③ 층 이름을 **BeST 이름과 일치**시킵니다. **한글은 영문으로** 바꿉니다 (예: 2F상부 → 2FUP).",
           "④ Ground Level 옆 […] 클릭.",
           "⑤ Consider Underground Seismic Loads 체크 후 Bedrock Level 에 최하층 높이를 확인해 기입합니다.",
         ],
@@ -322,11 +331,10 @@ export const resources: Resource[] = [
         width: 700,
         markers: [
           {
-            n: 1,
-            x: 11,
-            y: 75,
+            x: 13.2,
+            y: 87.2,
             note: "[Auto Generate Story Data…] 를 클릭합니다.",
-            box: { w: 20, h: 4 },
+            box: { w: 24.6, h: 4.8, borderWidth: 3 },
           },
         ],
       },
@@ -337,11 +345,11 @@ export const resources: Resource[] = [
         width: 500,
         markers: [
           {
-            n: 2,
-            x: 69,
-            y: 93.5,
+            x: 69.3,
+            y: 93.6,
             note: "층을 확인한 뒤 [OK] 를 클릭합니다.",
-            box: { w: 20, h: 7 },
+            box: { w: 20, h: 8.1, borderWidth: 3 },
+            numberCorner: "top-right",
           },
         ],
       },
@@ -352,11 +360,10 @@ export const resources: Resource[] = [
         width: 700,
         markers: [
           {
-            n: 3,
-            x: 24,
-            y: 44,
-            note: "Story Name 을 BeST 의 Story Name·벽부호와 일치하도록 수정합니다.",
-            box: { w: 12, h: 52 },
+            x: 28.2,
+            y: 50.5,
+            note: "Story Name 을 **BeST 의 Story Name·벽부호와 일치**하도록 수정합니다.",
+            box: { w: 14.5, h: 51.5 },
           },
         ],
       },
@@ -367,11 +374,11 @@ export const resources: Resource[] = [
         width: 500,
         markers: [
           {
-            n: 4,
             x: 40,
             y: 36,
             note: "[Consider Underground Seismic Loads] 체크 후 Bedrock Level 에 최하층 높이를 확인해 기입합니다.",
-            box: { w: 76, h: 13 },
+            box: { w: 80, h: 18 },
+            numberCorner: "top-right",
           },
         ],
       },
@@ -379,7 +386,7 @@ export const resources: Resource[] = [
       {
         type: "callout",
         tone: "warning",
-        text: "Name 은 무조건 영문과 언더바(_)만 사용합니다. 한글·괄호·하이픈이 남아 있으면 이후 단계에서 읽히지 않습니다.",
+        text: "Name 은 **무조건 영문과 언더바(_)만** 사용합니다. **한글·괄호·하이픈이 남아 있으면 이후 단계에서 읽히지 않습니다.**",
       },
       {
         type: "table",
@@ -425,14 +432,13 @@ export const resources: Resource[] = [
         type: "annotated-image",
         src: "/images/resources/pf3d-ads-to-gen/s2-6-material-naming.webp",
         alt: "Material 트리에서 C30·C27 처럼 이름을 통일한 항목과 파란 글자로 표시된 미사용 항목",
-        width: 402,
+        width: 392,
         markers: [
           {
-            n: 1,
-            x: 41.5,
+            x: 44,
             y: 25,
             note: "이름은 C 뒤에 바로 강도를 붙입니다 (C30, C27).",
-            box: { w: 41, h: 24 },
+            box: { w: 37, h: 24 },
           },
         ],
       },
@@ -447,11 +453,10 @@ export const resources: Resource[] = [
         width: 399,
         markers: [
           {
-            n: 1,
-            x: 32.5,
+            x: 48,
             y: 60.5,
-            note: "파란 글자는 미사용 항목 — 모두 삭제 대상입니다.",
-            box: { w: 65, h: 39 },
+            note: "**파란 글자는 미사용 항목 — 모두 삭제 대상입니다.**",
+            box: { w: 44, h: 39 },
           },
         ],
       },
@@ -462,7 +467,7 @@ export const resources: Resource[] = [
           "① 아무 mgt 파일이나 열어 Ctrl+F 로 *SECTION 을 찾습니다.",
           "② 한두 줄을 복사해 엑셀에 붙여넣습니다 (세로줄이 맞는 것으로 복사).",
           "③ [데이터] > [텍스트 나누기](Alt+D+E) 에서 '너비가 일정함' 체크 후 마침.",
-          "④ 칸이 나뉘면 필요한 개수만큼 복사해 Section ID·Name·단면 정보를 수정합니다. 쉼표는 지우면 안 됩니다.",
+          "④ 칸이 나뉘면 필요한 개수만큼 복사해 Section ID·Name·단면 정보를 수정합니다. **쉼표는 지우면 안 됩니다.**",
           "⑤ 전체를 복사해 Gen 의 [Tools] > [MGT Command Shell] 로 옮깁니다.",
           "⑥ Command or Data 에 *SECTION 을 정확히 입력하고 Insert Command → 아래에 엑셀 내용 붙여넣기 → Run.",
         ],
@@ -518,18 +523,14 @@ export const resources: Resource[] = [
         width: 629,
         markers: [
           {
-            n: 1,
-            x: 68.3,
-            y: 34,
+            x: 72,
+            y: 32,
             note: "[Masses] 를 클릭합니다.",
-            box: { w: 4.7, h: 22 },
           },
           {
-            n: 2,
-            x: 72,
-            y: 58.7,
+            x: 88,
+            y: 64,
             note: "[Loads to Masses] 를 선택합니다.",
-            box: { w: 11, h: 7.7 },
           },
         ],
       },
@@ -540,18 +541,16 @@ export const resources: Resource[] = [
         width: 360,
         markers: [
           {
-            n: 1,
             x: 50,
             y: 14.7,
             note: "Mass Direction 은 X, Y 를 선택합니다.",
-            box: { w: 94, h: 15.6 },
+            box: { w: 94, h: 18 },
           },
           {
-            n: 2,
             x: 50,
-            y: 62.7,
+            y: 56,
             note: "Load Case 는 DL, Scale Factor 는 1 로 입력하고 Add 를 클릭합니다.",
-            box: { w: 94, h: 23.4 },
+            box: { w: 94, h: 5 },
           },
         ],
       },
@@ -562,11 +561,9 @@ export const resources: Resource[] = [
         width: 500,
         markers: [
           {
-            n: 1,
-            x: 19.5,
-            y: 64,
+            x: 28,
+            y: 40,
             note: "[Structure Type] 을 클릭합니다.",
-            box: { w: 17, h: 56 },
           },
         ],
       },
@@ -577,11 +574,10 @@ export const resources: Resource[] = [
         width: 620,
         markers: [
           {
-            n: 1,
-            x: 44.7,
+            x: 48,
             y: 56,
             note: "[Convert Self-weight into Masses] 를 체크하고 [Convert to X, Y] 를 선택합니다.",
-            box: { w: 86.6, h: 8.9 },
+            box: { w: 94, h: 12 },
           },
         ],
       },
@@ -589,14 +585,14 @@ export const resources: Resource[] = [
       {
         type: "callout",
         tone: "warning",
-        text: "여기서 실수가 가장 많이 납니다. BeST 의 Story Name·벽부호와 Wall Mark 를 일치시키고, 지하외벽에는 Wall Mark 를 지정하지 않습니다.",
+        text: "**여기서 실수가 가장 많이 납니다.** BeST 의 **Story Name·벽부호와 Wall Mark 를 일치**시키고, **지하외벽에는 Wall Mark 를 지정하지 않습니다.**",
       },
       {
         type: "list",
         items: [
           "[Design] 탭 > [RC Design] > [Modify Wall Mark Data] 를 엽니다.",
           "① 벽체 리스트와 같은 위치의 Name 을 적고 ② 해당 위치의 벽을 선택한 뒤 ③ Add.",
-          "지하외벽과 다른 벽체의 Wall ID 가 겹칠 때는 [Alt+9] > [Change Element Parameters] 에서 Wall ID 를 선택하고, 전혀 겹치지 않는 번호(예: 5000, 777)를 Fixed No. 로 입력합니다.",
+          "지하외벽과 다른 벽체의 Wall ID 가 겹칠 때는 [Alt+9] > [Change Element Parameters] 에서 Wall ID 를 선택하고, **전혀 겹치지 않는 번호**(예: 5000, 777)를 Fixed No. 로 입력합니다.",
         ],
       },
       {
@@ -615,10 +611,10 @@ export const resources: Resource[] = [
       {
         type: "list",
         items: [
-          "① 단위를 kN, cm 로 변환합니다.",
+          "① 단위를 **kN, cm** 로 변환합니다.",
           "② Node Table 을 엽니다 (Ctrl+Alt+N).",
           "③④ 전체를 선택해 복사한 뒤 엑셀에 붙여넣습니다.",
-          "⑤⑥ 전체 선택 후 '자릿수 늘림'을 클릭하고 이어서 '자릿수 줄임'을 클릭합니다. 곧바로 줄임만 누르면 반응하지 않습니다.",
+          "⑤⑥ 전체 선택 후 **'자릿수 늘림'** 을 클릭하고 **이어서 '자릿수 줄임'** 을 클릭합니다. **곧바로 줄임만 누르면 반응하지 않습니다.**",
         ],
       },
       {
@@ -628,11 +624,11 @@ export const resources: Resource[] = [
         width: 400,
         markers: [
           {
-            n: 1,
-            x: 43.5,
-            y: 91.3,
+            x: 40,
+            y: 93,
             note: "힘 단위는 kN, 길이 단위는 cm 로 맞춥니다.",
-            box: { w: 87, h: 11.5 },
+            box: { w: 80, h: 14, borderWidth: 3 },
+            numberCorner: "top-right",
           },
         ],
       },
@@ -643,11 +639,9 @@ export const resources: Resource[] = [
         width: 700,
         markers: [
           {
-            n: 2,
-            x: 82,
-            y: 31.5,
+            x: 90,
+            y: 20,
             note: "[Nodes Table] 을 클릭합니다 (Ctrl+Alt+N).",
-            box: { w: 6, h: 26 },
           },
         ],
       },
@@ -658,11 +652,11 @@ export const resources: Resource[] = [
         width: 700,
         markers: [
           {
-            n: 3,
-            x: 77.5,
-            y: 16.7,
-            note: "전체 선택 후 '자릿수 늘림'을 클릭하고 이어서 '자릿수 줄임'을 클릭합니다. 곧바로 줄임만 누르면 반응하지 않습니다.",
-            box: { w: 4.2, h: 4.5 },
+            x: 96.5,
+            y: 21,
+            note: "전체 선택 후 **'자릿수 늘림'** 을 클릭하고 **이어서 '자릿수 줄임'** 을 클릭합니다. **곧바로 줄임만 누르면 반응하지 않습니다.**",
+            box: { w: 7, h: 7, borderWidth: 2 },
+            numberCorner: "top-left",
           },
         ],
       },
@@ -682,11 +676,9 @@ export const resources: Resource[] = [
         width: 800,
         markers: [
           {
-            n: 1,
-            x: 63.4,
-            y: 47.6,
+            x: 90,
+            y: 38,
             note: "[Seismic Loads] 를 클릭합니다.",
-            box: { w: 4, h: 35.7 },
           },
         ],
       },
@@ -697,11 +689,11 @@ export const resources: Resource[] = [
         width: 500,
         markers: [
           {
-            n: 2,
-            x: 88.4,
+            x: 88.7,
             y: 14.6,
             note: "[Add] 를 클릭합니다.",
-            box: { w: 20, h: 6.4 },
+            box: { w: 21.6, h: 7, borderWidth: 3 },
+            numberCorner: "top-left",
           },
         ],
       },
@@ -716,7 +708,6 @@ export const resources: Resource[] = [
         width: 500,
         markers: [
           {
-            n: 3,
             x: 50.5,
             y: 66.6,
             note: "Seismic Zone·EPA(S)·Site Class·Importance 를 설계개요와 같은 값으로 입력합니다.",
@@ -732,11 +723,10 @@ export const resources: Resource[] = [
           width: 312,
           markers: [
             {
-              n: 4,
-              x: 93.7,
-              y: 47.4,
+              x: 93,
+              y: 48,
               note: "Approximate Period 옆 […] 버튼을 클릭해 Period Calculator 를 엽니다. Response Modification Factor(R) 도 함께 입력합니다.",
-              box: { w: 7.1, h: 10.3 },
+              box: { w: 9, h: 16, borderWidth: 2 },
               hideNumber: true,
             },
           ],
@@ -747,18 +737,18 @@ export const resources: Resource[] = [
           width: 312,
           markers: [
             {
-              n: 5,
               x: 50,
-              y: 49,
+              y: 49.5,
               note: "건물 유형에 맞는 산정식을 선택합니다 (예: 4. T = 0.0488hn^0.75). hn·N 은 자동으로 채워집니다.",
-              box: { w: 100, h: 6.9 },
+              box: { w: 98, h: 10, borderWidth: 2 },
+              numberCorner: "top-center",
             },
             {
-              n: 6,
-              x: 66.5,
-              y: 91.5,
+              x: 67,
+              y: 93,
               note: "[OK] 를 클릭해 계산된 고유주기를 반영합니다.",
-              box: { w: 21, h: 9 },
+              box: { w: 21, h: 12, borderWidth: 2 },
+              numberCorner: "top-right",
             },
           ],
         },
@@ -770,18 +760,17 @@ export const resources: Resource[] = [
         width: 500,
         markers: [
           {
-            n: 7,
             x: 49.7,
             y: 7.4,
-            note: "Load Case Name 은 EX 로 두고 X-Direction 1 / Y-Direction 0 을 입력합니다. (EY 케이스는 X-Direction 0 / Y-Direction 1)",
-            box: { w: 95.6, h: 13 },
+            note: "Load Case Name 은 EX 로 두고 **X-Direction 1 / Y-Direction 0** 을 입력합니다. (**EY 케이스는 X-Direction 0 / Y-Direction 1**)",
+            box: { w: 97, h: 13 },
           },
           {
-            n: 8,
-            x: 86.1,
-            y: 92.8,
-            note: "입력 후 Apply. EX·EY 두 케이스 모두 입력했다면 OK 로 닫습니다.",
-            box: { w: 22.7, h: 7 },
+            x: 85.3,
+            y: 95,
+            note: "입력 후 Apply. **EX·EY 두 케이스 모두** 입력했다면 OK 로 닫습니다.",
+            box: { w: 26.4, h: 9, borderWidth: 3 },
+            numberCorner: "top-left",
           },
         ],
       },
@@ -792,11 +781,10 @@ export const resources: Resource[] = [
         width: 700,
         markers: [
           {
-            n: 3,
-            x: 21.6,
-            y: 85.2,
+            x: 21.8,
+            y: 85.5,
             note: "[Make Seismic Load Calc. Sheet] 를 클릭해 spf 파일로 저장합니다.",
-            box: { w: 38.6, h: 4.5 },
+            box: { w: 39.5, h: 4.5, borderWidth: 3 },
           },
         ],
       },
@@ -808,18 +796,14 @@ export const resources: Resource[] = [
         width: 600,
         markers: [
           {
-            n: 1,
-            x: 16.3,
-            y: 46,
+            x: 16,
+            y: 45,
             note: "[Export] 를 클릭합니다.",
-            box: { w: 32.7, h: 4 },
           },
           {
-            n: 2,
-            x: 62.7,
-            y: 12.3,
+            x: 68,
+            y: 11,
             note: "[MGTX file (for GEN NX)] 을 클릭해 mgt 파일로 저장합니다.",
-            box: { w: 57.5, h: 3.7 },
           },
         ],
       },
@@ -827,14 +811,14 @@ export const resources: Resource[] = [
       {
         type: "callout",
         tone: "info",
-        text: "BeST Pro 작업에는 Lock key 가 필요합니다.",
+        text: "BeST Pro 작업에는 **Lock key 가 필요합니다.**",
       },
       {
         type: "list",
         items: [
           "① BeST Pro 에서 [RC] > [batch Wall] 클릭.",
           "② Excel 로 출력 → ③ 출력할 벽체 선택 창에서 바로 OK.",
-          "④ Excel 파일을 저장한 뒤 열어 ⑤ 배근이 '개수'로 표현된 부재를 찾습니다 (예: 14-D10).",
+          "④ Excel 파일을 저장한 뒤 열어 ⑤ **배근이 '개수'로 표현된 부재**를 찾습니다 (예: 14-D10).",
         ],
       },
       {
@@ -860,13 +844,13 @@ export const resources: Resource[] = [
         type: "list",
         items: [
           "① [배근형식 변경] 에서 '간격으로 입력(단부보강근 사용)' 선택.",
-          "② 철근 개수를 0 으로 만듭니다 (Alt+Enter 를 누르면 아래 박스에 복사됩니다).",
+          "② **철근 개수를 0 으로** 만듭니다 (Alt+Enter 를 누르면 아래 박스에 복사됩니다).",
           "③ 간격을 계산해 입력합니다.",
         ],
       },
       {
         type: "paragraph",
-        text: "간격 = { L − (2dc + df) } ÷ (N/2 − 1). 여기서 L 은 벽 길이, dc 는 피복 두께, df 는 전단 철근 직경, N 은 수직 철근 개수입니다. 철근이 2줄로 배근되므로 개수를 2로 나눕니다.",
+        text: "**간격 = { L − (2dc + df) } ÷ (N/2 − 1).** 여기서 L 은 벽 길이, dc 는 피복 두께, df 는 전단 철근 직경, N 은 수직 철근 개수입니다. **철근이 2줄로 배근되므로 개수를 2로 나눕니다.**",
       },
       {
         type: "callout",
