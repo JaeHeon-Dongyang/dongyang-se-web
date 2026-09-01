@@ -1,6 +1,6 @@
 /**
- * "질문하기"(/ask)는 사내 전용 AI 노트북 창구다. 외부망에서는 middleware.ts 가
- * not-found 를 반환하므로 메뉴를 눌러도 열리지 않는다.
+ * "질문하기"(/ask)와 "기술자료"(/resources)는 사내 전용이다. 외부망에서는
+ * middleware.ts 가 not-found 를 반환하므로 메뉴를 눌러도 열리지 않는다.
  */
 export const primaryNav = [
   { label: "홈", href: "/" },
