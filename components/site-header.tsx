@@ -26,34 +26,36 @@ export function SiteHeader({
           <LogoHorizontal />
         </Link>
 
-        <nav aria-label="주요 내비게이션" className="hidden items-center gap-1 md:flex">
-          {navItems.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "text-body-text hover:text-brand focus-visible:ring-focus-ring rounded-md px-4 py-2 text-base font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
-                  active && "text-brand",
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="flex items-center gap-6 md:gap-8">
+          <nav aria-label="주요 내비게이션" className="hidden items-center gap-1 md:flex">
+            {navItems.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "text-body-text hover:text-brand focus-visible:ring-focus-ring rounded-md px-4 py-2 text-base font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                    active && "text-brand",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
 
-        <div className="flex items-center gap-2">
-          <Link
-            href={contactNav.href}
-            aria-label={contactNav.label}
-            title={contactNav.label}
-            className="bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring hidden items-center justify-center rounded-full p-3 transition-colors focus-visible:ring-2 focus-visible:outline-none md:inline-flex"
-          >
-            <Mail className="size-5 shrink-0" aria-hidden="true" />
-          </Link>
-          <MobileNav navItems={navItems} />
+          <div className="flex items-center gap-2">
+            <Link
+              href={contactNav.href}
+              aria-label={contactNav.label}
+              title={contactNav.label}
+              className="bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring hidden items-center justify-center rounded-full p-3 transition-colors focus-visible:ring-2 focus-visible:outline-none md:inline-flex"
+            >
+              <Mail className="size-5 shrink-0" aria-hidden="true" />
+            </Link>
+            <MobileNav navItems={navItems} />
+          </div>
         </div>
       </div>
     </header>
