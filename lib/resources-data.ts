@@ -13,37 +13,47 @@ export type ContentBlock =
   | { type: "table"; headers: string[]; rows: string[][] }
   | { type: "video"; label: string; url: string; description?: string }
   | {
-    type: "video-story";
-    eyebrow: string;
-    title: string;
-    paragraphs: string[];
-    comparison: {
-      leftLabel: string;
-      leftText: string;
-      rightLabel: string;
-      rightText: string;
-    };
-    note?: string;
-    video: { label: string; url: string };
-  }
+      type: "video-story";
+      eyebrow: string;
+      title: string;
+      paragraphs: string[];
+      comparison: {
+        leftLabel: string;
+        leftText: string;
+        rightLabel: string;
+        rightText: string;
+      };
+      note?: string;
+      video: { label: string; url: string };
+    }
   | { type: "image"; src: string; alt: string; caption?: string }
   | {
-    // 주석 없는 원본 스크린샷 위에 번호를 CSS 로 얹는다. x·y 는 이미지 기준 백분율.
-    type: "annotated-image";
-    src: string;
-    alt: string;
-    width: number;
-    caption?: string;
-    markers: {
-      n: number;
-      x: number;
-      y: number;
-      note: string;
-      // 번호 원 대신/추가로 영역을 감싸는 테두리 박스. w·h 는 이미지 기준 백분율, x·y 는 박스 중심.
-      box?: { w: number; h: number };
-    }[];
-  }
+      // 주석 없는 원본 스크린샷 위에 번호를 CSS 로 얹는다. x·y 는 이미지 기준 백분율.
+      type: "annotated-image";
+      src: string;
+      alt: string;
+      width: number;
+      caption?: string;
+      markers: ImageMarker[];
+    }
+  | {
+      // 이미지 두 장을 화살표로 이어 가로로 배치 (예: 버튼 클릭 → 열리는 창).
+      type: "image-pair";
+      left: { src: string; alt: string; width: number; markers: ImageMarker[] };
+      right: { src: string; alt: string; width: number; markers: ImageMarker[] };
+    }
   | { type: "link"; label: string; url: string; description?: string };
+
+export type ImageMarker = {
+  n: number;
+  x: number;
+  y: number;
+  note: string;
+  // 번호 원 대신/추가로 영역을 감싸는 테두리 박스. w·h 는 이미지 기준 백분율, x·y 는 박스 중심.
+  box?: { w: number; h: number };
+  // 이미지가 이미 한 동작만 보여주도록 잘려있어 번호 배지가 불필요할 때 이미지 위 배지만 숨김 (목록의 번호는 유지).
+  hideNumber?: boolean;
+};
 
 export type Attachment = {
   name: string;
@@ -149,9 +159,9 @@ export const resources: Resource[] = [
           {
             n: 3,
             x: 75,
-            y: 81,
+            y: 80.5,
             note: "[Frame Model to MIDAS/Gen…] 을 클릭해 mgt 파일로 저장합니다.",
-            box: { w: 44, h: 7 }
+            box: { w: 44, h: 7 },
           },
         ],
       },
@@ -161,10 +171,26 @@ export const resources: Resource[] = [
         text: "변환된 모델은 그대로 쓸 수 없습니다. 지하외벽을 만들고, ADS 에서 따라온 불필요한 데이터를 지우고, 하중·질량·이름·단위를 PF3D 가 읽을 수 있는 형태로 맞춥니다.",
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/03-gen-import.webp",
-        alt: "midas Gen 의 Import > midas Gen MGT File 메뉴 위치",
-        caption: "2-1. ADS 에서 뽑은 mgt 파일 Import",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-1-import-menu.webp",
+        alt: "midas Gen 의 Import > MGT or MGTX file 메뉴 위치",
+        width: 500,
+        markers: [
+          {
+            n: 1,
+            x: 17.5,
+            y: 42.6,
+            note: "[Import] 를 클릭합니다.",
+            box: { w: 35, h: 4 },
+          },
+          {
+            n: 2,
+            x: 67,
+            y: 12.6,
+            note: "[MGT or MGTX file (for GEN/GEN NX)] 을 클릭해 mgt 파일을 Import 합니다.",
+            box: { w: 62, h: 4 },
+          },
+        ],
       },
       { type: "heading", text: "2-2. 지하외벽 생성", id: "basement-wall" },
       {
@@ -199,20 +225,68 @@ export const resources: Resource[] = [
         text: "순서는 중요하지 않지만 노드 정리는 반드시 마지막에 합니다. F12 로도 지워지지 않는 노드는 충분히 확인한 뒤 삭제하세요.",
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/05-cleanup-tree.webp",
-        alt: "midas Gen 트리 메뉴에서 삭제 대상 항목을 표시한 화면",
-        caption: "2-3. 트리에서 확인하며 정리",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-3-boundaries-tree.webp",
+        alt: "midas Gen 트리 메뉴의 Boundaries > Supports·Rigid Link 항목",
+        width: 807,
+        markers: [
+          {
+            n: 1,
+            x: 28.5,
+            y: 62,
+            note: "Supports·Rigid Link 를 모두 삭제한 뒤 다시 생성합니다.",
+            box: { w: 57, h: 60 },
+          },
+        ],
       },
       {
         type: "paragraph",
         text: "Nodal Loads 삭제는 전이층 아래 골조 부분을 선택한 뒤 [Load] 탭 > [Static Loads] > [Nodal Loads] 에서 Delete 로 Apply 하고, Load Case 를 LL 로 바꿔 한 번 더 Apply 합니다.",
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/06-nodal-loads-delete.webp",
-        alt: "Nodal Loads 대화상자에서 Delete 옵션으로 DL·LL 하중을 삭제하는 화면",
-        caption: "2-3 ④. DL 로 한 번, LL 로 한 번 Apply",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-3-nodal-loads-menu.webp",
+        alt: "Load 탭에서 Nodal Loads 를 선택하는 화면",
+        width: 700,
+        markers: [
+          {
+            n: 1,
+            x: 62.5,
+            y: 59.5,
+            note: "[Nodal Loads] 를 클릭합니다.",
+            box: { w: 7, h: 71 },
+          },
+        ],
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-3-nodal-loads-dl.webp",
+        alt: "Nodal Loads 창에서 Load Case DL, Delete 옵션을 선택하는 화면",
+        width: 400,
+        markers: [
+          {
+            n: 2,
+            x: 43,
+            y: 71,
+            note: "Load Case 를 DL 로 두고 Options 에서 Delete 를 선택해 Apply 합니다.",
+            box: { w: 80, h: 54 },
+          },
+        ],
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-3-nodal-loads-ll.webp",
+        alt: "Nodal Loads 창에서 Load Case LL, Delete 옵션을 선택하는 화면",
+        width: 400,
+        markers: [
+          {
+            n: 3,
+            x: 42.5,
+            y: 51,
+            note: "Load Case 를 LL 로 바꾸고 Delete 로 한 번 더 Apply 합니다.",
+            box: { w: 79, h: 94 },
+          },
+        ],
       },
       { type: "heading", text: "2-4. 골조부분 Floor Beam Loads 입력", id: "floor-loads" },
       {
@@ -242,16 +316,64 @@ export const resources: Resource[] = [
         ],
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/08-story-data.webp",
-        alt: "Story Data 창과 Automatic Generation of Story Data 창",
-        caption: "2-5 ①②. Story Data 자동 생성",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-5-story-data-empty.webp",
+        alt: "빈 Story Data 창에서 Auto Generate Story Data 버튼",
+        width: 700,
+        markers: [
+          {
+            n: 1,
+            x: 11,
+            y: 75,
+            note: "[Auto Generate Story Data…] 를 클릭합니다.",
+            box: { w: 20, h: 4 },
+          },
+        ],
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/09-story-name-bedrock.webp",
-        alt: "Story Data 의 층 이름 수정과 Building Control 의 Bedrock Level 입력 화면",
-        caption: "2-5 ③④⑤. 층 이름 일치와 Bedrock Level 입력",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-5-story-data-auto.webp",
+        alt: "Automatic Generation of Story Data 창에서 층을 선택해 넘기는 화면",
+        width: 500,
+        markers: [
+          {
+            n: 2,
+            x: 69,
+            y: 93.5,
+            note: "층을 확인한 뒤 [OK] 를 클릭합니다.",
+            box: { w: 20, h: 7 },
+          },
+        ],
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-5-story-data-complete.webp",
+        alt: "자동 생성된 Story Data 결과 — Story Name 을 실제 층 이름으로 수정",
+        width: 700,
+        markers: [
+          {
+            n: 3,
+            x: 24,
+            y: 44,
+            note: "Story Name 을 BeST 의 Story Name·벽부호와 일치하도록 수정합니다.",
+            box: { w: 12, h: 52 },
+          },
+        ],
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-5-building-control.webp",
+        alt: "Building Control 창에서 Bedrock Level 을 입력하는 화면",
+        width: 500,
+        markers: [
+          {
+            n: 4,
+            x: 40,
+            y: 36,
+            note: "[Consider Underground Seismic Loads] 체크 후 Bedrock Level 에 최하층 높이를 확인해 기입합니다.",
+            box: { w: 76, h: 13 },
+          },
+        ],
       },
       { type: "heading", text: "2-6. Name 정리", id: "naming" },
       {
@@ -296,10 +418,42 @@ export const resources: Resource[] = [
         caption: "2-6-2. 한 층에만 있는 부재는 부재만 나누면 됨",
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/13-material-unused-delete.webp",
-        alt: "재료 목록의 이름 통일과 사용되지 않아 파란 글자로 표시된 항목",
-        caption: "2-6-3·4. 재료명 통일, 사용되지 않는 부재·재료(파란 글자)는 모두 삭제",
+        type: "paragraph",
+        text: "2-6-3. 재료명은 C 뒤에 바로 강도를 붙여 통일합니다 (예: C24, C27, C30).",
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-6-material-naming.webp",
+        alt: "Material 트리에서 C30·C27 처럼 이름을 통일한 항목과 파란 글자로 표시된 미사용 항목",
+        width: 402,
+        markers: [
+          {
+            n: 1,
+            x: 41.5,
+            y: 25,
+            note: "이름은 C 뒤에 바로 강도를 붙입니다 (C30, C27).",
+            box: { w: 41, h: 24 },
+          },
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "2-6-4. 부재로 사용되지 않아 파란 글자로 표시된 항목은 위치·종류 상관없이 모두 삭제합니다.",
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-6-section-unused.webp",
+        alt: "Section 트리에서 파란 글자로 표시된 미사용 항목",
+        width: 399,
+        markers: [
+          {
+            n: 1,
+            x: 32.5,
+            y: 60.5,
+            note: "파란 글자는 미사용 항목 — 모두 삭제 대상입니다.",
+            box: { w: 65, h: 39 },
+          },
+        ],
       },
       { type: "heading", text: "팁 · 부재 Name 한 번에 만들기", id: "naming-tip" },
       {
@@ -358,16 +512,78 @@ export const resources: Resource[] = [
         ],
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/20-loads-to-masses.webp",
-        alt: "Loads to Masses 대화상자에서 DL 하중을 질량으로 변환하는 화면",
-        caption: "2-7-1. Load to Mass",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-7-loads-to-masses-menu.webp",
+        alt: "Load 탭에서 Masses > Loads to Masses 를 선택하는 화면",
+        width: 629,
+        markers: [
+          {
+            n: 1,
+            x: 68.3,
+            y: 34,
+            note: "[Masses] 를 클릭합니다.",
+            box: { w: 4.7, h: 22 },
+          },
+          {
+            n: 2,
+            x: 72,
+            y: 58.7,
+            note: "[Loads to Masses] 를 선택합니다.",
+            box: { w: 11, h: 7.7 },
+          },
+        ],
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/21-self-weight-mass.webp",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-7-loads-to-masses-dialog.webp",
+        alt: "Loads to Masses 대화상자에서 DL 하중을 질량으로 변환하는 화면",
+        width: 360,
+        markers: [
+          {
+            n: 1,
+            x: 50,
+            y: 14.7,
+            note: "Mass Direction 은 X, Y 를 선택합니다.",
+            box: { w: 94, h: 15.6 },
+          },
+          {
+            n: 2,
+            x: 50,
+            y: 62.7,
+            note: "Load Case 는 DL, Scale Factor 는 1 로 입력하고 Add 를 클릭합니다.",
+            box: { w: 94, h: 23.4 },
+          },
+        ],
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-7-structure-type-menu.webp",
+        alt: "Structure 탭에서 Structure Type 을 선택하는 화면",
+        width: 500,
+        markers: [
+          {
+            n: 1,
+            x: 19.5,
+            y: 64,
+            note: "[Structure Type] 을 클릭합니다.",
+            box: { w: 17, h: 56 },
+          },
+        ],
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-7-structure-type-dialog.webp",
         alt: "Structure Type 대화상자의 Convert Self-weight into Masses 체크 화면",
-        caption: "2-7-2. Self Weight 를 질량으로 변환",
+        width: 620,
+        markers: [
+          {
+            n: 1,
+            x: 44.7,
+            y: 56,
+            note: "[Convert Self-weight into Masses] 를 체크하고 [Convert to X, Y] 를 선택합니다.",
+            box: { w: 86.6, h: 8.9 },
+          },
+        ],
       },
       { type: "heading", text: "2-8. Wall Mark 생성", id: "wall-mark" },
       {
@@ -406,46 +622,206 @@ export const resources: Resource[] = [
         ],
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/24-units-coordinates.webp",
-        alt: "단위 변경, Node Table, 엑셀 자릿수 조정 화면",
-        caption: "2-9. 단위 kN·cm 변환과 좌표 자릿수 정리",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-8-units-dropdown.webp",
+        alt: "단위를 kN, cm 로 변경하는 드롭다운",
+        width: 400,
+        markers: [
+          {
+            n: 1,
+            x: 43.5,
+            y: 91.3,
+            note: "힘 단위는 kN, 길이 단위는 cm 로 맞춥니다.",
+            box: { w: 87, h: 11.5 },
+          },
+        ],
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-8-nodes-table-menu.webp",
+        alt: "Node/Element 탭에서 Nodes Table 을 여는 화면",
+        width: 700,
+        markers: [
+          {
+            n: 2,
+            x: 82,
+            y: 31.5,
+            note: "[Nodes Table] 을 클릭합니다 (Ctrl+Alt+N).",
+            box: { w: 6, h: 26 },
+          },
+        ],
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-8-nodes-excel-paste.webp",
+        alt: "Node Table 을 엑셀에 붙여넣고 자릿수를 정리하는 화면",
+        width: 700,
+        markers: [
+          {
+            n: 3,
+            x: 77.5,
+            y: 16.7,
+            note: "전체 선택 후 '자릿수 늘림'을 클릭하고 이어서 '자릿수 줄임'을 클릭합니다. 곧바로 줄임만 누르면 반응하지 않습니다.",
+            box: { w: 4.2, h: 4.5 },
+          },
+        ],
       },
       { type: "heading", text: "2-10. 지진하중", id: "seismic" },
       {
         type: "list",
         items: [
           "① [Load] 탭 > [Lateral] 그룹 > [Seismic Loads] > ② Add.",
-          "③ 해당 건물 설계개요의 지진하중 파트를 보고 값을 입력합니다 — 지진구역·지역계수·지반계수·중요도계수·감쇠비·고유주기·반응수정계수.",
-          "Load Case Name 은 EX 로 두고, X-Direction 1 / Y-Direction 0 을 기입한 뒤 Apply.",
-          "이어서 Load Case Name 을 EY 로, X-Direction 0 / Y-Direction 1 로만 바꿔 OK.",
+          "③ 설계개요 값 입력, EX·EY 두 케이스 생성 (아래 화면 참고).",
           "④ Seismic Load Profile 에서 Make Seismic Load Calc. Sheet 로 spf 파일을 저장합니다.",
         ],
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/25-seismic-load-add.webp",
-        alt: "Seismic Loads 메뉴 위치와 Static Seismic Loads 창의 Add 버튼",
-        caption: "2-10 ①②. 지진하중 추가",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-10-seismic-loads-menu.webp",
+        alt: "Load 탭의 Lateral 그룹에서 Seismic Loads 를 선택하는 화면",
+        width: 800,
+        markers: [
+          {
+            n: 1,
+            x: 63.4,
+            y: 47.6,
+            note: "[Seismic Loads] 를 클릭합니다.",
+            box: { w: 4, h: 35.7 },
+          },
+        ],
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/26-seismic-input.webp",
-        alt: "설계개요 지진하중 표와 Add/Modify Seismic Load Specification 입력 화면",
-        caption: "2-10 ③. 설계개요 값을 그대로 입력, EX·EY 두 케이스 생성",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-10-seismic-loads-dialog.webp",
+        alt: "Static Seismic Loads 창에서 Add 버튼을 누르는 화면",
+        width: 500,
+        markers: [
+          {
+            n: 2,
+            x: 88.4,
+            y: 14.6,
+            note: "[Add] 를 클릭합니다.",
+            box: { w: 20, h: 6.4 },
+          },
+        ],
       },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/27-seismic-spf-save.webp",
-        alt: "Seismic Load Profile 창에서 계산 시트를 저장하는 화면",
-        caption: "2-10 ④. spf 파일로 저장",
+        type: "paragraph",
+        text: "해당 건물 설계개요의 지진하중 파트(지진구역·지역계수·지반계수·중요도계수·감쇠비·반응수정계수)를 보고 아래 Add/Modify Seismic Load Specification 창에 그대로 입력합니다. 고유주기는 직접 계산하는 대신 Approximate Period 옆 […] 버튼으로 Period Calculator 를 열어 자동 산출합니다.",
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-10-seismic-load-spec-01.webp",
+        alt: "Add/Modify Seismic Load Specification 창 상단 — Seismic Zone·EPA(S)·Site Class·Importance 입력",
+        width: 500,
+        markers: [
+          {
+            n: 3,
+            x: 50.5,
+            y: 66.6,
+            note: "Seismic Zone·EPA(S)·Site Class·Importance 를 설계개요와 같은 값으로 입력합니다.",
+            hideNumber: true,
+          },
+        ],
+      },
+      {
+        type: "image-pair",
+        left: {
+          src: "/images/resources/pf3d-ads-to-gen/s2-10-seismic-load-spec-02.webp",
+          alt: "Structural Parameters — Approximate Period 옆 […] 버튼",
+          width: 312,
+          markers: [
+            {
+              n: 4,
+              x: 93.7,
+              y: 47.4,
+              note: "Approximate Period 옆 […] 버튼을 클릭해 Period Calculator 를 엽니다. Response Modification Factor(R) 도 함께 입력합니다.",
+              box: { w: 7.1, h: 10.3 },
+              hideNumber: true,
+            },
+          ],
+        },
+        right: {
+          src: "/images/resources/pf3d-ads-to-gen/s2-10-period-calculator.webp",
+          alt: "KDS 41-17 Period Calculator 창에서 고유주기 산정식을 선택하는 화면",
+          width: 312,
+          markers: [
+            {
+              n: 5,
+              x: 50,
+              y: 49,
+              note: "건물 유형에 맞는 산정식을 선택합니다 (예: 4. T = 0.0488hn^0.75). hn·N 은 자동으로 채워집니다.",
+              box: { w: 100, h: 6.9 },
+            },
+            {
+              n: 6,
+              x: 66.5,
+              y: 91.5,
+              note: "[OK] 를 클릭해 계산된 고유주기를 반영합니다.",
+              box: { w: 21, h: 9 },
+            },
+          ],
+        },
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-10-seismic-load-spec-03.webp",
+        alt: "Seismic Load Direction Factor 입력과 Apply/OK 버튼",
+        width: 500,
+        markers: [
+          {
+            n: 7,
+            x: 49.7,
+            y: 7.4,
+            note: "Load Case Name 은 EX 로 두고 X-Direction 1 / Y-Direction 0 을 입력합니다. (EY 케이스는 X-Direction 0 / Y-Direction 1)",
+            box: { w: 95.6, h: 13 },
+          },
+          {
+            n: 8,
+            x: 86.1,
+            y: 92.8,
+            note: "입력 후 Apply. EX·EY 두 케이스 모두 입력했다면 OK 로 닫습니다.",
+            box: { w: 22.7, h: 7 },
+          },
+        ],
+      },
+      {
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-10-seismic-spf-save.webp",
+        alt: "Seismic Load Profile 창에서 Make Seismic Load Calc. Sheet 로 spf 파일을 저장하는 화면",
+        width: 700,
+        markers: [
+          {
+            n: 3,
+            x: 21.6,
+            y: 85.2,
+            note: "[Make Seismic Load Calc. Sheet] 를 클릭해 spf 파일로 저장합니다.",
+            box: { w: 38.6, h: 4.5 },
+          },
+        ],
       },
       { type: "heading", text: "2-11. 모델링 mgt 파일 Export", id: "gen-export" },
       {
-        type: "image",
-        src: "/images/resources/pf3d-ads-to-gen/28-gen-export-mgt.webp",
-        alt: "midas Gen 의 Export > midas Gen MGT File 메뉴 위치",
-        caption: "2-11. 정리된 모델을 mgt 로 Export",
+        type: "annotated-image",
+        src: "/images/resources/pf3d-ads-to-gen/s2-11-gen-export-menu.webp",
+        alt: "midas Gen 의 Export > MGTX file (for GEN NX) 메뉴 위치",
+        width: 600,
+        markers: [
+          {
+            n: 1,
+            x: 16.3,
+            y: 46,
+            note: "[Export] 를 클릭합니다.",
+            box: { w: 32.7, h: 4 },
+          },
+          {
+            n: 2,
+            x: 62.7,
+            y: 12.3,
+            note: "[MGTX file (for GEN NX)] 을 클릭해 mgt 파일로 저장합니다.",
+            box: { w: 57.5, h: 3.7 },
+          },
+        ],
       },
       { type: "heading", text: "3. Wall 배근 리스트", id: "wall-rebar" },
       {
