@@ -6,10 +6,12 @@ import { z } from "zod";
  */
 
 export const inquiryTypes = [
-  { value: "business", label: "사업 문의" },
-  { value: "technical", label: "기술 문의" },
-  { value: "pf3d", label: "PF3D 문의" },
-  { value: "other", label: "기타 문의" },
+  { value: "structural", label: "구조설계" },
+  { value: "safety", label: "안전점검·진단" },
+  { value: "construction", label: "공사 중 안전관리" },
+  { value: "demolition", label: "해체공사 구조검토" },
+  { value: "technical", label: "기술 자료" },
+  { value: "other", label: "기타" },
 ] as const;
 
 export type InquiryTypeValue = (typeof inquiryTypes)[number]["value"];
@@ -28,7 +30,14 @@ const optionalEmail = z
   .optional();
 
 export const inquirySchema = z.object({
-  type: z.enum(["business", "technical", "pf3d", "other"]),
+  type: z.enum([
+    "structural",
+    "safety",
+    "construction",
+    "demolition",
+    "technical",
+    "other",
+  ]),
   name: z.string().trim().min(1, "이름을 입력해 주세요.").max(100, "이름이 너무 깁니다."),
   company: z.string().trim().max(100, "회사/소속이 너무 깁니다.").optional(),
   phone: z

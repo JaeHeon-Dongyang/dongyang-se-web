@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { inquirySchema, inquiryTypeLabel, toFieldErrors } from "@/lib/validation/inquiry";
 
 const valid = {
-  type: "business" as const,
+  type: "structural" as const,
   name: "홍길동",
   company: "",
   phone: "010-1234-5678",
@@ -62,7 +62,7 @@ describe("inquirySchema", () => {
 
 describe("inquiryTypeLabel", () => {
   it("모든 유형에 라벨이 있다", () => {
-    expect(inquiryTypeLabel.business).toBe("사업 문의");
-    expect(inquiryTypeLabel.pf3d).toBe("PF3D 문의");
+    expect(inquiryTypeLabel.structural).toBe("구조설계");
+    expect(inquiryTypeLabel.demolition).toBe("해체공사 구조검토");
   });
 });

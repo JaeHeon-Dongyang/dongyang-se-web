@@ -36,7 +36,7 @@ export function ContactForm() {
   const [state, setState] = useState<FormState>("idle");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
-  const [inquiryType, setInquiryType] = useState<InquiryTypeValue>("business");
+  const [inquiryType, setInquiryType] = useState<InquiryTypeValue>(inquiryTypes[0].value);
   const [consent, setConsent] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -85,7 +85,7 @@ export function ContactForm() {
       if (res.ok && data.ok) {
         form.reset();
         setConsent(false);
-        setInquiryType("business");
+        setInquiryType(inquiryTypes[0].value);
         setState("success");
         return;
       }
