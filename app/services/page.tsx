@@ -10,7 +10,7 @@ import { serviceGroups } from "@/lib/services-data";
 export const metadata: Metadata = {
   title: "사업분야",
   description:
-    "동양구조엔지니어링의 구조설계, 안전진단·점검, 공사 중 안전관리, 해체공사 구조검토 사업분야와 업무 범위를 안내합니다.",
+    "동양구조엔지니어링의 구조설계, 안전점검·진단, 공사 중 안전관리, 해체공사 구조검토 사업분야와 업무 범위를 안내합니다.",
 };
 
 export default function ServicesPage() {
@@ -25,7 +25,7 @@ export default function ServicesPage() {
       <section className="container-site">
         <div className="content-measure flex flex-col gap-4">
           <p className="text-body-text text-base leading-relaxed text-pretty">
-            동양구조엔지니어링은 건축구조설계, 안전진단·점검, 공사 중 안전관리, 해체공사
+            동양구조엔지니어링은 건축구조설계, 안전점검·진단, 공사 중 안전관리, 해체공사
             구조검토 등 건축물의 각 단계에서 요구되는 구조안전 업무를 수행합니다.
           </p>
 

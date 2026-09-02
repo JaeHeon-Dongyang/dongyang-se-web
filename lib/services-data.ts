@@ -65,7 +65,7 @@ export const serviceGroups: ServiceGroup[] = [
   {
     slug: "safety-inspection",
     icon: ShieldCheck,
-    title: "안전진단·점검",
+    title: "안전점검·진단",
     headline: "건축물의 현재 상태를 정확하게 파악합니다",
     shortDescription:
       "현장조사와 구조적 판단으로 주요 부재의 상태와 안전성을 확인합니다.",
