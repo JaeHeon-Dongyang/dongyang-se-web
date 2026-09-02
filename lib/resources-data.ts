@@ -788,7 +788,12 @@ export const resources: Resource[] = [
           },
         ],
       },
-      { type: "heading", text: "2-11. 모델링 mgt 파일 Export", id: "gen-export" },
+      { type: "heading", text: "2-11. 모델링 mgtx 파일 Export", id: "gen-export" },
+      {
+        type: "callout",
+        tone: "info",
+        text: "**반드시 해석을 먼저 돌린 뒤** Export 합니다. 해석하지 않으면 mgtx 파일을 정상적으로 추출할 수 없습니다.",
+      },
       {
         type: "annotated-image",
         src: "/images/resources/pf3d-ads-to-gen/s2-11-gen-export-menu.webp",
@@ -803,7 +808,7 @@ export const resources: Resource[] = [
           {
             x: 68,
             y: 11,
-            note: "[MGTX file (for GEN NX)] 을 클릭해 mgt 파일로 저장합니다.",
+            note: "[MGTX file (for GEN NX)] 을 클릭해 mgtx 파일로 저장합니다.",
           },
         ],
       },
