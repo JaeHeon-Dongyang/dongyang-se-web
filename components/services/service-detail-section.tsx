@@ -7,7 +7,7 @@ export function ServiceDetailSection({ service }: { service: ServiceGroup }) {
   return (
     <section
       id={service.slug}
-      className="container-site border-border scroll-mt-32 border-t pt-14 first:border-t-0 first:pt-0"
+      className="container-site border-border scroll-mt-32 border-t pt-14 first:border-t-0"
     >
       <div className="flex flex-col gap-3">
         <span className="bg-accent-green-light text-brand flex h-12 w-12 items-center justify-center rounded-xl">
@@ -63,7 +63,7 @@ export function ServiceDetailSection({ service }: { service: ServiceGroup }) {
           ) : null}
         </div>
 
-        <div className="border-border bg-surface flex flex-col gap-4 rounded-2xl border p-6">
+        <div className="border-border bg-surface flex flex-col gap-4 self-start rounded-2xl border p-6">
           <span className="text-heading text-sm font-semibold">
             이런 경우에 필요합니다
           </span>

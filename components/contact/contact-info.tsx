@@ -1,4 +1,5 @@
 import { ExternalLink, Mail, MapPin, Phone, Printer } from "lucide-react";
+import { NaverMapEmbed } from "@/components/contact/naver-map-embed";
 import { company, contactLinks } from "@/lib/site";
 
 const infoItems: Array<{
@@ -48,6 +49,7 @@ export function ContactInfo() {
           );
         })}
       </ul>
+      <NaverMapEmbed address={company.address} />
       <a
         href={naverMapUrl}
         target="_blank"
