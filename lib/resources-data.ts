@@ -903,7 +903,7 @@ export const resources: Resource[] = [
   {
     slug: "pf3d-pre-processor",
     category: "PF3D 매뉴얼",
-    title: "02 · Perform-3D 전처리 프로그램 사용법",
+    title: "02 · PERFORM-3D 전처리 프로그램 사용법",
     summary:
       "PF3D Pre Processor 로 Midas Gen 의 mgtx 와 BeST 의 Wall List 를 PERFORM-3D 입력 파일로 바꾸는 방법입니다. 세 가지 작업(MGTX 추출 · Nodal Mass · Wall List 정리)과 프로그램이 무엇을 어떤 기준으로 뽑는지 정리했습니다.",
     updatedAt: "2026-09-02",
@@ -1030,7 +1030,7 @@ export const resources: Resource[] = [
       {
         type: "list",
         items: [
-          "출력은 **건물명-node.txt** 와 **건물명-nodal_mass.txt** 두 개입니다. Node 파일은 체크를 끄면 만들지 않습니다.",
+          "출력은 **건물명-nodal_mass_node.txt** 와 **건물명-nodal_mass.txt** 두 개입니다. Node 파일은 체크를 끄면 만들지 않습니다.",
           "**PERFORM-3D 에서는 Node 를 먼저 Import 한 뒤 Nodal Mass 를 Import** 합니다. 절점이 없으면 질량이 들어갈 자리가 없습니다.",
           "질량이 X·Y·회전 모두 0 인 층은 층 수에는 포함되지만 출력에서는 빠집니다.",
           "자릿수는 좌표·레벨 소수 4자리, 질량 3자리, 회전질량 유효숫자 7자리로 맞춰 나갑니다.",
@@ -1104,8 +1104,6 @@ export const resources: Resource[] = [
         type: "table",
         headers: ["출력 파일", "PERFORM-3D 사용처"],
         rows: [
-          ["건물명-node.txt", "Nodes — 절점. Nodal Mass 보다 먼저 Import"],
-          ["건물명-nodal_mass.txt", "Nodes › Masses — 층 질량"],
           ["-01.node.txt ~ -04.wall.txt", "확인 필요"],
           ["-05.rotgage.txt · -06.axgage.txt", "확인 필요 (Deformation Gage 계열)"],
           ["-07.embbeam.txt", "확인 필요"],
@@ -1117,6 +1115,8 @@ export const resources: Resource[] = [
             "-for wall_list_tab.txt · -wall_list.csv",
             "PF3D 입력 아님 — 후처리·물성치 정리용",
           ],
+          ["건물명-nodal_mass_node.txt", "Nodes — 절점. Nodal Mass 보다 먼저 Import"],
+          ["건물명-nodal_mass.txt", "Nodes › Masses — 층 질량"],
         ],
       },
       { type: "heading", text: "설정 저장 · 불러오기", id: "preset" },
