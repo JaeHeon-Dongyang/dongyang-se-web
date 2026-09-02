@@ -792,7 +792,7 @@ export const resources: Resource[] = [
       {
         type: "callout",
         tone: "info",
-        text: "**반드시 해석을 먼저 돌린 뒤** Export 합니다. 해석하지 않으면 mgtx 파일을 정상적으로 추출할 수 없습니다.",
+        text: "**반드시 해석을 먼저 돌린 뒤** Export 합니다. 해석하지 않으면 정상적인 mgtx 파일을 추출할 수 없습니다.",
       },
       {
         type: "annotated-image",
@@ -899,6 +899,435 @@ export const resources: Resource[] = [
         caption: "완료 — ◯◯동 TEXT.TXT · ◯◯동.mgt · ◯◯동.spf",
       },
     ],
+  },
+  {
+    slug: "pf3d-perform3d-modeling",
+    category: "PF3D 매뉴얼",
+    title: "02 · PERFORM-3D 모델링 설정",
+    summary:
+      "Gen에서 넘어온 모델을 PERFORM-3D에서 비선형 해석이 돌아가는 상태로 만드는 과정입니다. 물성치·유효강성 입력부터 Gage, Limit State, 지진파, Load Case, Damping, 횡하중 분포까지 16단계로 정리했습니다.",
+    updatedAt: "2026-09-02",
+    body: [
+      {
+        type: "paragraph",
+        text: "01편에서 만든 입력 파일을 PERFORM-3D 로 가져오면, 그때부터는 해석이 돌아가도록 모델을 채워 넣는 작업입니다. 재료 물성치와 유효강성을 넣고, 벽체에 Gage 를 달고, 층간변위·Limit State·지진파·Load Case·Damping 을 설정하는 순서로 진행합니다. 이 문서는 원본 설명서의 16단계를 그 순서 그대로 따라갑니다.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "원본 설명서를 옮긴 **초안**입니다. 순서와 설정값은 원본 그대로이며, 화면 캡처는 아직 옮기지 않았습니다.",
+      },
+      { type: "heading", text: "작업 전 유의사항", id: "before-start" },
+      {
+        type: "list",
+        items: [
+          "파일 이름은 00_P3D 형식으로 짓습니다. 예) 103동 P3D 파일 → **103_P3D**",
+          "Macro 를 쓰는 작업은 'Macro 작업 파일' 을 함께 봅니다.",
+          "**이 문서에서 정한 이름은 그대로 사용합니다.** 다른 직원이 열어봐도 무엇인지 알 수 있어야 하기 때문입니다.",
+          "부재별 Section Cut 작업(Auto Hot Key 이용)은 'Kdesign 사용법' 을 참고합니다.",
+          "Section Cut 은 1~16장 중 어느 시점에 해도 되지만 **소요시간이 매우 길기 때문에** 프로젝트 일정에 맞춰 언제 할지 미리 정해둡니다.",
+        ],
+      },
+      { type: "heading", text: "1. Node 관련사항 확인", id: "nodes" },
+      {
+        type: "paragraph",
+        text: "NODES 아이콘을 누르면 지점(Supports)·질량(Masses)·강막(Slaving) 세 탭을 확인할 수 있습니다. 세 가지가 Gen 에서 넘어온 그대로인지 먼저 봅니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "**지점 확인** — 지점이 설정된 노드는 X 로 표시됩니다. 화면의 H1·H2 뷰 기능으로 옆에서 보면서, 최하부층 이외에 지점으로 잡힌 곳이 없는지 확인합니다.",
+          "**질량 확인** — Masses 탭. Gen 에서 모델링한 지하층까지 질량이 모두 들어갔는지 확인합니다.",
+          "**강막 확인** — Slaving 탭. 지하외벽까지 층별 강막이 설정되었는지 확인합니다.",
+        ],
+      },
+      { type: "heading", text: "2. 재료·Gage 물성치 입력", id: "materials" },
+      {
+        type: "paragraph",
+        text: "2장부터 5장까지는 모두 Component Properties 에서 하는 작업입니다. 물성치는 직접 입력하지 않고 Import 기능으로 불러옵니다. Import 목록에 없는 물성치만 '공동주택 성능기반 내진설계 지침' 의 [표4.1], [표4.2] 를 참고해 직접 입력합니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "① Materials 탭에서 [Import] 를 누르고, User Defined 로 물성치 파일이 있는 폴더를 지정합니다.",
+          "② 불러올 물성치 파일을 고릅니다. 예) 콘크리트는 Con'c.PF3CMP",
+          "③ 파일 안의 물성치를 모두 가져오려면 [Select All] 을 선택합니다. (필요한 것만 골라도 무방)",
+          "④ 이름이 겹칠 때의 처리로 [Read component from file (replace current component)] 을 선택합니다.",
+        ],
+      },
+      {
+        type: "table",
+        headers: ["구분", "PERFORM-3D 물성치 타입"],
+        rows: [
+          ["콘크리트", "Inelastic 1D Concrete Material"],
+          ["철근", "Inelastic Steel Material, Non-Buckling"],
+          ["비선형 전단", "Inelastic Shear Material for a Wall"],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "Gage 물성치(Axial·Rotation·Shear)도 같은 방법으로 Import 하지만 **④만 다릅니다.** Gage 는 [Keep current component (ignore component in file)] 을 선택합니다.",
+      },
+      { type: "heading", text: "3. 전단벽(비선형) 물성치 설정", id: "shear-wall" },
+      {
+        type: "paragraph",
+        text: "Cross Sects. 탭의 Shear Wall, Inelastic Section 에서 설정합니다. Macro 가 자동으로 채우는 부분과 사용자가 직접 고쳐야 하는 부분이 나뉩니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "**직접 수정** — 철근 재질(Material Name)은 벽체 이름에 적힌 철근 종류에 맞춰 사용자가 직접 고칩니다. 예) 벽체 이름이 XecWallclneV-C24_SD500_T200_D10@450 이면 SD500 철근으로 수정합니다.",
+          "**Macro 자동 설정** — 그 외 단면 정보와 면외강성은 Macro 가 채웁니다.",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "면외강성(Out-of-Plane)은 면내강성의 25%(0.25EI) 로 가정하며, Macro 사용 시 Young's Modulus = 632 로 자동 설정됩니다. 원칙대로면 벽체별 콘크리트 강도에 맞춰 조절해야 하지만, 강도에 따른 탄성계수 차이가 매우 작고 면외강성은 그중 25%만 고려하므로 해석 결과에 미치는 영향이 거의 없다고 보아 모든 벽체를 632 로 통일합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "비선형 전단은 Compound 탭에서 설정합니다. Shear Material Type 을 Elastic Shear Material for a Wall 에서 **Inelastic Shear Material for a Wall** 로 바꾸고, Shear Material Name 을 해당 벽체의 fck 와 같은 값으로 맞춥니다.",
+      },
+      {
+        type: "heading",
+        text: "4. 탄성 부재(보·기둥·전이보) 유효강성 입력",
+        id: "effective-stiffness",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "유효강성은 **Gen 에 설정된 부재명과 같은 부재에만** 입력합니다. Gen 에서 Assign 되지 않은 부재는 P3D 모델에도 Assign 되어 있지 않기 때문입니다. 예) Gen 에서 기둥명을 층별로 재설정해 B5_1TC1 이 되었다면, 그 이름을 가진 기둥의 유효강성만 입력합니다.",
+      },
+      {
+        type: "table",
+        headers: ["부재", "부재명 형식", "선택하는 탭"],
+        rows: [
+          ["보 요소", "XecBmC-부재명", "Beam, RC Section"],
+          ["기둥 요소", "XecColC-부재명", "Column, RC Section"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "기둥인데도 Beam, RC Section 탭의 XecBmC-기둥명 부재에 값을 넣는 것이 가장 흔한 실수입니다. 기둥은 반드시 Column, RC Section 탭에서 고릅니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "**보(일반보·전이보)** — Macro 로 2·3축 I 값을 수정합니다.",
+          "**기둥 1차 수정** — 기둥은 I 값을 바로 못 고칩니다. 먼저 Inelastic 탭의 FEMA Column, Concrete Type 에서 'Use Cross Section' 을 **No** 로 바꿉니다(Macro 사용, 유효강성을 넣을 부재만).",
+          "**기둥 유효강성** — 1차 수정을 마치면 2·3축 I 값을 고칠 수 있습니다. 보와 같은 방법으로 Macro 로 수정합니다.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "5. 연결보(인방보) FEMA 비선형 물성치 입력",
+        id: "coupling-beam",
+      },
+      {
+        type: "paragraph",
+        text: "연결보는 SMATH 로 부재별 FEMA 물성치를 계산한 뒤, 그 결과를 Macro 입력자료로 만들어 넣습니다. 준비물은 SMATH 파일(#36_Coupling Beam Nonlinear Model Ver5.0.sm)과 SMATH 가 읽는 Excel 파일(연결보 단면·배근, 예: 103_104_BEAM LIST NAME_MODIFY.xlsx) 두 개입니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "① Excel 파일을 엽니다.",
+          "② 초록색으로 표시된 칸을 수정합니다. 부재명·단면치수는 **mgt 파일**, 부재길이(Lbeam)는 **Gen**, 배근정보는 **부재리스트**를 보고 채웁니다.",
+          "③ SMATH 파일을 엽니다. Excel 에 입력한 부재명별로 선택할 수 있고, 단면·배근을 읽어 부재별 FEMA 물성치를 자동 계산합니다.",
+          "④ 계산 후 새로고침 아이콘을 누르면 SMATH 폴더에 부재명별 Excel 파일이 생성됩니다.",
+          "⑤ 생성된 파일을 새 폴더로 복사합니다. **SMATH 의 부재 순서대로** 복사해야 뒤에서 합칠 때 순서가 맞습니다.",
+          "⑥ Excel 에서 '저녁이있는엑셀(VBA)' 의 내용합치기로 그 폴더의 파일을 하나로 합칩니다.",
+          "⑦ 합쳐진 내용을 'Macro Excel 파일 - 3. 연결보 FEMA Macro' 시트에 붙여넣으면 Macro 입력자료가 완성됩니다.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "단면치수 단위와 순서를 주의합니다. **MGT 는 H × B (cm)** 이고 **Excel 입력 순서는 B × H (mm)** 입니다. 부재길이(Lbeam)는 가장 짧은 부재를 기준으로 m 단위로 입력합니다.",
+      },
+      {
+        type: "link",
+        label: "저녁이있는엑셀(VBA) 내용합치기 사용법",
+        url: "https://exceltool.tistory.com/24",
+        description: "⑥번 단계에서 쓰는 Excel 추가기능의 사용법",
+      },
+      {
+        type: "paragraph",
+        text: "입력자료가 준비되면 Macro 로 FEMA 물성치를 넣습니다. Type 과 Name(부재명)을 확인해 입력 대상 부재에만 넣고, Gen 에서 새로 설정한 연결보(강도부재명, 예: 35aB1)만 입력합니다.",
+      },
+      { type: "heading", text: "6. 층간변위 설정", id: "drift" },
+      {
+        type: "paragraph",
+        text: "PERFORM-3D 는 MIDAS 와 달리 **설정해 둔 층간변위만** 해석 후 TEXT 로 뽑을 수 있습니다. 그래서 어느 위치의 층간변위를 볼지 미리 정해 두는 작업이 필요합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "먼저 고유치 해석(Mode 해석)으로 모드별 최대 층간변위 발생 위치를 확인합니다. Load Case Type 은 Gravity, Load Case Name 은 test, Linear 로 두고 Pattern Name 에 LoadNode-DL 을 Add 합니다. 이어서 Analysis Series 에서 [Check Structure] 를 눌러 구조를 확인하고, 'Start a new series' 이름에 **Mode** 를 입력합니다. 모드 개수는 20, Mass Pattern 은 Nodal Mass, Scale Factor 는 1 로 두고 [OK] → [GO] 로 해석합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "해석이 끝나면 모드 차수별 질량참여율을 볼 수 있고, [Plot] 으로 각 모드의 변형 형상을 확인할 수 있습니다. **변위가 가장 크게 발생하는 부위**를 층간변위 지점으로 잡습니다.",
+      },
+      {
+        type: "table",
+        headers: ["모드", "T (주기)", "질량참여율 H1", "질량참여율 H2"],
+        rows: [
+          ["1차", "1.681", "17.3", "11.21"],
+          ["2차 → P1", "1.643", "44.81", "13.88"],
+          ["3차 → P2", "1.244", "3.01", "45.49"],
+          ["4차", "0.4532", "1.53", "4.28"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "위 표는 이름 정의를 이해하기 위한 예시입니다. X 방향 질량참여율이 가장 큰 2차 모드에서 X 변위가 가장 큰 위치를 P1, Y 방향이 큰 3차 모드에서 Y 변위가 가장 큰 위치를 P2 로 정합니다.",
+      },
+      {
+        type: "table",
+        headers: ["이름", "위치", "설정 범위"],
+        rows: [
+          ["P1 / P2", "X·Y 변위가 가장 크게 발생하는 위치", "각 방향·층별 전부"],
+          [
+            "RH1 / RH2",
+            "질량중심(Mass_D_0.25L_5%)에서 X(RH1)·Y(RH2)",
+            "최상층·최하층 절점만",
+          ],
+          ["MC", "질량중심(Mass_D_0.25L_5%)", "각 방향·층별 전부"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "위치를 정했으면 Frame 을 만듭니다. 이름은 Drift_P1, Drift_P2 로 하고 해당 위치를 드래그해 지정합니다. Mass_D_0.25L_5% Frame 은 이미 만들어져 있으므로 RH1·RH2·MC 는 따로 만들지 않아도 됩니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "**Frame 설정 시 두 가지를 확인합니다.** ① 층간변위는 최상층부터 최하층까지 모든 층에 대해 출력해야 하므로, P1·P2 가 최상층까지 이어지는 절점인지 옆에서 확인합니다. 전이층이 있는 건물이 대부분이라 끊기는 경우가 많고, 그때는 인접한 다른 위치로 옮깁니다. ② Setback 되는 부분을 P1·P2 로 잡으면 층간변위가 튀므로 인접한 다른 위치로 잡습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "층간변위 이름은 '위치_방향_층수' 로 짓고 최상층은 RF 로 씁니다. 예) P1_X_RF, P1_X_20F … 지하 5층까지 있는 건물이면 마지막은 P1_X_B4F 가 되어야 정상입니다(최상층을 RF 로 쓰기 때문에 한 칸씩 밀립니다). P1·P2 모두 최상층~최하층, X·Y 두 방향을 다 만듭니다. Y 방향은 H2 로 설정한 뒤 상·하부 절점을 입력합니다. 질량중심은 Mass_D_0.25L_5% Frame 만 활성화한 뒤 MC_X_RF ~ MC_X_최하부층, MC_Y_… 로 같은 규칙으로 만들고, RH_X(H1)·RH_Y(H2) 는 최상층·최하층만 잡습니다.",
+      },
+      {
+        type: "heading",
+        text: "7. 층별 Structure Section 설정",
+        id: "structure-section",
+      },
+      {
+        type: "paragraph",
+        text: "층 전단력과 밑면 전단력을 보기 위한 설정입니다. 층별 이름은 Macro 로 만들며, 층전단력을 보기 위한 것이므로 **최상층 이름은 RF 가 아니라 20F**, 최하층은 B5F 로 지정합니다(지하 5층~21층 건물 기준).",
+      },
+      {
+        type: "list",
+        items: [
+          "element group 을 ElemConcWall 로 두고 벽체를 드래그해 층별로 Structure Section 을 설정합니다.",
+          "전이층 하부는 벽체 말고도 기둥(ElemConcCol)과 지하외벽(ElemConcEWall)이 있으므로, element group 을 바꿔가며 그 층의 Structure Section 을 추가로 설정합니다.",
+          "각 층 전단력을 보기 위한 작업이라는 점을 생각하면서, **해당 층의 모든 수직부재**에 대해 설정합니다.",
+        ],
+      },
+      { type: "heading", text: "8. Gage 입력", id: "gage" },
+      {
+        type: "paragraph",
+        text: "먼저 Gage 를 담을 element group 을 만듭니다. Element Type 은 Deformation Gage 이고, Gage Type 은 종류에 따라 다릅니다.",
+      },
+      {
+        type: "table",
+        headers: ["Gage", "Gage Type"],
+        rows: [
+          ["Rotation · Shear gage", "Wall type, rotation or shear"],
+          ["Axial gage", "Bar type, axial strain"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Rotation·Shear gage 는 s2k file 생성 후 만든 **Rotation gage 파일 하나로** 설정합니다. 그 파일을 노트패드로 열어 줄의 끝문자(EOL)를 Windows(CR LF) 로 변환한 뒤, element group 을 지정하고 파일 위치를 잡아 Import 합니다. 설정에는 시간이 다소 걸리고, 끝나면 Import 된 요소가 노란색으로 표시됩니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "Import 후 **반드시 확인**합니다. Gage 는 전이층 상·하부와 Setback 부분에 설정되지 않을 확률이 있으므로 그 부위만 활성화해 육안으로 봅니다. 빠진 벽체는 [Add element] 로 추가합니다. 뒤에서 Axial gage 를 Rotation gage 로 만들기 때문에 Rotation gage 확인은 특히 중요합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "전이부재와의 Link 때문에 나눠 놓은 벽체는 실제로는 하나의 벽체입니다. 나눠진 각각에 모두 gage 를 달지 않습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "Axial gage 는 Rotation gage 를 Export 한 뒤 Kdesign 의 [Rot Gage To Axial Gage] 로 파일을 만들어 씁니다. element group 을 Rotation gage 로 두고 Export → Kdesign 에서 그 파일을 열어 이름을 Axial gage 로 저장 → 앞과 같은 방법으로 Import 합니다. 이때는 노트패드로 줄 끝문자를 바꾸지 않아도 됩니다.",
+      },
+      {
+        type: "paragraph",
+        text: "여기까지가 gage 를 벽체에 붙이는 작업이고, 마지막으로 gage 물성치를 assign 합니다. 벽체를 더블클릭하거나 드래그해 선택하면 빨간색으로 표시되고, [Assign Component] 에서 해당 gage 타입과 이름을 골라 [Assign] 합니다. Rotation·Shear·Axial 모두 같은 방법으로 수행합니다.",
+      },
+      { type: "heading", text: "9. 연결보(인방보) 분리", id: "lintel-split" },
+      {
+        type: "paragraph",
+        text: "나중에 탄성부재(보·전이보·기둥) 부재력을 출력할 때 연결보 부재력이 섞여 나오지 않게 하기 위한 작업입니다. ElemConcBeam 에서 [New] 를 눌러 Element Type = Beam, Group Name = ElemConcLintelBeam 그룹을 만들고 Geometric Nonlinearity 는 P-delta 로 둡니다. 그다음 [Change Group] 으로 연결보만 새 그룹으로 옮깁니다. 이때 **전이층 상부에 있는 연결보만** 선택합니다.",
+      },
+      { type: "heading", text: "10. Limit State 설정", id: "limit-state" },
+      {
+        type: "paragraph",
+        text: "해석 후 결과치를 직관적으로 보기 위한 설정입니다. Deformation 과 Drift 두 종류를 만듭니다.",
+      },
+      {
+        type: "table",
+        headers: ["Name", "Element Group", "Element Type", "Component Type"],
+        rows: [
+          ["W_comp_Strain_0.002", "Axial gage", "Deformation gage", "Axial Strain gage"],
+          ["FEMA_Beam[IO]", "ElemConcLintelBeam", "Beam", "FEMA Beam ~"],
+          ["FEMA_Beam[LS]", "ElemConcLintelBeam", "Beam", "FEMA Beam ~"],
+          ["FEMA_Beam[CP]", "ElemConcLintelBeam", "Beam", "FEMA Beam ~"],
+          ["Wall_Rotation[IO]", "Rotation gage", "Deformation gage", "Rotation Gage~"],
+          ["Wall_Rotation[LS]", "Rotation gage", "Deformation gage", "Rotation Gage~"],
+          ["Wall_Rotation[CP]", "Rotation gage", "Deformation gage", "Rotation Gage~"],
+          ["Wall_Shear[CP]", "Shear gage", "Deformation gage", "Shear Strain Gage~"],
+        ],
+      },
+      {
+        type: "table",
+        headers: ["Name", "Deformation Type", "Level", "D/C Limit"],
+        rows: [
+          ["W_comp_Strain_0.002", "Strain, Compression", "2", "1"],
+          ["FEMA_Beam[IO]", "~, Pos or Neg", "2", "1"],
+          ["FEMA_Beam[LS]", "~, Pos or Neg", "3", "1"],
+          ["FEMA_Beam[CP]", "~, Pos or Neg", "4", "1"],
+          ["Wall_Rotation[IO]", "~, Pos or Neg", "1", "1"],
+          ["Wall_Rotation[LS]", "~, Pos or Neg", "2", "1"],
+          ["Wall_Rotation[CP]", "~, Pos or Neg", "4", "1"],
+          ["Wall_Shear[CP]", "~, Pos or Neg", "1", "1"],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "원본 설명서는 Deformation Limit State 를 **총 10개** 만든다고 적고 있으나, 표에는 위 8개만 이름이 적혀 있고 2행이 비어 있습니다. 나머지 2개는 원본 확인 후 채워야 합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "Level 은 기준에서 정한 허용변위를 각 물성치에 입력해 두고, Limit State 의 level 설정으로 그 허용변위를 불러오는 구조입니다. 예) FEMA_Beam[IO] 의 Level = 2 는 물성치에 입력된 허용변위 level 2 를 뜻합니다. 각 level 은 기준의 IO·LS·CP 에 맞게 물성치에 입력됩니다.",
+      },
+      {
+        type: "paragraph",
+        text: "Drift 는 Drift, Drift [IO], Drift [LS], Drift [CP] 총 4개를 만듭니다. Drift [IO]~[CP] 는 'All drifts' 로 두고, 'Drift' 만 'Highlighted drifts only' 로 두어 RH_X·RH_Y 를 선택합니다.",
+      },
+      {
+        type: "table",
+        headers: ["Name", "Drift limit"],
+        rows: [
+          ["Drift", "0.1"],
+          ["Drift [IO]", "0.005"],
+          ["Drift [LS]", "0.015"],
+          ["Drift [CP]", "0.02"],
+        ],
+      },
+      { type: "heading", text: "11. P-δ 효과 입력", id: "p-delta" },
+      {
+        type: "list",
+        items: [
+          "element group 의 'Geometric Nonlinearity' 를 P-delta 로 바꿉니다. **모든 부재(기둥·보·전단벽 등)에 대해** 수행합니다.",
+          "Analysis Series 의 'Include P-Delta effects?' 를 **Yes** 로 둡니다. 이후 Analysis series 를 만들 때마다 이 설정을 적용해야 합니다.",
+        ],
+      },
+      { type: "heading", text: "12. 지진파 입력", id: "earthquake" },
+      {
+        type: "paragraph",
+        text: "시간이력해석에 쓸 지진파를 P3D 에 넣는 작업입니다. Load Case Type 을 Dynamic Earthquake 로 바꾼 뒤 [Add/Review/Delete Earthquakes] 로 들어갑니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "① 지진파 자료 파일의 위치를 지정합니다. 자료는 **.txt 형식**이어야 합니다.",
+          "② 자료 형식에 맞게 Time Interval·Duration 등을 조정합니다. 보통 Duration 을 뺀 나머지는 기본값으로 문제없지만 **꼭 확인**합니다.",
+          "③ 저장할 Earthquake Group 과 이름을 입력합니다. Group 은 프로젝트 이름으로 만듭니다. 예) 선화동 프로젝트 → seonhwadong. File Name 은 7개 지진파의 X·Y 방향을 각각 넣어 EQ1-1, EQ1-2 ~ EQ7-2 까지 **총 14개**가 됩니다. (EQ1-1 = 1번 지진파의 X방향)",
+          "④ [Review] 로 입력한 지진파를 그림으로 확인합니다.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "입력한 지진파는 '내 PC - 문서 - PERFORM - Records' 에 저장됩니다. 이 폴더를 복사해 다른 PC 의 같은 위치에 붙여넣으면 그 PC 에서 곧바로 같은 지진파를 쓸 수 있습니다.",
+      },
+      { type: "heading", text: "13. Load Case 설정", id: "load-case" },
+      {
+        type: "paragraph",
+        text: "**Vertical Load** 는 1.0D.L + 0.25L.L 를 만들기 위한 Load Case 입니다. Load Case Type 은 Gravity, 이름은 Vertical Load, Analysis Method 는 Nonlinear 로 두고 No. of Load Steps 50, Max Events in any Step 1000, Limit State to Stop Analysis 는 Drift 로 설정합니다. 하중 패턴은 LoadNode-DL·LoadFrame-DL·SelfWeight-DL 을 각 1, LoadNode-LL·LoadFrame-LL 을 각 0.25 로 넣습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "**Push-Over Load** 는 P_X_P / P_X_N / P_Y_P / P_Y_N 네 개를 만듭니다(P_X_P = Pushover_X방향_Positive). Static Push-Over 타입에 No. of Load Steps 100, Max Events 1000, Maximum Allowable Drift 0.1 로 두고, 이름의 뜻에 맞게 Reference Drift 와 Nodal Load Pattern 의 Name·Scale Factor 를 맞춥니다.",
+      },
+      {
+        type: "table",
+        headers: ["Load Case Name", "Reference Drift", "Pattern Name", "Scale Factor"],
+        rows: [
+          ["P_X_P", "RH_X", "AccelUX", "1"],
+          ["P_X_N", "RH_X", "AccelUX", "-1"],
+          ["P_Y_P", "RH_Y", "AccelUY", "1"],
+          ["P_Y_N", "RH_Y", "AccelUY", "-1"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "**Dynamic Load** 는 EQ1-X, EQ1-Y ~ EQ7-Y 까지 총 14개를 만듭니다. Total Time 에는 Q1 Earthquake 의 Duration 값을 넣고, Time Step 은 지진파 자료와 일치시킵니다.",
+      },
+      {
+        type: "table",
+        headers: [
+          "Load Case Name",
+          "Reference Drift",
+          "Angle (degrees)",
+          "Q1 / Q2 Earthquake",
+        ],
+        rows: [
+          ["EQ1-X ~ EQ7-X", "RH_X", "0", "EQn-1 / EQn-2"],
+          ["EQ1-Y ~ EQ7-Y", "RH_Y", "90", "EQn-1 / EQn-2"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "n 은 지진파 번호(1~7)입니다. 예) EQ3-Y 는 Reference Drift RH_Y, Angle 90, Q1 = EQ3-1, Q2 = EQ3-2 입니다.",
+      },
+      { type: "heading", text: "14. Analysis 설정", id: "analysis" },
+      {
+        type: "paragraph",
+        text: "Analysis 이름은 Load Case 이름과 똑같이 짓습니다. Push-over 4개(P_X_P, P_X_N, P_Y_P, P_Y_N), Dynamic 14개(EQ1-X ~ EQ7-Y)입니다. 15장의 Damping 을 먼저 설정해 두면 여기서 편합니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "**꼭 Vertical Load 를 선행하중으로 넣어야 합니다.** 먼저 Load Case Type = Gravity, Name = Vertical Load, Preceding Analysis Number = **0** 으로 Add 한 뒤, 해당 Push-over·Dynamic Load Case 를 Preceding Analysis Number = **1** 로 Add 합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "Basic + Masses 탭은 모드 개수 20, Mass Pattern 은 Nodal Mass, Scale Factor 1, Include P-Delta effects 는 Yes 로 둡니다.",
+      },
+      { type: "heading", text: "15. Damping 설정", id: "damping" },
+      {
+        type: "list",
+        items: [
+          "**Modal Damping** — Same damping ratio for all modes 에 **1.5 %** 를 입력합니다.",
+          "**Rayleigh Damping** — **1 %** 를 입력합니다. Point A 의 T/T1 은 고유치 해석 결과의 주기로 T4 / T1 을 계산해 넣고, Point B 는 T1 / T1 = 1 을 넣습니다.",
+          "**모든 Analysis 에** Damping 을 설정해야 합니다.",
+        ],
+      },
+      { type: "heading", text: "16. 횡하중 수직분포 입력", id: "lateral-load" },
+      {
+        type: "paragraph",
+        text: "Pushover 해석에 쓸 횡하중 분포를 넣는 작업입니다. 먼저 AccelUX 는 H1 Force = 1, AccelUY 는 H2 Force = 1 로 초기화합니다. 이때 Mass_D_0.25L_5% 만 활성화하고 **최하층 노드는 제외**합니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "① Nodal Loads 에서 AccelUX·AccelUY 를 각각 Export 합니다.",
+          "② 내보낸 TEXT 파일을 '횡하중 가력패턴' 엑셀 파일에 복사합니다. A1 열에 붙여넣은 뒤 데이터 → 텍스트 나누기 → 구분 기호로 분리됨 → 쉼표 체크로 열을 나눕니다.",
+          "③ 해당 구조물의 Gen 파일을 열어 응답스펙트럼 해석(Response Spectrum)을 수행합니다. 모드조합은 **질량참여율 90% 이상**이 되는 모드차수까지 설정합니다.",
+          "④ Gen Result Tables - Story - Story Shear(Response Spectrum Analysis) 에서 Inertia Force 의 각 방향 하중만 복사해 엑셀의 노란색 칸에 붙여넣습니다. UX 는 RX 로, UY 는 RY 로 복사합니다. 예) Roof ~ B4F 구조물이면 하중은 Roof ~ B3F 까지만 복사합니다.",
+          "⑤ 수정한 값을 AccelUX·AccelUY TEXT 파일에 붙여넣습니다.",
+          "⑥ 그 TEXT 파일을 PERFORM-3D 에서 Import 합니다. 각 load pattern(AccelUX / AccelUY)을 고르고 Skip 은 1 line 으로 둡니다.",
+        ],
+      },
+    ],
+    related: ["pf3d-ads-to-gen"],
   },
   {
     slug: "ai-adoption-concept",
