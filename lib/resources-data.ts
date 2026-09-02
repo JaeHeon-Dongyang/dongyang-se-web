@@ -1104,19 +1104,35 @@ export const resources: Resource[] = [
         type: "table",
         headers: ["출력 파일", "PERFORM-3D 사용처"],
         rows: [
-          ["-01.node.txt ~ -04.wall.txt", "확인 필요"],
-          ["-05.rotgage.txt · -06.axgage.txt", "확인 필요 (Deformation Gage 계열)"],
+          ["-01.node.txt", "Import → Nodes Only 탭. 절점을 Import"],
+          [
+            "-02.beam.txt · -03.column.txt · -04.wall.txt",
+            "Import → Elements (+Nodes) 탭. 보·기둥·벽 모델링",
+          ],
+          [
+            "-05.rotgage.txt · -06.axgage.txt",
+            "Import → Elements (+Nodes) 탭. 부재 모델링이 아니라 Gage 부착",
+          ],
           ["-07.embbeam.txt", "확인 필요"],
           ["-08.dlnodal.txt · -09.llnodal.txt", "확인 필요 (Nodal Loads)"],
-          ["-10.frame.csv", "확인 필요 (Frame 이름)"],
-          ["-11.section.csv", "확인 필요 (Structure Section 이름)"],
-          ["-12.slaving.csv", "확인 필요 (Slaving)"],
+          ["-10.frame.csv", "Import → FRAMES 탭. Frame 항목 생성"],
+          [
+            "-11.section.csv",
+            "Import → STRUCTURE SECTIONS - Define Sections 탭. Section 생성",
+          ],
+          ["-12.slaving.csv", "Import → NODES - Slaving 탭. Diaphragm(강막) 생성"],
+          [
+            "건물명-nodal_mass_node.txt",
+            "Import → NODES - Masses 탭. Nodal Mass 절점 생성",
+          ],
+          [
+            "건물명-nodal_mass.txt",
+            "Import → IMPORT - Masses 탭. 생성된 절점에 Nodal Mass 부여",
+          ],
           [
             "-for wall_list_tab.txt · -wall_list.csv",
             "PF3D 입력 아님 — 후처리·물성치 정리용",
           ],
-          ["건물명-nodal_mass_node.txt", "Nodes — 절점. Nodal Mass 보다 먼저 Import"],
-          ["건물명-nodal_mass.txt", "Nodes › Masses — 층 질량"],
         ],
       },
       { type: "heading", text: "설정 저장 · 불러오기", id: "preset" },
