@@ -1096,39 +1096,47 @@ export const resources: Resource[] = [
       },
       { type: "heading", text: "출력 파일이 PERFORM-3D 어디로 들어가나", id: "mapping" },
       {
-        type: "callout",
-        tone: "warning",
-        text: "아래 표에서 **확인 필요**로 적은 줄은 프로그램 쪽에서 확정되지 않은 항목입니다. 실제 Task·탭을 확인한 뒤 채워야 합니다.",
+        type: "paragraph",
+        text: "전처리 프로그램이 뽑아낸 파일 하나하나가 PERFORM-3D 안에서 정확히 어느 Task, 어느 탭으로 들어가는지 정리했습니다. **확인 필요**라고 적어둔 줄은 아직 어디에 쓰는지 못 정한 항목이니, 나중에 확인되면 채워 넣으면 됩니다.",
       },
       {
         type: "table",
-        headers: ["출력 파일", "Task — 탭. 쓰임"],
+        headers: ["출력 파일", "어디에 쓰나"],
         rows: [
-          ["-01.node.txt", "IMPORT 작업 — Nodes Only 탭. 절점 Import"],
+          [
+            "-01.node.txt",
+            "IMPORT 작업의 Nodes Only 탭에서 이 파일 그대로 절점을 불러옵니다.",
+          ],
           [
             "-02.beam.txt · -03.column.txt · -04.wall.txt",
-            "IMPORT 작업 — Elements (+Nodes) 탭. 보·기둥·벽 모델링",
+            "같은 IMPORT 작업이지만 Elements (+Nodes) 탭에서 불러와 보·기둥·벽을 실제로 모델링합니다.",
           ],
           [
             "-05.rotgage.txt · -06.axgage.txt",
-            "IMPORT 작업 — Elements (+Nodes) 탭. 부재 모델링이 아니라 Gage 부착",
+            "탭은 똑같이 Elements (+Nodes) 인데 성격이 달라요 — 부재를 새로 만드는 게 아니라, 이미 있는 벽에 Gage 를 붙여 주는 용도입니다.",
           ],
           ["-07.embbeam.txt", "확인 필요"],
-          ["-08.dlnodal.txt · -09.llnodal.txt", "확인 필요 (Nodal Loads)"],
-          ["-10.frame.csv", "FRAMES 작업. Frame 항목 생성"],
+          ["-08.dlnodal.txt · -09.llnodal.txt", "확인 필요 (아마 Nodal Loads 쪽)"],
+          ["-10.frame.csv", "FRAMES 작업에서 Frame 항목을 만들 때 이름 목록으로 씁니다."],
           [
             "-11.section.csv",
-            "STRUCTURE SECTIONS 작업 — Define Sections 탭. Section 생성",
+            "STRUCTURE SECTIONS 작업의 Define Sections 탭에서 Section 을 만들 때 씁니다.",
           ],
-          ["-12.slaving.csv", "NODES 작업 — Slaving 탭. Diaphragm(강막) 생성"],
-          ["건물명-nodal_mass_node.txt", "NODES 작업 — Masses 탭. Nodal Mass 절점 생성"],
+          [
+            "-12.slaving.csv",
+            "NODES 작업의 Slaving 탭에서 층별 다이어프레임(강막)을 만들 때 씁니다.",
+          ],
+          [
+            "건물명-nodal_mass_node.txt",
+            "NODES 작업의 Masses 탭에서 Nodal Mass 전용 절점을 새로 만들 때 씁니다.",
+          ],
           [
             "건물명-nodal_mass.txt",
-            "IMPORT 작업 — Masses 탭. 생성된 절점에 Nodal Mass 부여",
+            "IMPORT 작업의 Masses 탭에서, 방금 만든 그 절점에 실제 질량 값을 입혀 줍니다.",
           ],
           [
             "-for wall_list_tab.txt · -wall_list.csv",
-            "PF3D 입력 아님 — 후처리·물성치 정리용",
+            "PF3D 에 넣는 파일이 아니라 후처리·물성치 정리용입니다.",
           ],
         ],
       },
