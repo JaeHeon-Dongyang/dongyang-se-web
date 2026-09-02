@@ -1098,36 +1098,33 @@ export const resources: Resource[] = [
       {
         type: "callout",
         tone: "warning",
-        text: "아래 표에서 **확인 필요**로 적은 줄은 프로그램 쪽에서 확정되지 않은 항목입니다. 실제 Import 경로를 확인한 뒤 채워야 합니다.",
+        text: "아래 표에서 **확인 필요**로 적은 줄은 프로그램 쪽에서 확정되지 않은 항목입니다. 실제 Task·탭을 확인한 뒤 채워야 합니다.",
       },
       {
         type: "table",
-        headers: ["출력 파일", "PERFORM-3D 사용처"],
+        headers: ["출력 파일", "Task — 탭. 쓰임"],
         rows: [
-          ["-01.node.txt", "Import → Nodes Only 탭. 절점을 Import"],
+          ["-01.node.txt", "IMPORT 작업 — Nodes Only 탭. 절점 Import"],
           [
             "-02.beam.txt · -03.column.txt · -04.wall.txt",
-            "Import → Elements (+Nodes) 탭. 보·기둥·벽 모델링",
+            "IMPORT 작업 — Elements (+Nodes) 탭. 보·기둥·벽 모델링",
           ],
           [
             "-05.rotgage.txt · -06.axgage.txt",
-            "Import → Elements (+Nodes) 탭. 부재 모델링이 아니라 Gage 부착",
+            "IMPORT 작업 — Elements (+Nodes) 탭. 부재 모델링이 아니라 Gage 부착",
           ],
           ["-07.embbeam.txt", "확인 필요"],
           ["-08.dlnodal.txt · -09.llnodal.txt", "확인 필요 (Nodal Loads)"],
-          ["-10.frame.csv", "Import → FRAMES 탭. Frame 항목 생성"],
+          ["-10.frame.csv", "FRAMES 작업. Frame 항목 생성"],
           [
             "-11.section.csv",
-            "Import → STRUCTURE SECTIONS - Define Sections 탭. Section 생성",
+            "STRUCTURE SECTIONS 작업 — Define Sections 탭. Section 생성",
           ],
-          ["-12.slaving.csv", "Import → NODES - Slaving 탭. Diaphragm(강막) 생성"],
-          [
-            "건물명-nodal_mass_node.txt",
-            "Import → NODES - Masses 탭. Nodal Mass 절점 생성",
-          ],
+          ["-12.slaving.csv", "NODES 작업 — Slaving 탭. Diaphragm(강막) 생성"],
+          ["건물명-nodal_mass_node.txt", "NODES 작업 — Masses 탭. Nodal Mass 절점 생성"],
           [
             "건물명-nodal_mass.txt",
-            "Import → IMPORT - Masses 탭. 생성된 절점에 Nodal Mass 부여",
+            "IMPORT 작업 — Masses 탭. 생성된 절점에 Nodal Mass 부여",
           ],
           [
             "-for wall_list_tab.txt · -wall_list.csv",
