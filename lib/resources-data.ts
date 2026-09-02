@@ -901,9 +901,246 @@ export const resources: Resource[] = [
     ],
   },
   {
+    slug: "pf3d-pre-processor",
+    category: "PF3D 매뉴얼",
+    title: "02 · Perform-3D 전처리 프로그램 사용법",
+    summary:
+      "PF3D Pre Processor 로 Midas Gen 의 mgtx 와 BeST 의 Wall List 를 PERFORM-3D 입력 파일로 바꾸는 방법입니다. 세 가지 작업(MGTX 추출 · Nodal Mass · Wall List 정리)과 프로그램이 무엇을 어떤 기준으로 뽑는지 정리했습니다.",
+    updatedAt: "2026-09-02",
+    version: "v4.02",
+    body: [
+      {
+        type: "callout",
+        tone: "info",
+        text: "**프로그램 받는 곳** — 아래 경로를 복사해 파일 탐색기 주소창에 붙여넣으면 폴더가 열립니다. 폴더 안의 **가장 최신 버전**을 받아 쓰세요.",
+      },
+      {
+        type: "paragraph",
+        text: "\\\\Dongyang\\01. 용역\\1000. 구조\\1300. 성능설계",
+      },
+      {
+        type: "paragraph",
+        text: "PF3D Pre Processor 는 Midas Gen 에서 내보낸 mgtx(또는 mgt)와 BeST 의 Wall List 를 읽어 PERFORM-3D 가 바로 Import 할 수 있는 텍스트 파일로 바꿔 주는 프로그램입니다. 손으로 좌표를 옮기거나 메모장에서 줄 끝 문자를 고치던 작업을 대신합니다. 이 문서는 **v4.02 화면 기준**입니다.",
+      },
+      { type: "heading", text: "화면 구성", id: "layout" },
+      {
+        type: "paragraph",
+        text: "위쪽 SETTINGS 는 세 작업이 함께 쓰는 공통 설정이고, 왼쪽 목록에서 할 일을 고르면 오른쪽 화면이 바뀝니다. 각 작업은 아래쪽 RUN 버튼 하나로 끝납니다.",
+      },
+      {
+        type: "table",
+        headers: ["공통 설정", "하는 일"],
+        rows: [
+          [
+            "건물명",
+            "모든 출력 파일 이름의 앞머리. 비어 있으면 실행되지 않습니다. 설정 저장 이름으로도 쓰입니다. 예) 204D → 204D-01.node.txt",
+          ],
+          [
+            "저장 위치",
+            "비워 두면 자동 — 고른 입력 파일이 있는 폴더에 저장합니다. 탐색기에서 복사한 경로를 그대로 붙여넣어도 됩니다.",
+          ],
+          [
+            "MGTX 파일",
+            "공통 자리. 01(MGTX 추출)과 02(우발편심)의 파일 칸이 비어 있을 때만 자동으로 채워집니다. 이미 고른 파일은 건드리지 않습니다.",
+          ],
+          [
+            "설정 저장 / 불러오기 / 초기화",
+            "화면에 넣은 입력 전부를 건물명으로 저장·복원합니다. 자세한 내용은 아래 설정 저장 항목 참고.",
+          ],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "드래그 앤 드롭이 되는 자리(점선 테두리)에는 파일을 끌어다 놓아도 됩니다. 파일이 들어가면 점선이 실선으로 바뀝니다.",
+      },
+      { type: "heading", text: "01 · MGTX 추출", id: "mgtx" },
+      {
+        type: "paragraph",
+        text: "Midas Gen 의 mgtx(또는 mgt) 한 개에서 PF3D 입력 12종을 뽑습니다. 파일을 고르면 곧바로 형식을 검사해 ✓ 또는 ⚠ 로 알려 줍니다(파일 안에 *NODE 블록이 있는지). 필요한 항목만 체크하고 RUN 하면 됩니다.",
+      },
+      {
+        type: "table",
+        headers: ["항목", "무엇을 뽑나", "판정 기준"],
+        rows: [
+          ["1. NODE", "절점 좌표 x, y, z", "*NODE 블록 전체"],
+          ["2. BEAM", "보의 양 끝 좌표", "ELEMENT 중 BEAM 이면서 양 끝 z 가 같은 것"],
+          [
+            "3. COLUMN",
+            "기둥의 아래→위 좌표",
+            "ELEMENT 중 BEAM 이면서 양 끝 z 가 다른 것. 낮은 절점을 먼저 씁니다",
+          ],
+          ["4. WALL", "벽 4절점 좌표", "ELEMENT 중 WALL. N1·N2·N4·N3 순서"],
+          [
+            "5. ROTATION GAGE",
+            "벽·층마다 4꼭짓점 한 줄",
+            "같은 Wall ID(iWID) + 같은 층(하단 z·상단 z)인 패널을 하나로 합칩니다. 중간 분할 절점은 빠지고 바깥 4꼭짓점만 남습니다. 수평 부재(슬래브류)는 제외",
+          ],
+          [
+            "6. AXIAL GAGE",
+            "벽의 수직변",
+            "WALL 4절점 중 x·y 가 같은 두 절점. 낮은 z → 높은 z 순서. 인접한 벽이 공유하는 변은 한 번만",
+          ],
+          [
+            "7. EMBEDDED BEAM",
+            "벽 상단 수평변",
+            "각 WALL 에서 z 가 가장 큰 두 절점. 층·인접 벽이 공유하는 변은 한 번만",
+          ],
+          [
+            "8. DL Nodal",
+            "고정하중 절점하중 + 좌표",
+            "*USE-STLD, DL 구간의 *CONLOAD 를 절점 좌표에 붙입니다",
+          ],
+          ["9. LL Nodal", "활하중 절점하중 + 좌표", "위와 같고 LL 구간"],
+          [
+            "10. Frame",
+            "벽체 마크 목록 (MARKNAME_WID)",
+            "*WALLMARK 블록. 1001TO1006 같은 범위 표기는 낱개로 펼칩니다",
+          ],
+          [
+            "11. Structure Section",
+            "벽체 마크 × 층 (Markname_WID_층)",
+            "*WALLMARK × *STORY. 층은 위에서 아래 순서",
+          ],
+          ["12. Slaving", "층별 DIAPH_층", "*STORY 에서 최하층만 빼고"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "저장되는 이름은 **건물명-번호.항목.확장자** 입니다. 예) 204D-01.node.txt · 204D-05.rotgage.txt · 204D-11.section.csv. **번호는 위 목록의 순번으로 고정**이라 체크를 몇 개만 해도 번호가 밀리지 않습니다. 1~9 는 txt, 10~12 는 csv 로 저장됩니다.",
+      },
+      { type: "heading", text: "02 · Nodal Mass", id: "nodal-mass" },
+      {
+        type: "paragraph",
+        text: "Midas Gen 의 Story Mass Table 을 **머리글째 통째로** 복사해 붙여넣습니다. 프로그램은 각 줄의 **뒤쪽 숫자 6개**(Level · X-DIR · Y-DIR · Rotational · X-Coord · Y-Coord)만 골라 읽기 때문에, 앞에 붙은 Story 이름이나 위쪽 머리글·Bedrock 안내줄은 알아서 건너뜁니다. 천 단위 쉼표도 그대로 두면 됩니다.",
+      },
+      {
+        type: "paragraph",
+        text: "붙여넣는 즉시 몇 개 층을 인식했는지 아래에 표시됩니다. 층 수가 예상과 다르면 그 자리에서 알 수 있습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "MGTX 를 함께 지정하면 *STORY 블록에서 층별 우발편심(ECCX·ECCY)을 읽어 질량중심을 옮길 수 있습니다. 방향은 +X+Y / −X+Y / −X−Y / +X−Y 네 가지이고, 지진하중 조합에 맞춰 네 번 돌려 네 벌을 만드는 방식입니다.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "**회전관성 편심축 보정** — 편심 방향을 고르면 함께 켜지는 항목입니다. 질량중심이 d = √(ECCX² + ECCY²) 만큼 옮겨가므로, 옮긴 축을 기준으로 한 회전관성이 커집니다. 그만큼을 **Rot_z += X-mass × (ECCX² + ECCY²)** 로 더해 줍니다. 이동거리의 제곱이라 편심 부호(±)와 무관하게 네 방향 모두 같은 값이 더해집니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "출력은 **건물명-node.txt** 와 **건물명-nodal_mass.txt** 두 개입니다. Node 파일은 체크를 끄면 만들지 않습니다.",
+          "**PERFORM-3D 에서는 Node 를 먼저 Import 한 뒤 Nodal Mass 를 Import** 합니다. 절점이 없으면 질량이 들어갈 자리가 없습니다.",
+          "질량이 X·Y·회전 모두 0 인 층은 층 수에는 포함되지만 출력에서는 빠집니다.",
+          "자릿수는 좌표·레벨 소수 4자리, 질량 3자리, 회전질량 유효숫자 7자리로 맞춰 나갑니다.",
+        ],
+      },
+      { type: "heading", text: "03 · Wall List 정리", id: "wall-list" },
+      {
+        type: "paragraph",
+        text: "BeST 에서 출력한 Wall List 를 넣으면 두 가지를 만듭니다. 파일을 고르면 원본인지(‘MEMB Name :’), 이미 정리된 TXT 인지(‘Story,Mem_Name’) 자동으로 구분해 표시합니다.",
+      },
+      {
+        type: "table",
+        headers: ["출력", "내용"],
+        rows: [
+          [
+            "건물명-for wall_list_tab.txt",
+            "부재별 정리표. Story, Mem_Name, fck, Thk, V-Rebar, H-Rebar 순서이고 배근의 괄호 부분은 지웁니다",
+          ],
+          [
+            "건물명-wall_list.csv",
+            "단면 조합 목록. fck·SD·두께·수직배근 조합에서 중복을 없애고 정렬한 뒤, 이름(C24_SD500_T200_D10@450)과 As/Ag·두께(cm)·Ec 계산식을 넣어 둡니다",
+          ],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "철근 강도는 수직배근 직경으로 판정합니다. **D16 이상이면 큰 강도, 미만이면 작은 강도**를 쓰고, 그 값은 Wall List 머리글의 fy,D13↓ · fy,D16↑ 에서 읽습니다(못 읽으면 400 / 700). CSV 는 원본이 아니라 위 TXT 결과를 입력으로 쓰기 때문에 두 항목을 함께 체크해도 됩니다.",
+      },
+      { type: "heading", text: "저장이 안 될 때", id: "validation" },
+      {
+        type: "paragraph",
+        text: "프로그램은 잘못된 자료를 조용히 저장하지 않습니다. 막히는 경우는 대부분 아래 넷 중 하나입니다.",
+      },
+      {
+        type: "table",
+        headers: ["증상", "원인", "조치"],
+        rows: [
+          [
+            "‘건물명을 입력하세요’",
+            "건물명이 비어 있음",
+            "모든 출력 파일의 앞머리라 필수입니다",
+          ],
+          [
+            "파일 이름 옆에 ⚠",
+            "MGTX 에 *NODE 가 없거나, Wall List 가 두 형식 중 어느 쪽도 아님",
+            "확장자만 같은 다른 파일일 수 있습니다. 그대로 실행은 되지만 결과를 확인하세요",
+          ],
+          [
+            "**‘층 정보 불일치 — 진행 중단’**",
+            "붙여넣은 층 수가 MGTX 층 수와 다르거나, Level 값이 MGTX 층 레벨과 맞지 않음",
+            "저장하지 않고 멈춥니다. Mass Table 을 다시 복사하거나 MGTX 가 같은 모델인지 확인하세요",
+          ],
+          [
+            "‘결과 없음’",
+            "체크한 항목에 해당하는 데이터가 모델에 없음",
+            "진행/결과 로그에 어떤 항목이 비었는지 나옵니다",
+          ],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "같은 이름의 파일이 이미 있으면 덮어쓸지 먼저 묻습니다. 여러 파일 중 하나가 다른 프로그램에 열려 있어 실패해도 나머지는 계속 저장하고, 실패한 것만 따로 알려 줍니다.",
+      },
+      { type: "heading", text: "출력 파일이 PERFORM-3D 어디로 들어가나", id: "mapping" },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "아래 표에서 **확인 필요**로 적은 줄은 프로그램 쪽에서 확정되지 않은 항목입니다. 실제 Import 경로를 확인한 뒤 채워야 합니다.",
+      },
+      {
+        type: "table",
+        headers: ["출력 파일", "PERFORM-3D 사용처"],
+        rows: [
+          ["건물명-node.txt", "Nodes — 절점. Nodal Mass 보다 먼저 Import"],
+          ["건물명-nodal_mass.txt", "Nodes › Masses — 층 질량"],
+          ["-01.node.txt ~ -04.wall.txt", "확인 필요"],
+          ["-05.rotgage.txt · -06.axgage.txt", "확인 필요 (Deformation Gage 계열)"],
+          ["-07.embbeam.txt", "확인 필요"],
+          ["-08.dlnodal.txt · -09.llnodal.txt", "확인 필요 (Nodal Loads)"],
+          ["-10.frame.csv", "확인 필요 (Frame 이름)"],
+          ["-11.section.csv", "확인 필요 (Structure Section 이름)"],
+          ["-12.slaving.csv", "확인 필요 (Slaving)"],
+          [
+            "-for wall_list_tab.txt · -wall_list.csv",
+            "PF3D 입력 아님 — 후처리·물성치 정리용",
+          ],
+        ],
+      },
+      { type: "heading", text: "설정 저장 · 불러오기", id: "preset" },
+      {
+        type: "list",
+        items: [
+          "화면에 넣은 입력 전부(고른 파일 경로 · 체크 항목 · 붙여넣은 원문 · 편심 설정)를 **건물명 이름으로** 저장합니다.",
+          "저장 위치는 **프로그램 폴더\\_설정\\건물명.json** 이고, 그 폴더에 쓸 수 없으면 %LOCALAPPDATA%\\PF3D_pre\\_설정 으로 넘어갑니다.",
+          "**RUN 이 성공하면 조용히 자동 저장**됩니다. 같은 건물을 다시 뽑을 때는 불러오기만 누르면 됩니다.",
+          "불러올 때 없어진 파일은 지우지 않고 ‘⚠ 파일 없음’ 으로 남겨 어떤 파일을 다시 골라야 하는지 보여 줍니다.",
+          "‘초기화’ 는 지금 화면만 비웁니다. **저장해 둔 설정 파일은 지우지 않습니다.**",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "해석이 끝난 뒤 결과를 정리·검토하는 후처리 프로그램은 별도 문서로 다룹니다.",
+      },
+    ],
+    related: ["pf3d-ads-to-gen", "pf3d-perform3d-modeling"],
+  },
+  {
     slug: "pf3d-perform3d-modeling",
     category: "PF3D 매뉴얼",
-    title: "02 · PERFORM-3D 모델링 설정",
+    title: "03 · PERFORM-3D 모델링 설정",
     summary:
       "Gen에서 넘어온 모델을 PERFORM-3D에서 비선형 해석이 돌아가는 상태로 만드는 과정입니다. 물성치·유효강성 입력부터 Gage, Limit State, 지진파, Load Case, Damping, 횡하중 분포까지 16단계로 정리했습니다.",
     updatedAt: "2026-09-02",
@@ -1327,7 +1564,7 @@ export const resources: Resource[] = [
         ],
       },
     ],
-    related: ["pf3d-ads-to-gen"],
+    related: ["pf3d-ads-to-gen", "pf3d-pre-processor"],
   },
   {
     slug: "ai-adoption-concept",
