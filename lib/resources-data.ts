@@ -2367,7 +2367,265 @@ export const resources: Resource[] = [
         text: "이번 주에 두 번 이상 한 반복 작업 하나를 고릅니다. 아직 AI를 켜지 말고 목적·입력·처리·출력·확인 다섯 칸부터 적어보세요. 다섯 칸이 채워지면 그때 가장 단순한 한 단계만 AI와 코드로 옮깁니다.",
       },
     ],
-    related: ["ai-output-verification", "ai-adoption-practice"],
+    related: ["ai-output-verification", "ai-tools-for-work"],
+  },
+  {
+    slug: "ai-tools-for-work",
+    category: "기술 가이드",
+    title: "05. 실무에서 사용하는 AI와 개발 도구",
+    summary:
+      "Python부터 터미널, AI 코딩, 디자인, Git과 배포까지 — 실제 작업에 사용하는 도구의 역할과 연결 순서를 정리했습니다.",
+    updatedAt: "2026-09-04",
+    body: [
+      {
+        type: "paragraph",
+        text: "AI에게 프로그램을 만들어달라고 해도 컴퓨터에는 코드를 작성하고 실행하고 보관할 도구가 필요합니다. 처음에는 이름이 비슷해 보여도 역할은 서로 다릅니다. 모두 능숙하게 다룰 필요는 없지만, 어떤 도구가 어느 단계에서 쓰이는지는 알아두는 것이 좋습니다.",
+      },
+      {
+        type: "link",
+        label: "이전 글 · 04. 반복 업무를 AI 작업 절차로 만들기",
+        url: "/resources/ai-workflow-standardization",
+        description:
+          "반복 업무의 입력·출력·검증 방법을 정하는 과정을 먼저 다룬 글입니다.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "도구를 많이 설치하는 것이 목적은 아닙니다. **작성·실행·검증·기록·배포에 필요한 역할만 골라서 사용합니다.**",
+      },
+      {
+        type: "heading",
+        text: "도구를 역할별로 나눠봅니다",
+        id: "overview",
+      },
+      {
+        type: "table",
+        headers: ["분류", "용도", "사용하는 도구"],
+        rows: [
+          ["기획", "무엇을 만들지 정리", "ChatGPT"],
+          ["조사", "웹과 보유 자료에서 근거 확인", "Gemini, NotebookLM"],
+          ["디자인", "참고 사례를 찾고 화면 시안 제작", "Godly, Dribbble, Claude Design"],
+          [
+            "편집기·IDE",
+            "코드와 텍스트 파일을 직접 열고 수정",
+            "Notepad++, VS Code, Antigravity IDE",
+          ],
+          [
+            "AI 작업",
+            "AI에 코드·문서 작업을 맡기고 결과 확인",
+            "Claude Code, Codex, Cowork",
+          ],
+          ["실행환경", "Python·JavaScript 코드 실행", "Python, Python Launcher, Node.js"],
+          ["CLI", "명령 입력과 터미널 작업 관리", "PowerShell, Herdr"],
+          ["검증", "정답과 오류 처리 시험", "pytest, 기존 계산서, 검증된 도구"],
+          ["관리", "변경 이력 기록과 온라인 보관", "Git, GitHub"],
+          ["배포", "완성한 웹사이트·프로그램과 파일을 배포", "Vercel, NAS"],
+        ],
+      },
+      {
+        type: "heading",
+        text: "코드를 실행하는 기본 환경",
+        id: "runtime",
+      },
+      {
+        type: "table",
+        headers: ["도구", "역할"],
+        rows: [
+          ["Python", "계산, 데이터 정리와 반복 업무 자동화에 사용하는 언어와 실행환경"],
+          [
+            "Python Launcher",
+            "Windows에서 .py 파일을 더블클릭하거나 py 명령으로 실행할 Python을 찾아주는 실행기",
+          ],
+          [
+            "Node.js",
+            "JavaScript·TypeScript 코드와 웹 프로젝트를 컴퓨터에서 실행하는 환경",
+          ],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Python 파일을 더블클릭하면 Python Launcher가 연결된 Python을 찾아 실행합니다. 다만 실행이 끝나거나 오류가 나면 창이 바로 닫힐 수 있습니다. 결과와 오류를 확인하면서 개발할 때는 PowerShell에서 실행하는 편이 좋습니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "Python과 Node.js는 서로를 대신하는 프로그램이 아닙니다. Python 자동화에는 Python이, 현재 웹사이트와 같은 JavaScript·TypeScript 프로젝트에는 Node.js가 필요합니다.",
+      },
+      {
+        type: "heading",
+        text: "파일과 코드를 작성하는 도구",
+        id: "editors",
+      },
+      {
+        type: "table",
+        headers: ["도구", "사용할 때"],
+        rows: [
+          [
+            "Notepad++",
+            "텍스트, 설정과 코드 파일 하나를 빠르게 열어 확인하거나 간단히 수정할 때",
+          ],
+          [
+            "VS Code",
+            "폴더 전체를 열고 여러 파일, 검색, 터미널과 확장 기능을 함께 사용할 때",
+          ],
+          ["Antigravity IDE", "코드를 직접 보면서 AI 에이전트와 프로그램을 개발할 때"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Notepad++와 VS Code를 모두 배울 필요는 없습니다. 단순한 파일 확인에는 Notepad++가 가볍고, 프로그램을 만들 때는 프로젝트 전체를 다룰 수 있는 VS Code나 Antigravity IDE가 적합합니다.",
+      },
+      {
+        type: "heading",
+        text: "명령을 실행하는 도구",
+        id: "terminal",
+      },
+      {
+        type: "table",
+        headers: ["도구", "역할"],
+        rows: [
+          ["PowerShell", "파일 이동, 프로그램 실행, 설치와 검사 명령을 해석하고 실행"],
+          ["Herdr", "프로젝트별로 여러 터미널과 AI 에이전트 작업을 한 화면에서 관리"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "PowerShell은 명령을 실행하는 셸이고 Herdr는 그 터미널과 작업공간을 정리하는 프로그램입니다. Herdr 안에서도 PowerShell을 사용할 수 있습니다.",
+      },
+      {
+        type: "heading",
+        text: "AI는 역할에 따라 나눠 씁니다",
+        id: "ai-tools",
+      },
+      {
+        type: "table",
+        headers: ["도구", "주로 맡기는 일"],
+        rows: [
+          ["ChatGPT", "아이디어 발굴, 기획, 계획과 전체 작업 방향 정리"],
+          ["Gemini", "웹 검색을 이용한 최신 자료와 참고 정보 조사"],
+          ["NotebookLM", "미리 넣어둔 자료 안에서 근거를 찾고 내용을 정리"],
+          ["Claude Code", "프로젝트의 코드를 읽고 작성·수정하며 명령을 실행"],
+          [
+            "Codex",
+            "저장소를 직접 확인하고 여러 파일을 수정한 뒤 검사·빌드·Git 작업까지 수행",
+          ],
+          ["Cowork", "폴더의 문서와 파일을 바탕으로 여러 단계의 일반 업무를 이어서 수행"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "같은 질문을 모든 AI에 반복해서 던질 필요는 없습니다. 아이디어와 계획은 ChatGPT, 공개 자료 검색은 Gemini, 지정한 자료 안의 확인은 NotebookLM, 문서와 파일을 다루는 여러 단계의 일반 업무는 Cowork, 실제 코드 작업은 Claude Code·Codex·Antigravity처럼 역할을 정해두면 작업 흐름이 단순해집니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "어떤 AI를 사용하더라도 발주처 원본 도면·계약서·미공개 성과품과 개인정보는 입력하지 않습니다. 공개 자료나 사용이 허용된 자료만 사용합니다.",
+      },
+      {
+        type: "heading",
+        text: "디자인은 참고·시안·구현을 나눕니다",
+        id: "design-tools",
+      },
+      {
+        type: "table",
+        headers: ["구분", "도구", "역할"],
+        rows: [
+          ["참고", "Godly", "실제로 공개된 웹사이트의 전체 구성과 흐름 탐색"],
+          ["참고", "Dribbble", "UI, 타이포그래피, 카드와 화면 세부 표현 탐색"],
+          ["시안", "Claude Design", "대화로 디자인 방향, 화면 시안과 프로토타입 제작"],
+          ["UI 구현", "v0", "자연어와 시안을 실행 가능한 웹 화면과 초기 코드로 변환"],
+          [
+            "자료 수집",
+            "Firecrawl",
+            "공개 웹페이지의 내용과 구조를 AI가 읽을 수 있는 자료로 정리",
+          ],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Godly에서는 전체 웹사이트의 흐름을 보고 Dribbble에서는 세부적인 시각 표현을 찾습니다. 참고한 사이트의 코드·문구·이미지·로고를 복제하지 않고, 정보 배치와 분위기를 정하는 자료로만 사용합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "동양구조엔지니어링 웹사이트는 v0에서 만든 초기 UI를 기반으로 시작했습니다. 현재는 v0 무료 플랜에서 더 이상 편집하지 않고, 로컬 개발환경과 AI 코딩 도구에서 디자인과 기능을 수정합니다. Firecrawl도 디자인을 만드는 도구가 아니라 공개 웹 자료를 조사하고 구조화하는 보조 도구입니다.",
+      },
+      {
+        type: "heading",
+        text: "변경을 기록하고 결과를 검증합니다",
+        id: "manage-and-test",
+      },
+      {
+        type: "table",
+        headers: ["도구", "역할"],
+        rows: [
+          [
+            "Git",
+            "AI와 사람이 수정한 내용을 비교하고 기록하며 문제가 생기면 이전 상태로 복구",
+          ],
+          ["GitHub 계정", "Git 저장소를 온라인에 보관하고 다른 서비스와 연결"],
+          [
+            "pytest",
+            "Python 코드가 정답을 내고 잘못된 입력에서 안전하게 멈추는지 자동 시험",
+          ],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "GitHub Desktop은 필수로 사용하지 않습니다. Git 명령을 직접 외우지 않아도 Claude Code, Codex와 Antigravity가 작업을 도울 수 있습니다. 다만 변경 내용을 확인한 뒤 기록한다는 원칙은 그대로 지킵니다.",
+      },
+      {
+        type: "heading",
+        text: "완성한 결과를 배포합니다",
+        id: "deployment",
+      },
+      {
+        type: "paragraph",
+        text: "Vercel은 만든 웹사이트를 외부에서 접속할 수 있도록 인터넷에 배포하는 서비스입니다. GitHub 저장소와 연결하면 새 코드가 올라왔을 때 웹사이트를 다시 만들고 배포할 수 있습니다. NAS는 사내망에서 프로그램, 실행 파일과 업무 자료를 구성원에게 배포하고 함께 사용할 때 활용합니다.",
+      },
+      {
+        type: "heading",
+        text: "처음 준비할 때의 순서",
+        id: "setup-order",
+      },
+      {
+        type: "list",
+        items: [
+          "하나 · GitHub 계정을 만듭니다.",
+          "둘 · Python과 Python Launcher를 설치하고 .py 파일이 실행되는지 확인합니다.",
+          "셋 · 웹 프로젝트를 다룬다면 Node.js를 설치합니다.",
+          "넷 · VS Code 또는 Antigravity IDE에서 작업 폴더를 엽니다.",
+          "다섯 · PowerShell이나 Herdr에서 실행·검사 명령을 사용합니다.",
+          "여섯 · AI가 만든 코드를 시험한 뒤 Git에 기록하고 GitHub에 올립니다.",
+          "일곱 · 외부 웹사이트는 Vercel에, 사내 프로그램과 파일은 NAS에 배포합니다.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "처음부터 모든 도구를 배울 필요는 없습니다. **AI에게 일을 맡기더라도 지금 어느 단계이며 결과를 무엇으로 확인해야 하는지만 알고 있으면 됩니다.**",
+      },
+      {
+        type: "link",
+        label: "디자인 참고 · Godly",
+        url: "https://godly.design/websites/",
+        description:
+          "완성된 웹사이트 사례를 중심으로 전체 구성과 흐름을 찾아볼 수 있습니다.",
+      },
+      {
+        type: "link",
+        label: "디자인 참고 · Dribbble",
+        url: "https://dribbble.com/",
+        description: "웹·모바일·브랜드와 UI 세부 표현을 폭넓게 찾아볼 수 있습니다.",
+      },
+      {
+        type: "link",
+        label: "웹 자료 수집 · Firecrawl",
+        url: "https://www.firecrawl.dev/",
+        description:
+          "공개 웹페이지를 검색하고 AI가 처리할 수 있는 자료로 구조화하는 도구입니다.",
+      },
+    ],
+    related: ["ai-workflow-standardization", "ai-output-verification"],
   },
 ];
 
