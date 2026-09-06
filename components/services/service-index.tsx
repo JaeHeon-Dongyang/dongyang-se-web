@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { serviceGroups } from "@/lib/services-data";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,16 @@ import { cn } from "@/lib/utils";
  */
 export function ServiceIndex() {
   const [active, setActive] = useState<string>(serviceGroups[0].slug);
+
+  function handleAnchorClick(event: MouseEvent<HTMLAnchorElement>, slug: string) {
+    const section = document.getElementById(slug);
+    if (!section) return;
+
+    event.preventDefault();
+    setActive(slug);
+    window.history.pushState(null, "", `#${slug}`);
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   useEffect(() => {
     const sections = serviceGroups
@@ -52,7 +62,7 @@ export function ServiceIndex() {
           <li key={s.slug} className="shrink-0">
             <a
               href={`#${s.slug}`}
-              onClick={() => setActive(s.slug)}
+              onClick={(event) => handleAnchorClick(event, s.slug)}
               aria-current={active === s.slug ? "true" : undefined}
               className={cn(
                 "flex items-baseline gap-2.5 px-[clamp(0.25rem,0.8vw,0.625rem)] py-[15px] text-sm font-semibold tracking-[-0.015em] whitespace-nowrap transition-colors",
