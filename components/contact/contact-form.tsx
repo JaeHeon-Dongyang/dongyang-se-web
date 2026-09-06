@@ -38,6 +38,15 @@ export function ContactForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const [inquiryType, setInquiryType] = useState<InquiryTypeValue>(inquiryTypes[0].value);
   const [consent, setConsent] = useState(false);
+  const [requiredValues, setRequiredValues] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    message: "",
+  });
+
+  const requiredFieldsComplete =
+    consent && Object.values(requiredValues).every((value) => value.trim().length > 0);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -86,6 +95,7 @@ export function ContactForm() {
         form.reset();
         setConsent(false);
         setInquiryType(inquiryTypes[0].value);
+        setRequiredValues({ name: "", phone: "", email: "", message: "" });
         setState("success");
         return;
       }
@@ -192,8 +202,13 @@ export function ContactForm() {
             <Input
               id="name"
               name="name"
+              value={requiredValues.name}
+              onChange={(event) =>
+                setRequiredValues((current) => ({ ...current, name: event.target.value }))
+              }
               placeholder="홍길동"
               autoComplete="name"
+              required
               aria-invalid={Boolean(errors.name)}
               className="h-12 rounded-none border-0 bg-transparent px-0 shadow-none"
             />
@@ -239,8 +254,16 @@ export function ContactForm() {
               id="phone"
               name="phone"
               type="tel"
+              value={requiredValues.phone}
+              onChange={(event) =>
+                setRequiredValues((current) => ({
+                  ...current,
+                  phone: event.target.value,
+                }))
+              }
               placeholder="010-0000-0000"
               autoComplete="tel"
+              required
               aria-invalid={Boolean(errors.phone)}
               className="h-12 rounded-none border-0 bg-transparent px-0 shadow-none"
             />
@@ -262,6 +285,13 @@ export function ContactForm() {
               id="email"
               name="email"
               type="email"
+              value={requiredValues.email}
+              onChange={(event) =>
+                setRequiredValues((current) => ({
+                  ...current,
+                  email: event.target.value,
+                }))
+              }
               placeholder="example@company.com"
               autoComplete="email"
               required
@@ -308,7 +338,15 @@ export function ContactForm() {
             id="message"
             name="message"
             rows={6}
+            value={requiredValues.message}
+            onChange={(event) =>
+              setRequiredValues((current) => ({
+                ...current,
+                message: event.target.value,
+              }))
+            }
             placeholder="프로젝트 개요, 위치, 규모, 희망 일정 등을 자세히 남겨주시면 상담에 도움이 됩니다."
+            required
             aria-invalid={Boolean(errors.message)}
             className="min-h-36 resize-y rounded-none border-0 bg-transparent px-0 shadow-none"
           />
@@ -371,7 +409,7 @@ export function ContactForm() {
         <Button
           type="submit"
           size="lg"
-          disabled={state === "submitting" || !consent}
+          disabled={state === "submitting" || !requiredFieldsComplete}
           className="h-auto w-full rounded-none px-7 py-4 disabled:bg-[#aeb1ac] disabled:text-white disabled:opacity-100 has-data-[icon=inline-end]:pr-7 sm:w-fit sm:min-w-[150px]"
         >
           {state === "submitting" ? (
@@ -380,10 +418,8 @@ export function ContactForm() {
           {state === "submitting" ? "전송 중..." : "문의 보내기"}
           {state !== "submitting" ? <ArrowRight data-icon="inline-end" /> : null}
         </Button>
-        {!consent ? (
-          <p className="text-muted-foreground text-xs">
-            개인정보 수집·이용 동의 후 전송할 수 있습니다.
-          </p>
+        {!requiredFieldsComplete ? (
+          <p className="text-muted-foreground text-xs">필수 항목을 작성해 주세요.</p>
         ) : null}
       </div>
     </form>
