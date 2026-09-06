@@ -36,8 +36,8 @@ describe("inquirySchema", () => {
     if (!r.success) expect(toFieldErrors(r.error).privacyConsent).toBeTruthy();
   });
 
-  it("이메일은 선택이지만 형식이 틀리면 실패한다", () => {
-    expect(inquirySchema.safeParse({ ...valid, email: "" }).success).toBe(true);
+  it("이메일이 비거나 형식이 틀리면 실패한다", () => {
+    expect(inquirySchema.safeParse({ ...valid, email: "" }).success).toBe(false);
     expect(inquirySchema.safeParse({ ...valid, email: "not-an-email" }).success).toBe(
       false,
     );
@@ -62,6 +62,7 @@ describe("inquirySchema", () => {
 
 describe("inquiryTypeLabel", () => {
   it("모든 유형에 라벨이 있다", () => {
+    expect(inquiryTypeLabel.business).toBe("사업 문의");
     expect(inquiryTypeLabel.structural).toBe("구조설계");
     expect(inquiryTypeLabel.demolition).toBe("해체공사 구조검토");
   });

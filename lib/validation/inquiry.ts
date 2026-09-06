@@ -6,6 +6,7 @@ import { z } from "zod";
  */
 
 export const inquiryTypes = [
+  { value: "business", label: "사업 문의" },
   { value: "structural", label: "구조설계" },
   { value: "safety", label: "안전점검·진단" },
   { value: "construction", label: "공사 중 안전관리" },
@@ -20,17 +21,18 @@ export const inquiryTypeLabel = Object.fromEntries(
   inquiryTypes.map((t) => [t.value, t.label]),
 ) as Record<InquiryTypeValue, string>;
 
-const optionalEmail = z
+const requiredEmail = z
   .string()
   .trim()
+  .min(1, "이메일을 입력해 주세요.")
   .max(150, "이메일이 너무 깁니다.")
-  .refine((v) => v === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), {
+  .refine((v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), {
     message: "이메일 형식이 올바르지 않습니다.",
-  })
-  .optional();
+  });
 
 export const inquirySchema = z.object({
   type: z.enum([
+    "business",
     "structural",
     "safety",
     "construction",
@@ -46,7 +48,7 @@ export const inquirySchema = z.object({
     .min(9, "연락처를 입력해 주세요.")
     .max(20, "연락처가 너무 깁니다.")
     .regex(/^[0-9+\-\s()]+$/, "연락처는 숫자와 -, 공백만 사용할 수 있습니다."),
-  email: optionalEmail,
+  email: requiredEmail,
   subject: z.string().trim().max(150, "제목이 너무 깁니다.").optional(),
   message: z
     .string()

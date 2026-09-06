@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { CheckCircle2, Loader2, Send } from "lucide-react";
+import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -141,7 +141,7 @@ export function ContactForm() {
           className="sr-only"
         />
 
-        <Field className="border-border border-heading grid gap-3 border-t border-b py-3 md:grid-cols-[150px_1fr] md:items-center md:gap-10">
+        <Field className="border-t-heading border-b-border grid gap-3 border-t border-b py-3 md:grid-cols-[150px_1fr] md:items-center md:gap-10">
           <FieldLabel
             htmlFor="inquiry-type"
             className="text-heading gap-2.5 text-[13.5px] font-semibold"
@@ -256,7 +256,7 @@ export function ContactForm() {
               className="text-heading gap-2.5 text-[13.5px] font-semibold"
             >
               <span className="text-[#cde0d4] tabular-nums">05</span>
-              이메일
+              이메일 <span className="text-brand">*</span>
             </FieldLabel>
             <Input
               id="email"
@@ -264,6 +264,7 @@ export function ContactForm() {
               type="email"
               placeholder="example@company.com"
               autoComplete="email"
+              required
               aria-invalid={Boolean(errors.email)}
               className="h-12 rounded-none border-0 bg-transparent px-0 shadow-none"
             />
@@ -337,8 +338,11 @@ export function ContactForm() {
               aria-invalid={Boolean(errors.privacyConsent)}
             />
             <span>
-              문의 접수 및 회신을 위한 개인정보(이름·연락처·이메일·문의 내용) 수집·이용에
-              동의합니다. 수집한 정보는 문의 처리 목적으로만 사용합니다.
+              <strong className="text-heading font-semibold">
+                개인정보 수집·이용 동의.
+              </strong>{" "}
+              문의 접수 및 회신을 위한 개인정보(이름·연락처·이메일·문의 내용)를
+              수집·이용하며, 문의 처리 목적으로만 사용합니다.
             </span>
           </label>
           {errors.privacyConsent && <FieldError>{errors.privacyConsent}</FieldError>}
@@ -363,23 +367,22 @@ export function ContactForm() {
         </div>
       ) : null}
 
-      <div className="mt-6 flex flex-col gap-2">
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
         <Button
           type="submit"
           size="lg"
           disabled={state === "submitting" || !consent}
-          className="h-auto w-full rounded-none px-7 py-4 sm:w-fit"
+          className="h-auto w-full rounded-none px-7 py-4 disabled:bg-[#aeb1ac] disabled:text-white disabled:opacity-100 sm:w-fit"
         >
           {state === "submitting" ? (
             <Loader2 className="animate-spin" data-icon="inline-start" />
-          ) : (
-            <Send data-icon="inline-start" />
-          )}
+          ) : null}
           {state === "submitting" ? "전송 중..." : "문의 보내기"}
+          {state !== "submitting" ? <ArrowRight data-icon="inline-end" /> : null}
         </Button>
         {!consent ? (
           <p className="text-muted-foreground text-xs">
-            개인정보 수집·이용에 동의하시면 문의를 보낼 수 있습니다.
+            개인정보 수집·이용 동의 후 전송할 수 있습니다.
           </p>
         ) : null}
       </div>
