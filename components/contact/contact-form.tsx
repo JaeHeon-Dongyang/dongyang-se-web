@@ -315,7 +315,7 @@ export function ContactForm() {
           {errors.message ? (
             <FieldError className="md:col-start-2">{errors.message}</FieldError>
           ) : (
-            <FieldDescription className="md:col-start-2">
+            <FieldDescription className="text-xs md:col-start-2 md:w-full md:text-center">
               첨부할 도면이나 자료가 있으면 회신 이메일로 별도 전달해 주세요.
             </FieldDescription>
           )}
