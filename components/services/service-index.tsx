@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { serviceGroups } from "@/lib/services-data";
 import { cn } from "@/lib/utils";
 
@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
  */
 export function ServiceIndex() {
   const [active, setActive] = useState<string>(serviceGroups[0].slug);
-  const scrollAnimationFrame = useRef<number | null>(null);
 
   function handleAnchorClick(event: MouseEvent<HTMLAnchorElement>, slug: string) {
     const section = document.getElementById(slug);
@@ -20,42 +19,7 @@ export function ServiceIndex() {
     event.preventDefault();
     setActive(slug);
     window.history.pushState(null, "", `#${slug}`);
-
-    if (scrollAnimationFrame.current !== null) {
-      window.cancelAnimationFrame(scrollAnimationFrame.current);
-    }
-
-    const startY = window.scrollY;
-    const parsedScrollMarginTop = Number.parseFloat(
-      window.getComputedStyle(section).scrollMarginTop,
-    );
-    const scrollMarginTop = Number.isFinite(parsedScrollMarginTop)
-      ? parsedScrollMarginTop
-      : 0;
-    const maximumY = document.documentElement.scrollHeight - window.innerHeight;
-    const targetY = Math.min(
-      maximumY,
-      Math.max(0, startY + section.getBoundingClientRect().top - scrollMarginTop),
-    );
-    const distance = targetY - startY;
-    const duration = 700;
-    let startTime: number | null = null;
-
-    const animateScroll = (currentTime: number) => {
-      startTime ??= currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-      const easedProgress = 1 - Math.pow(1 - progress, 4);
-
-      window.scrollTo(0, startY + distance * easedProgress);
-
-      if (progress < 1) {
-        scrollAnimationFrame.current = window.requestAnimationFrame(animateScroll);
-      } else {
-        scrollAnimationFrame.current = null;
-      }
-    };
-
-    scrollAnimationFrame.current = window.requestAnimationFrame(animateScroll);
+    section.scrollIntoView({ block: "start" });
   }
 
   useEffect(() => {
@@ -83,9 +47,6 @@ export function ServiceIndex() {
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
-      if (scrollAnimationFrame.current !== null) {
-        window.cancelAnimationFrame(scrollAnimationFrame.current);
-      }
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("hashchange", handleScroll);
     };
