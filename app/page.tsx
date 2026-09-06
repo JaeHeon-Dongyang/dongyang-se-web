@@ -88,7 +88,7 @@ export default function HomePage() {
           </div>
           <div className="relative mt-[clamp(2.75rem,5.4vw,5.5rem)] h-[clamp(15rem,30vw,28.75rem)] overflow-hidden">
             <Image
-              src="/images/about-engineers-review.png"
+              src="/images/about-engineers-review2.png"
               alt="구조 엔지니어들이 구조도면과 구조해석 모델을 검토하는 모습"
               fill
               className="object-cover"
@@ -143,7 +143,7 @@ export default function HomePage() {
               <Link
                 key={service.slug}
                 href={`/services#${service.slug}`}
-                className="group border-heading hover:bg-accent flex flex-wrap gap-x-[clamp(1.5rem,3vw,3rem)] gap-y-2.5 border-b py-[clamp(1.75rem,2.8vw,2.5rem)] transition-[background-color,transform] duration-200 hover:translate-x-2 lg:px-5"
+                className="group border-heading hover:bg-accent flex flex-wrap gap-x-[clamp(1.5rem,3vw,3rem)] gap-y-2.5 border-b py-[clamp(1.75rem,2.8vw,2.5rem)] transition-[background-color_200ms_ease,transform_280ms_cubic-bezier(0.16,1,0.3,1)] hover:translate-x-2 lg:px-5"
               >
                 <span className="flex min-w-0 flex-[1_1_220px] items-baseline gap-3.5">
                   <span className="text-brand text-[13px] font-bold tracking-[0.1em] tabular-nums opacity-80">
@@ -212,7 +212,7 @@ export default function HomePage() {
                 기술자료 보기
                 <ArrowRight aria-hidden className="size-3.5" strokeWidth={2.2} />
               </Link>
-              <div className="relative mt-2 h-[clamp(13rem,22vw,20rem)] w-full overflow-hidden">
+              <div className="relative mt-2 aspect-[3/2] w-full overflow-hidden">
                 <Image
                   src="/images/company-manual.png"
                   alt="구조설계와 안전점검 업무 매뉴얼을 체계적으로 관리하는 모습"
