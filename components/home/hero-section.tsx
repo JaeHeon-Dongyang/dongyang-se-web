@@ -10,7 +10,7 @@ const heroImages = Array.from(
 export function HeroSection() {
   return (
     <section className="border-input border-b">
-      <div className="container-site flex flex-wrap items-stretch gap-x-[clamp(2rem,4vw,4.75rem)]">
+      <div className="container-site flex flex-wrap items-center gap-x-[clamp(2rem,4vw,4.75rem)]">
         <div className="reveal-up flex min-w-0 flex-[7_1_420px] flex-col gap-[clamp(1.5rem,2.8vw,2.375rem)] py-[clamp(3.25rem,6vw,6rem)]">
           <span className="text-brand text-xs font-bold tracking-[0.18em]">
             STRUCTURAL ENGINEERING

@@ -148,6 +148,7 @@
   }
   html {
     @apply bg-background;
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-background text-foreground font-sans;
@@ -175,6 +176,12 @@
   }
   .content-measure {
     max-width: 68ch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 

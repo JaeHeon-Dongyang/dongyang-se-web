@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { ResourceCard } from "@/components/resource-card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { resourceCategories, type Resource } from "@/lib/resources-data";
+import { cn } from "@/lib/utils";
 
 function resourceText(r: Resource): string {
   const parts: string[] = [r.title, r.summary, r.category];
@@ -79,10 +80,15 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
             <ToggleGroupItem
               key={cat}
               value={cat}
-              className="h-auto rounded-none px-[18px] py-3 text-[13px]"
+              className={cn(
+                "h-auto rounded-none px-5 py-3.5 text-sm font-semibold transition-colors",
+                category === cat
+                  ? "border-brand bg-brand hover:bg-brand-hover aria-pressed:bg-brand data-[state=on]:bg-brand text-white hover:text-white aria-pressed:text-white data-[state=on]:text-white"
+                  : "text-heading hover:border-brand hover:text-brand hover:bg-transparent",
+              )}
             >
               {cat}
-              <span className="ml-2 text-[11px] tabular-nums opacity-65">
+              <span className="ml-2 text-xs font-medium tabular-nums opacity-70">
                 {String(
                   cat === "전체"
                     ? resources.length

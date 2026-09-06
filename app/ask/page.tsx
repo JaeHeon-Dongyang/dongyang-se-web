@@ -33,7 +33,7 @@ export default function AskPage() {
           <section
             key={group.id}
             aria-labelledby={`group-${group.id}`}
-            className="border-border first:border-heading border-t py-8 first:pt-10 md:py-11"
+            className="border-border border-t py-8 first:pt-10 md:py-11"
           >
             <div className="grid gap-4 lg:grid-cols-[1fr_2fr] lg:gap-14">
               <div className="flex items-baseline gap-3.5">
