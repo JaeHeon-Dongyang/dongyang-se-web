@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { ContactCta } from "@/components/contact-cta";
-import { PageHero } from "@/components/page-hero";
 import { ProcessSteps } from "@/components/services/process-steps";
 import { ServiceDetailSection } from "@/components/services/service-detail-section";
 import { ServiceIndex } from "@/components/services/service-index";
+import { ServicesHero } from "@/components/services/services-hero";
 import { serviceGroups } from "@/lib/services-data";
 
 export const metadata: Metadata = {
@@ -15,17 +15,7 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
   return (
     <div>
-      <PageHero
-        eyebrow="OUR SERVICES"
-        title={
-          <>
-            구조안전이 필요한
-            <br />
-            순간에 함께합니다
-          </>
-        }
-        description="설계 단계의 구조 계획부터 사용 중 안전진단과 점검, 시공 중 안전관리, 해체 단계의 구조검토까지 각 상황에 필요한 전문적인 기술 검토를 제공합니다. 판단의 근거와 필요한 조치를 명확하게 설명하는 것을 중요하게 생각합니다."
-      />
+      <ServicesHero />
 
       <div>
         <ServiceIndex />

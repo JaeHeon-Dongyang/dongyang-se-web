@@ -7,7 +7,6 @@ import { HeroSection } from "@/components/home/hero-section";
 import { ValuesGrid } from "@/components/home/values-grid";
 import { buildMetadata } from "@/lib/seo";
 import { serviceGroups } from "@/lib/services-data";
-import { company, contactLinks } from "@/lib/site";
 
 /*
  * 홈은 곧 회사소개 화면이다 (시안 v3_2_taste 의 `isHome`).
@@ -64,56 +63,10 @@ const capabilityItems = [
   },
 ];
 
-const location = company.address.split(" ").slice(0, 2).join(" ");
-
-const metrics = [
-  { label: "사업 분야", value: "04", suffix: "개 분야" },
-  { label: "공공 자문 위촉", value: "2021", suffix: "대전시 심의위원" },
-  { label: "소재", value: location },
-];
-
 export default function HomePage() {
   return (
     <div>
       <HeroSection />
-
-      <section aria-label="회사 개요" className="border-input bg-surface border-b">
-        <div className="container-site">
-          <dl className="bg-border grid gap-px sm:grid-cols-2 lg:grid-cols-4">
-            {metrics.map((metric) => (
-              <div
-                key={metric.label}
-                className="bg-surface flex flex-col gap-2.5 px-1 py-[clamp(1.5rem,2.8vw,2.375rem)] sm:px-[clamp(0.25rem,1.6vw,1.625rem)]"
-              >
-                <dt className="text-xs font-semibold tracking-[0.02em] text-[#8a8f87]">
-                  {metric.label}
-                </dt>
-                <dd className="text-heading flex items-baseline gap-1.5 text-[clamp(1.25rem,2.1vw,1.625rem)] font-semibold tracking-[-0.025em] tabular-nums">
-                  {metric.value}
-                  {metric.suffix ? (
-                    <span className="text-body-text text-sm font-medium">
-                      {metric.suffix}
-                    </span>
-                  ) : null}
-                </dd>
-              </div>
-            ))}
-            <div className="bg-surface flex flex-col gap-2.5 px-1 py-[clamp(1.5rem,2.8vw,2.375rem)] sm:px-[clamp(0.25rem,1.6vw,1.625rem)]">
-              <dt className="text-xs font-semibold tracking-[0.02em] text-[#8a8f87]">
-                문의
-              </dt>
-              <dd>
-                <a
-                  href={contactLinks.tel}
-                  className="text-heading hover:text-brand text-[clamp(1.25rem,2.1vw,1.625rem)] font-semibold tracking-[-0.025em] tabular-nums transition-colors"
-                >
-                  {company.tel}
-                </a>
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </section>
 
       <section className="pt-[clamp(5.25rem,9vw,9rem)] pb-[clamp(3.5rem,6.5vw,6rem)]">
         <div className="container-site">

@@ -1,6 +1,11 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { HeroSlideshow } from "@/components/home/hero-slideshow";
+import { ImageSlideshow } from "@/components/image-slideshow";
+
+const heroImages = Array.from(
+  { length: 6 },
+  (_, i) => `/images/hero-structural-frame-${i + 1}.jpg`,
+);
 
 export function HeroSection() {
   return (
@@ -37,7 +42,7 @@ export function HeroSection() {
         </div>
 
         <div className="reveal-up min-w-0 flex-[1_1_380px] [animation-delay:140ms]">
-          <HeroSlideshow />
+          <ImageSlideshow images={heroImages} />
         </div>
       </div>
     </section>
