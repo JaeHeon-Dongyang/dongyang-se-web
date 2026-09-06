@@ -88,7 +88,7 @@ export default function HomePage() {
           </div>
           <div className="relative mt-[clamp(2.75rem,5.4vw,5.5rem)] h-[clamp(15rem,30vw,28.75rem)] overflow-hidden">
             <Image
-              src="/images/about-engineers-review2.png"
+              src="/images/about-engineers-review.jpg"
               alt="구조 엔지니어들이 구조도면과 구조해석 모델을 검토하는 모습"
               fill
               className="object-cover"
