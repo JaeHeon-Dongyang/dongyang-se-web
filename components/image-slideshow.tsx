@@ -8,7 +8,7 @@ const INTERVAL_MS = 5000;
 
 /**
  * 히어로 이미지 슬라이드쇼. 5초마다 크로스페이드로 전환하며 각 이미지에 ken-burns 줌 유지.
- * prefers-reduced-motion 이면 자동 전환·줌 없이 첫 이미지만 표시.
+ * prefers-reduced-motion 이면 줌 효과만 끄고 이미지 전환은 유지.
  * 로드 실패한 슬라이드는 순환에서 제외(이미지 일부만 있어도 동작).
  */
 export function ImageSlideshow({ images, alt = "" }: { images: string[]; alt?: string }) {
@@ -22,8 +22,6 @@ export function ImageSlideshow({ images, alt = "" }: { images: string[]; alt?: s
 
   useEffect(() => {
     if (available.length <= 1) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
 
     const id = setInterval(() => {
       setIndex((current) => {
