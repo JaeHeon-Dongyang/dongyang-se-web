@@ -1,6 +1,6 @@
 import { ImageSlideshow } from "@/components/image-slideshow";
 
-const serviceHeroImages = [3, 2, 4, 1, 5].map((n) => `/images/svc-hero-${n}.png`);
+const serviceHeroImages = [3, 2, 4, 1, 5].map((n) => `/images/svc-hero-${n}.jpg`);
 
 export function ServicesHero() {
   return (
