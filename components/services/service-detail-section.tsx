@@ -14,66 +14,66 @@ export function ServiceDetailSection({ service }: { service: ServiceGroup }) {
   return (
     <section
       id={service.slug}
-      className="border-input scroll-mt-[120px] border-b py-[clamp(3.5rem,6.5vw,6rem)]"
+      className="scroll-mt-[120px] pt-[clamp(5.25rem,9vw,9rem)] pb-[clamp(3.5rem,6.5vw,6rem)]"
     >
       <div className="container-site">
-        <div className="border-heading flex flex-wrap gap-x-[clamp(1.5rem,3.4vw,3.5rem)] gap-y-3 border-b pb-[clamp(1.75rem,3vw,2.5rem)]">
-          <div className="flex min-w-0 flex-[1_1_200px] flex-col gap-3.5">
-            <span className="text-brand text-[clamp(1.875rem,3vw,2.5rem)] leading-none font-semibold tracking-[-0.03em] tabular-nums opacity-80">
-              {serviceNumber}
-            </span>
-            <span className="text-heading text-xl font-bold tracking-[-0.025em]">
+        <div className="mb-[clamp(1.625rem,3vw,2.5rem)] flex flex-wrap items-baseline gap-x-[clamp(1.5rem,3.4vw,4rem)] gap-y-2.5">
+          <span className="text-[clamp(2.75rem,5vw,4.25rem)] leading-[0.82] font-extralight tracking-[-0.05em] text-[#cde0d4] tabular-nums">
+            {serviceNumber}
+          </span>
+          <div className="flex min-w-0 flex-[1_1_480px] flex-col gap-3">
+            <span className="text-brand text-[13px] font-bold tracking-[0.02em]">
               {service.title}
             </span>
-          </div>
-          <div className="min-w-0 flex-[3_1_520px]">
-            <h2 className="text-heading max-w-[24em] text-[clamp(1.5rem,2.6vw,2rem)] leading-[1.24] font-bold tracking-[-0.03em]">
+            <h2 className="text-heading max-w-[22em] text-[clamp(1.625rem,3vw,2.5rem)] leading-[1.16] font-bold tracking-[-0.034em]">
               {service.headline}
             </h2>
-            <div className="text-body-text mt-[22px] flex max-w-[52em] flex-col gap-4 text-[15.5px] leading-[1.85]">
-              {service.intro.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </div>
           </div>
         </div>
 
-        <dl>
+        <div className="flex flex-wrap gap-x-[clamp(1.375rem,3vw,4rem)] gap-y-5 pb-[clamp(2.125rem,4vw,3.75rem)]">
+          {service.intro.map((paragraph) => (
+            <p
+              key={paragraph}
+              className="text-body-text min-w-0 flex-[1_1_320px] text-base leading-[1.9] text-pretty"
+            >
+              {paragraph}
+            </p>
+          ))}
+        </div>
+
+        <dl className="mb-[clamp(2rem,3.8vw,3.5rem)] grid grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))] gap-[clamp(0.875rem,1.6vw,1.25rem)]">
           {details.map((detail) => (
             <div
               key={detail.name}
-              className="border-border flex flex-wrap gap-x-[clamp(1.5rem,3.4vw,3.5rem)] gap-y-1 border-b py-[22px]"
+              className="border-border flex flex-col gap-3 border bg-white p-[clamp(1.5rem,2.8vw,2.375rem)]"
             >
-              <dt className="text-heading min-w-0 flex-[1_1_200px] text-[15px] font-bold tracking-[-0.02em]">
+              <dt className="text-heading text-[17px] leading-[1.34] font-bold tracking-[-0.028em]">
                 {detail.name}
               </dt>
-              <dd className="text-body-text max-w-[58em] min-w-0 flex-[3_1_460px] text-[14.5px] leading-[1.8]">
+              <dd className="text-body-text text-[14.5px] leading-[1.85]">
                 {detail.description}
               </dd>
             </div>
           ))}
         </dl>
 
-        <div className="mt-[clamp(1.75rem,3.4vw,2.75rem)] flex flex-wrap gap-[clamp(1.25rem,3vw,3rem)] bg-[#f1f6f2] p-[clamp(1.5rem,3vw,2.5rem)]">
-          <div className="flex min-w-0 flex-[1_1_240px] flex-col gap-3">
-            <span className="text-sm font-bold tracking-[0.14em] text-[#094d30]">
+        <div className="flex flex-wrap gap-[clamp(1.5rem,3vw,3.5rem)] bg-[#f1f6f2] p-[clamp(1.75rem,3.2vw,3rem)]">
+          <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-3.5">
+            <h3 className="text-[clamp(1.1875rem,2vw,1.5rem)] leading-[1.3] font-bold tracking-[-0.03em] text-[#094d30]">
               이런 경우에 필요합니다
-            </span>
-            <p className="text-[12.5px] leading-[1.75] text-[#6e756c]">{service.note}</p>
+            </h3>
+            <p className="max-w-[30em] text-[13px] leading-[1.8] text-[#56604f]">
+              {service.note}
+            </p>
           </div>
-          <ol className="grid min-w-0 flex-[2_1_440px] grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-x-[clamp(1.25rem,3vw,2.5rem)]">
-            {service.situations.map((situation, index) => (
-              <li
-                key={situation}
-                className="flex gap-[11px] border-b border-[#cde0d4] py-[11px] text-sm leading-[1.65] text-[#2c322c]"
-              >
-                <span className="text-brand pt-1 text-xs font-bold tracking-[0.08em] tabular-nums">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
+          <ul className="grid min-w-0 flex-[2_1_460px] grid-cols-[repeat(auto-fit,minmax(min(100%,250px),1fr))] gap-x-[clamp(1.5rem,3vw,2.75rem)] gap-y-3.5">
+            {service.situations.map((situation) => (
+              <li key={situation} className="text-[14.5px] leading-[1.7] text-[#2c322c]">
                 {situation}
               </li>
             ))}
-          </ol>
+          </ul>
         </div>
       </div>
     </section>
