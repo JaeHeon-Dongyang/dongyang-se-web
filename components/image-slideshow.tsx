@@ -35,7 +35,7 @@ export function ImageSlideshow({ images, alt = "" }: { images: string[]; alt?: s
   }, [available]);
 
   return (
-    <div className="bg-surface-muted relative aspect-square w-full overflow-hidden">
+    <div className="bg-surface-muted relative min-h-[280px] w-full overflow-hidden sm:min-h-[380px] lg:min-h-[520px]">
       {images.map((src, i) =>
         broken[i] ? null : (
           <Image
