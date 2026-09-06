@@ -17,7 +17,7 @@ export default function ContactPage() {
         eyebrow="CONTACT"
         title={
           <>
-            안전한 건축을 위한
+            안전한 건축물을 위한
             <br />첫 상담
           </>
         }

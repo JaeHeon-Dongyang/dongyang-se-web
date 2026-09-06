@@ -15,9 +15,8 @@ export function SiteFooter({
           <div className="flex max-w-md flex-[2] flex-col gap-5">
             <LogoHorizontal />
             <p className="text-body-text text-sm leading-relaxed">
-              동양구조엔지니어링은 구조설계, 안전점검·진단, 공사 중 안전관리, 해체공사
-              구조검토 분야에서 안전하고 신뢰할 수 있는 전문 엔지니어링 서비스를
-              제공합니다.
+              구조설계, 안전점검·진단, 공사 중 안전관리, 해체공사 구조검토 분야 등에서
+              안전하고 신뢰할 수 있는 전문 엔지니어링 서비스를 제공합니다.
             </p>
           </div>
 
