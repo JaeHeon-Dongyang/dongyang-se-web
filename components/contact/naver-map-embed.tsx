@@ -79,7 +79,7 @@ export function NaverMapEmbed({ address }: { address: string }) {
         ref={mapRef}
         role="img"
         aria-label={`지도: ${address}`}
-        className="border-border h-64 w-full overflow-hidden rounded-2xl border"
+        className="border-border h-64 w-full overflow-hidden border"
       />
     </>
   );

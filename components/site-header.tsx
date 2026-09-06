@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoHorizontal } from "@/components/logo";
@@ -16,18 +16,18 @@ export function SiteHeader({
   const pathname = usePathname();
 
   return (
-    <header className="border-border bg-surface/95 sticky top-0 z-40 border-b backdrop-blur-sm">
-      <div className="container-site flex h-16 items-center justify-between md:h-20">
+    <header className="border-input bg-background/95 sticky top-0 z-40 border-b backdrop-blur-md">
+      <div className="container-site flex min-h-16 items-center justify-between gap-6 py-2.5">
         <Link
           href="/"
-          className="focus-visible:ring-focus-ring flex items-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
+          className="focus-visible:ring-focus-ring flex items-center focus-visible:ring-2 focus-visible:outline-none"
           aria-label="(주)동양구조엔지니어링 홈"
         >
           <LogoHorizontal />
         </Link>
 
-        <div className="flex items-center gap-6 md:gap-8">
-          <nav aria-label="주요 내비게이션" className="hidden items-center gap-1 md:flex">
+        <div className="flex items-center gap-4 lg:gap-8">
+          <nav aria-label="주요 내비게이션" className="hidden items-stretch md:flex">
             {navItems.map((item) => {
               const active = pathname === item.href;
               return (
@@ -35,8 +35,9 @@ export function SiteHeader({
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "text-body-text hover:text-brand focus-visible:ring-focus-ring rounded-md px-4 py-2 text-base font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
-                    active && "text-brand",
+                    "text-body-text hover:text-brand focus-visible:ring-focus-ring relative px-3 py-3 text-[14.5px] font-medium tracking-[-0.015em] transition-colors focus-visible:ring-2 focus-visible:outline-none lg:px-4",
+                    active &&
+                      "text-brand after:bg-brand font-semibold after:absolute after:right-3 after:bottom-0 after:left-3 after:h-0.5 lg:after:right-4 lg:after:left-4",
                   )}
                 >
                   {item.label}
@@ -48,11 +49,10 @@ export function SiteHeader({
           <div className="flex items-center gap-2">
             <Link
               href={contactNav.href}
-              aria-label={contactNav.label}
-              title={contactNav.label}
-              className="bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring hidden items-center justify-center rounded-full p-3 transition-colors focus-visible:ring-2 focus-visible:outline-none md:inline-flex"
+              className="bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring hidden items-center justify-center gap-2 px-5 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none lg:inline-flex"
             >
-              <Mail className="size-5 shrink-0" aria-hidden="true" />
+              {contactNav.label}
+              <ArrowRight className="size-3.5 shrink-0" aria-hidden="true" />
             </Link>
             <MobileNav navItems={navItems} />
           </div>

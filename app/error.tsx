@@ -29,14 +29,14 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="group bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring inline-flex shrink-0 items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          className="group bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring inline-flex shrink-0 items-center gap-2 px-6 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
         >
           <RotateCcw className="h-4 w-4" aria-hidden="true" />
           다시 시도
         </button>
         <Link
           href="/"
-          className="border-border bg-surface text-heading hover:bg-muted focus-visible:ring-focus-ring inline-flex shrink-0 items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          className="border-border bg-surface text-heading hover:bg-muted focus-visible:ring-focus-ring inline-flex shrink-0 items-center gap-2 border px-6 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           홈으로

@@ -20,7 +20,7 @@ export default function NotFound() {
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Link
           href="/"
-          className="group bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring inline-flex shrink-0 items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          className="group bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring inline-flex shrink-0 items-center gap-2 px-6 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
         >
           홈으로 돌아가기
           <ArrowRight
@@ -30,7 +30,7 @@ export default function NotFound() {
         </Link>
         <Link
           href="/contact"
-          className="border-border bg-surface text-heading hover:bg-muted focus-visible:ring-focus-ring inline-flex shrink-0 items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          className="border-border bg-surface text-heading hover:bg-muted focus-visible:ring-focus-ring inline-flex shrink-0 items-center gap-2 border px-6 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
         >
           <MessageCircle className="h-4 w-4" aria-hidden="true" />
           문의하기

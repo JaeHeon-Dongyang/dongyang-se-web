@@ -1,7 +1,7 @@
-import { Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { LogoHorizontal } from "@/components/logo";
 import { footerLegalNav, type primaryNav } from "@/lib/nav";
+import { company, contactLinks } from "@/lib/site";
 
 export function SiteFooter({
   navItems,
@@ -9,10 +9,10 @@ export function SiteFooter({
   navItems: ReadonlyArray<(typeof primaryNav)[number]>;
 }) {
   return (
-    <footer className="border-border bg-surface border-t">
-      <div className="container-site flex flex-col gap-10 py-12 md:py-16">
-        <div className="flex flex-col gap-10 md:flex-row md:justify-between">
-          <div className="flex max-w-sm flex-col gap-4">
+    <footer className="border-input bg-background border-t">
+      <div className="container-site">
+        <div className="flex flex-col gap-10 py-10 md:flex-row md:gap-16 md:py-16 lg:gap-20">
+          <div className="flex max-w-md flex-[2] flex-col gap-5">
             <LogoHorizontal />
             <p className="text-body-text text-sm leading-relaxed">
               동양구조엔지니어링은 구조설계, 안전점검·진단, 공사 중 안전관리, 해체공사
@@ -21,10 +21,10 @@ export function SiteFooter({
             </p>
           </div>
 
-          <div className="flex flex-col gap-8 sm:flex-row sm:gap-16">
-            <nav aria-label="푸터 내비게이션" className="flex flex-col gap-3">
+          <div className="flex flex-1 flex-col gap-8 sm:flex-row sm:gap-16">
+            <nav aria-label="푸터 내비게이션" className="flex min-w-36 flex-col gap-3">
               <span className="text-heading text-xs font-semibold tracking-[0.1em] uppercase">
-                메뉴
+                MENU
               </span>
               {navItems.map((item) => (
                 <Link
@@ -43,35 +43,34 @@ export function SiteFooter({
               </Link>
             </nav>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex min-w-52 flex-col gap-3">
               <span className="text-heading text-xs font-semibold tracking-[0.1em] uppercase">
-                연락처
+                CONTACT
               </span>
               <a
-                href="tel:042-472-9782"
-                className="text-body-text hover:text-brand flex items-center gap-2 text-sm transition-colors"
+                href={contactLinks.tel}
+                className="text-body-text hover:text-brand text-sm tabular-nums transition-colors"
               >
-                <Phone className="h-4 w-4 shrink-0" aria-hidden="true" />
-                042-472-9782
+                T. {company.tel}
               </a>
+              <span className="text-body-text text-sm tabular-nums">
+                F. {company.fax}
+              </span>
               <a
-                href="mailto:dy8000@daum.net"
-                className="text-body-text hover:text-brand flex items-center gap-2 text-sm transition-colors"
+                href={contactLinks.mailto}
+                className="text-body-text hover:text-brand text-sm transition-colors"
               >
-                <Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
-                dy8000@daum.net
+                {company.email}
               </a>
-              <p className="text-body-text text-sm leading-relaxed">
-                대전광역시 유성구 유성대로654번길 38, 5층
-              </p>
+              <p className="text-body-text text-sm leading-relaxed">{company.address}</p>
             </div>
           </div>
         </div>
 
-        <div className="border-border text-body-text/80 flex flex-col gap-4 border-t pt-6 text-xs md:flex-row md:items-center md:justify-between">
+        <div className="border-border text-body-text/70 flex flex-col gap-4 border-t py-5 text-[11.5px] tracking-[0.02em] md:flex-row md:items-center md:justify-between md:pb-9">
           <p>
-            (주)동양구조엔지니어링 · 대표 김용철 · 사업자등록번호 314-81-44186 · 팩스
-            042-482-9782
+            {company.name} · 대표 {company.representative} · 사업자등록번호{" "}
+            {company.businessRegistrationNumber}
           </p>
           <div className="flex items-center gap-4">
             {footerLegalNav.map((item) => (
@@ -79,7 +78,7 @@ export function SiteFooter({
                 {item.label}
               </Link>
             ))}
-            <span>&copy; {new Date().getFullYear()} Dongyang Structural Engineering</span>
+            <span>&copy; {new Date().getFullYear()} DONGYANG SE</span>
           </div>
         </div>
       </div>

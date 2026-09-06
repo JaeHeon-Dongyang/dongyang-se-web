@@ -28,8 +28,14 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
   const [category, setCategory] = useState<string>("전체");
   const [query, setQuery] = useState("");
 
+  // 연번은 전체 목록 기준으로 고정한다. 필터를 바꿔도 자료마다 같은 번호를 유지한다.
   const indexed = useMemo(
-    () => resources.map((r) => ({ resource: r, text: resourceText(r) })),
+    () =>
+      resources.map((r, index) => ({
+        resource: r,
+        number: index + 1,
+        text: resourceText(r),
+      })),
     [resources],
   );
 
@@ -42,16 +48,16 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
           const qOk = q === "" || text.includes(q);
           return catOk && qOk;
         })
-        .map(({ resource }) => resource),
+        .map(({ resource, number }) => ({ resource, number })),
     [indexed, category, q],
   );
 
   const hasResources = resources.length > 0;
 
   return (
-    <div className="flex flex-col gap-8">
+    <div>
       <div className="flex flex-col gap-4">
-        <div className="relative max-w-md">
+        <div className="relative w-full max-w-[420px]">
           <Search
             className="text-body-text pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2"
             aria-hidden="true"
@@ -62,7 +68,7 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="자료 검색 (제목·내용·키워드)"
             aria-label="기술자료 검색"
-            className="border-border bg-surface text-heading placeholder:text-body-text/70 focus-visible:border-brand focus-visible:ring-focus-ring/40 h-11 w-full rounded-full border pr-4 pl-10 text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            className="border-input bg-surface text-heading placeholder:text-body-text/70 focus-visible:border-brand h-[46px] w-full border pr-4 pl-10 text-sm transition-colors focus-visible:outline-none"
           />
         </div>
 
@@ -72,15 +78,43 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
             if (value.length > 0) setCategory(value[0] as string);
           }}
           variant="outline"
-          className="flex-wrap"
+          className="flex-wrap justify-start gap-2"
           aria-label="기술자료 카테고리 필터"
         >
           {resourceCategories.map((cat) => (
-            <ToggleGroupItem key={cat} value={cat} className="rounded-full px-4">
+            <ToggleGroupItem
+              key={cat}
+              value={cat}
+              className="h-auto rounded-none px-[18px] py-3 text-[13px]"
+            >
               {cat}
+              <span className="ml-2 text-[11px] tabular-nums opacity-65">
+                {String(
+                  cat === "전체"
+                    ? resources.length
+                    : resources.filter((resource) => resource.category === cat).length,
+                ).padStart(2, "0")}
+              </span>
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
+      </div>
+
+      <div className="border-heading mt-9 mb-5 flex items-baseline justify-between border-b pb-3.5">
+        <span className="text-body-text/70 text-xs font-bold tracking-[0.12em]">
+          {String(filtered.length).padStart(2, "0")} DOCUMENTS
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            setCategory("전체");
+            setQuery("");
+          }}
+          className="text-brand disabled:text-body-text/60 text-xs font-semibold"
+          disabled={!q && category === "전체"}
+        >
+          전체 보기
+        </button>
       </div>
 
       {!hasResources ? (
@@ -89,14 +123,9 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
         </p>
       ) : filtered.length > 0 ? (
         <>
-          <p className="text-body-text/80 text-xs">
-            {q || category !== "전체"
-              ? `${filtered.length}건`
-              : `전체 ${filtered.length}건`}
-          </p>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((resource) => (
-              <ResourceCard key={resource.slug} resource={resource} />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {filtered.map(({ resource, number }) => (
+              <ResourceCard key={resource.slug} resource={resource} number={number} />
             ))}
           </div>
         </>
@@ -107,6 +136,12 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
             : "해당 조건의 자료가 없습니다."}
         </p>
       )}
+
+      <p className="text-body-text/70 mt-9 max-w-[52em] text-[13px] leading-[1.8]">
+        게시 자료는 일반적인 참고를 위한 것으로, 개별 프로젝트의 구조 안전에 대한 판단을
+        대체하지 않습니다. 실제 검토는 대상 건축물의 도면과 현장 조건을 확인한 후
+        수행합니다.
+      </p>
     </div>
   );
 }

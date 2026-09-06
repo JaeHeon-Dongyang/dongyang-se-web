@@ -109,8 +109,8 @@ export function ContactForm() {
 
   if (state === "success") {
     return (
-      <div className="border-border bg-surface flex flex-col items-center gap-4 rounded-2xl border px-8 py-16 text-center">
-        <span className="bg-accent-green-light text-brand flex size-14 items-center justify-center rounded-full">
+      <div className="border-heading bg-surface flex flex-col items-center gap-4 border-y px-8 py-16 text-center">
+        <span className="bg-accent-green-light text-brand flex size-14 items-center justify-center">
           <CheckCircle2 className="size-7" aria-hidden="true" />
         </span>
         <div className="flex flex-col gap-2">
@@ -129,8 +129,8 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8" noValidate>
-      <FieldGroup>
+    <form onSubmit={handleSubmit} noValidate>
+      <FieldGroup className="gap-0">
         {/* honeypot — 화면에 보이지 않음 */}
         <input
           type="text"
@@ -141,14 +141,23 @@ export function ContactForm() {
           className="sr-only"
         />
 
-        <Field>
-          <FieldLabel htmlFor="inquiry-type">문의 유형</FieldLabel>
+        <Field className="border-border border-heading grid gap-3 border-t border-b py-3 md:grid-cols-[150px_1fr] md:items-center md:gap-10">
+          <FieldLabel
+            htmlFor="inquiry-type"
+            className="text-heading gap-2.5 text-[13.5px] font-semibold"
+          >
+            <span className="text-[#cde0d4] tabular-nums">01</span>
+            문의 유형
+          </FieldLabel>
           <Select
             value={inquiryType}
             onValueChange={(value) => setInquiryType(value as InquiryTypeValue)}
             name="type"
           >
-            <SelectTrigger id="inquiry-type" className="w-full">
+            <SelectTrigger
+              id="inquiry-type"
+              className="h-12 w-full rounded-none border-0 bg-transparent px-0 shadow-none"
+            >
               <SelectValue placeholder="문의 유형을 선택하세요">
                 {(value: string) =>
                   inquiryTypes.find((t) => t.value === value)?.label ??
@@ -168,35 +177,64 @@ export function ContactForm() {
           </Select>
         </Field>
 
-        <div className="grid gap-5 md:grid-cols-2">
-          <Field data-invalid={Boolean(errors.name)}>
-            <FieldLabel htmlFor="name">이름 *</FieldLabel>
+        <div className="contents">
+          <Field
+            data-invalid={Boolean(errors.name)}
+            className="border-border grid gap-3 border-b py-3 md:grid-cols-[150px_1fr] md:items-center md:gap-10"
+          >
+            <FieldLabel
+              htmlFor="name"
+              className="text-heading gap-2.5 text-[13.5px] font-semibold"
+            >
+              <span className="text-[#cde0d4] tabular-nums">02</span>
+              이름 <span className="text-brand">*</span>
+            </FieldLabel>
             <Input
               id="name"
               name="name"
               placeholder="홍길동"
               autoComplete="name"
               aria-invalid={Boolean(errors.name)}
+              className="h-12 rounded-none border-0 bg-transparent px-0 shadow-none"
             />
             {errors.name && <FieldError>{errors.name}</FieldError>}
           </Field>
 
-          <Field data-invalid={Boolean(errors.company)}>
-            <FieldLabel htmlFor="company">회사 / 소속</FieldLabel>
+          <Field
+            data-invalid={Boolean(errors.company)}
+            className="border-border grid gap-3 border-b py-3 md:grid-cols-[150px_1fr] md:items-center md:gap-10"
+          >
+            <FieldLabel
+              htmlFor="company"
+              className="text-heading gap-2.5 text-[13.5px] font-semibold"
+            >
+              <span className="text-[#cde0d4] tabular-nums">03</span>
+              회사 / 소속
+            </FieldLabel>
             <Input
               id="company"
               name="company"
               placeholder="(주)동양건설"
               autoComplete="organization"
               aria-invalid={Boolean(errors.company)}
+              className="h-12 rounded-none border-0 bg-transparent px-0 shadow-none"
             />
             {errors.company && <FieldError>{errors.company}</FieldError>}
           </Field>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2">
-          <Field data-invalid={Boolean(errors.phone)}>
-            <FieldLabel htmlFor="phone">연락처 *</FieldLabel>
+        <div className="contents">
+          <Field
+            data-invalid={Boolean(errors.phone)}
+            className="border-border grid gap-3 border-b py-3 md:grid-cols-[150px_1fr] md:items-center md:gap-10"
+          >
+            <FieldLabel
+              htmlFor="phone"
+              className="text-heading gap-2.5 text-[13.5px] font-semibold"
+            >
+              <span className="text-[#cde0d4] tabular-nums">04</span>
+              연락처 <span className="text-brand">*</span>
+            </FieldLabel>
             <Input
               id="phone"
               name="phone"
@@ -204,12 +242,22 @@ export function ContactForm() {
               placeholder="010-0000-0000"
               autoComplete="tel"
               aria-invalid={Boolean(errors.phone)}
+              className="h-12 rounded-none border-0 bg-transparent px-0 shadow-none"
             />
             {errors.phone && <FieldError>{errors.phone}</FieldError>}
           </Field>
 
-          <Field data-invalid={Boolean(errors.email)}>
-            <FieldLabel htmlFor="email">이메일</FieldLabel>
+          <Field
+            data-invalid={Boolean(errors.email)}
+            className="border-border grid gap-3 border-b py-3 md:grid-cols-[150px_1fr] md:items-center md:gap-10"
+          >
+            <FieldLabel
+              htmlFor="email"
+              className="text-heading gap-2.5 text-[13.5px] font-semibold"
+            >
+              <span className="text-[#cde0d4] tabular-nums">05</span>
+              이메일
+            </FieldLabel>
             <Input
               id="email"
               name="email"
@@ -217,41 +265,65 @@ export function ContactForm() {
               placeholder="example@company.com"
               autoComplete="email"
               aria-invalid={Boolean(errors.email)}
+              className="h-12 rounded-none border-0 bg-transparent px-0 shadow-none"
             />
             {errors.email && <FieldError>{errors.email}</FieldError>}
           </Field>
         </div>
 
-        <Field data-invalid={Boolean(errors.subject)}>
-          <FieldLabel htmlFor="subject">제목</FieldLabel>
+        <Field
+          data-invalid={Boolean(errors.subject)}
+          className="border-border grid gap-3 border-b py-3 md:grid-cols-[150px_1fr] md:items-center md:gap-10"
+        >
+          <FieldLabel
+            htmlFor="subject"
+            className="text-heading gap-2.5 text-[13.5px] font-semibold"
+          >
+            <span className="text-[#cde0d4] tabular-nums">06</span>
+            제목
+          </FieldLabel>
           <Input
             id="subject"
             name="subject"
             placeholder="문의 제목 (선택)"
             aria-invalid={Boolean(errors.subject)}
+            className="h-12 rounded-none border-0 bg-transparent px-0 shadow-none"
           />
           {errors.subject && <FieldError>{errors.subject}</FieldError>}
         </Field>
 
-        <Field data-invalid={Boolean(errors.message)}>
-          <FieldLabel htmlFor="message">문의 내용 *</FieldLabel>
+        <Field
+          data-invalid={Boolean(errors.message)}
+          className="border-border grid gap-3 border-b py-4 md:grid-cols-[150px_1fr] md:items-start md:gap-10"
+        >
+          <FieldLabel
+            htmlFor="message"
+            className="text-heading gap-2.5 text-[13.5px] font-semibold md:pt-1"
+          >
+            <span className="text-[#cde0d4] tabular-nums">07</span>
+            문의 내용 <span className="text-brand">*</span>
+          </FieldLabel>
           <Textarea
             id="message"
             name="message"
             rows={6}
             placeholder="프로젝트 개요, 위치, 규모, 희망 일정 등을 자세히 남겨주시면 상담에 도움이 됩니다."
             aria-invalid={Boolean(errors.message)}
+            className="min-h-36 resize-y rounded-none border-0 bg-transparent px-0 shadow-none"
           />
           {errors.message ? (
-            <FieldError>{errors.message}</FieldError>
+            <FieldError className="md:col-start-2">{errors.message}</FieldError>
           ) : (
-            <FieldDescription>
+            <FieldDescription className="md:col-start-2">
               첨부할 도면이나 자료가 있으면 회신 이메일로 별도 전달해 주세요.
             </FieldDescription>
           )}
         </Field>
 
-        <Field data-invalid={Boolean(errors.privacyConsent)}>
+        <Field
+          data-invalid={Boolean(errors.privacyConsent)}
+          className="border-border border-b py-5"
+        >
           <label
             htmlFor="privacy-consent"
             className="text-body-text flex items-start gap-3 text-sm leading-relaxed"
@@ -276,7 +348,7 @@ export function ContactForm() {
       {state === "error" && formError ? (
         <div
           role="alert"
-          className="border-destructive/30 bg-destructive/5 text-destructive rounded-lg border px-4 py-3 text-sm leading-relaxed"
+          className="border-destructive/30 bg-destructive/5 text-destructive border px-4 py-3 text-sm leading-relaxed"
         >
           {formError}
           <div className="text-body-text mt-1">
@@ -291,12 +363,12 @@ export function ContactForm() {
         </div>
       ) : null}
 
-      <div className="flex flex-col gap-2">
+      <div className="mt-6 flex flex-col gap-2">
         <Button
           type="submit"
           size="lg"
           disabled={state === "submitting" || !consent}
-          className="w-full sm:w-fit"
+          className="h-auto w-full rounded-none px-7 py-4 sm:w-fit"
         >
           {state === "submitting" ? (
             <Loader2 className="animate-spin" data-icon="inline-start" />

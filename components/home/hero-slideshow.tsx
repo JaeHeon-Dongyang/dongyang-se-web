@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,10 @@ export function HeroSlideshow() {
   const [index, setIndex] = useState(0);
   const [broken, setBroken] = useState<Record<number, boolean>>({});
 
-  const available = slides.map((src, i) => ({ src, i })).filter(({ i }) => !broken[i]);
+  const available = useMemo(
+    () => slides.map((src, i) => ({ src, i })).filter(({ i }) => !broken[i]),
+    [broken],
+  );
 
   useEffect(() => {
     if (available.length <= 1) return;
@@ -36,7 +39,7 @@ export function HeroSlideshow() {
   }, [available]);
 
   return (
-    <div className="bg-surface-muted relative aspect-[4/3] w-full overflow-hidden rounded-2xl lg:aspect-[5/4]">
+    <div className="bg-surface-muted relative min-h-[280px] w-full overflow-hidden sm:min-h-[380px] lg:min-h-[520px]">
       {slides.map((src, i) =>
         broken[i] ? null : (
           <Image
@@ -55,7 +58,7 @@ export function HeroSlideshow() {
         ),
       )}
       {available.length > 1 ? (
-        <div className="absolute right-0 bottom-4 left-0 flex justify-center gap-2">
+        <div className="bg-heading/75 absolute bottom-0 left-0 flex">
           {available.map(({ i }) => (
             <button
               key={i}
@@ -64,10 +67,14 @@ export function HeroSlideshow() {
               aria-label={`${i + 1}번째 이미지 보기`}
               aria-current={i === index}
               className={cn(
-                "h-2 w-2 rounded-full transition-colors",
-                i === index ? "bg-white" : "bg-white/50 hover:bg-white/75",
+                "relative flex h-8 w-9 items-center justify-center text-[11px] font-medium tabular-nums transition-colors before:absolute before:top-0 before:right-0 before:left-0 before:h-0.5 before:origin-left before:bg-white before:transition-transform",
+                i === index
+                  ? "text-white before:scale-x-100"
+                  : "text-white/60 before:scale-x-0 hover:text-white/85",
               )}
-            />
+            >
+              {String(i + 1).padStart(2, "0")}
+            </button>
           ))}
         </div>
       ) : null}

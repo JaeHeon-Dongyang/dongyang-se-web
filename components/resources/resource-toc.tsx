@@ -10,10 +10,7 @@ export function ResourceToc({ blocks }: { blocks: ContentBlock[] }) {
   if (headings.length === 0) return null;
 
   return (
-    <nav
-      aria-label="목차"
-      className="border-border flex flex-col gap-3 rounded-2xl border p-5"
-    >
+    <nav aria-label="목차" className="border-border flex flex-col gap-3 border p-5">
       <span className="text-heading text-sm font-semibold">목차</span>
       <ul className="flex flex-col gap-2">
         {headings.map((heading) => (

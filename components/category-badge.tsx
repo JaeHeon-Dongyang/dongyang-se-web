@@ -10,7 +10,7 @@ export function CategoryBadge({
   return (
     <span
       className={cn(
-        "bg-accent-green-light text-accent-green-light-foreground inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold",
+        "text-brand inline-flex items-center bg-[#f1f6f2] px-2.5 py-1 text-[11.5px] font-bold",
         className,
       )}
     >

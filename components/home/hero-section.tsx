@@ -4,39 +4,41 @@ import { HeroSlideshow } from "@/components/home/hero-slideshow";
 
 export function HeroSection() {
   return (
-    <section className="container-site pt-10 pb-10 md:pt-16 md:pb-14">
-      <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
-        <div className="flex flex-col gap-7">
-          <h1 className="text-heading text-4xl leading-[1.15] font-bold tracking-tight text-balance md:text-5xl">
+    <section className="border-input border-b">
+      <div className="container-site flex flex-wrap items-center gap-x-[clamp(2rem,4vw,4.75rem)]">
+        <div className="reveal-up flex min-w-0 flex-[7_1_420px] flex-col gap-[clamp(1.5rem,2.8vw,2.375rem)] py-[clamp(3.25rem,6vw,6rem)]">
+          <span className="text-brand text-xs font-bold tracking-[0.18em]">
+            STRUCTURAL ENGINEERING
+          </span>
+          <h1 className="text-heading text-[clamp(2.125rem,4.6vw,3.625rem)] leading-[1.06] font-semibold tracking-[-0.042em]">
             안전을 설계하고,
             <br />
             신뢰를 쌓습니다.
           </h1>
-          <p className="text-body-text max-w-lg text-base leading-relaxed text-pretty md:text-lg">
-            동양구조엔지니어링은 구조설계부터 안전점검·진단, 공사 중 안전관리, 해체공사
-            구조검토까지 건축물의 생애주기 전반에 필요한 구조 엔지니어링 서비스를
-            제공합니다.
+          <p className="text-body-text max-w-[27em] text-[16.5px] leading-[1.8] text-pretty">
+            구조설계부터 안전점검·진단, 공사 중 안전관리, 해체공사 구조검토까지. 건축물의
+            생애주기 전반에서 구조 안전을 판단합니다.
           </p>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap gap-3">
             <Link
-              href="/services"
-              className="group bg-brand text-brand-foreground hover:bg-brand-hover focus-visible:ring-focus-ring inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              href="/contact"
+              className="bg-brand hover:bg-brand-hover focus-visible:ring-focus-ring inline-flex items-center gap-2.5 px-7 py-[17px] text-[14.5px] font-semibold text-white transition-[background-color,transform] hover:-translate-y-px focus-visible:ring-2 focus-visible:outline-none"
             >
-              사업분야 알아보기
-              <ArrowRight
-                className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
+              문의하기
+              <ArrowRight aria-hidden className="size-[15px]" strokeWidth={2.2} />
             </Link>
             <Link
-              href="/about"
-              className="border-border bg-surface text-heading hover:border-brand/50 hover:text-brand focus-visible:ring-focus-ring inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              href="/services"
+              className="border-heading text-heading hover:bg-surface-muted focus-visible:ring-focus-ring inline-flex items-center border px-[26px] py-[17px] text-[14.5px] font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
             >
-              회사 소개 보기
+              사업분야 보기
             </Link>
           </div>
         </div>
-        <HeroSlideshow />
+
+        <div className="reveal-up min-w-0 flex-[1_1_380px] [animation-delay:140ms]">
+          <HeroSlideshow />
+        </div>
       </div>
     </section>
   );

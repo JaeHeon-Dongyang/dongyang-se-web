@@ -1,90 +1,81 @@
-import { CheckCircle2 } from "lucide-react";
 import type { ServiceGroup } from "@/lib/services-data";
 
 export function ServiceDetailSection({ service }: { service: ServiceGroup }) {
-  const Icon = service.icon;
+  const serviceNumber = String(
+    [
+      "structural-design",
+      "safety-inspection",
+      "construction-safety",
+      "demolition-review",
+    ].indexOf(service.slug) + 1,
+  ).padStart(2, "0");
+  const details = service.details ?? [];
 
   return (
     <section
       id={service.slug}
-      className="container-site border-border scroll-mt-32 border-t pt-14 first:border-t-0"
+      className="border-input scroll-mt-[120px] border-b py-[clamp(3.5rem,6.5vw,6rem)]"
     >
-      <div className="flex flex-col gap-3">
-        <span className="bg-accent-green-light text-brand flex h-12 w-12 items-center justify-center rounded-xl">
-          <Icon className="h-6 w-6" aria-hidden="true" />
-        </span>
-        <p className="text-brand text-sm font-semibold">{service.title}</p>
-        <h2 className="text-heading text-2xl font-bold tracking-tight text-balance md:text-3xl">
-          {service.headline}
-        </h2>
-      </div>
-
-      <div className="content-measure mt-6 flex flex-col gap-4">
-        {service.intro.map((p, i) => (
-          <p key={i} className="text-body-text text-base leading-relaxed text-pretty">
-            {p}
-          </p>
-        ))}
-      </div>
-
-      <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.9fr)] md:gap-14">
-        <div className="flex flex-col gap-6">
-          {service.details ? (
-            <dl className="divide-border border-border flex flex-col divide-y border-y">
-              {service.details.map((d) => (
-                <div key={d.name} className="flex flex-col gap-1.5 py-4">
-                  <dt className="text-heading text-sm font-semibold">{d.name}</dt>
-                  <dd className="text-body-text text-sm leading-relaxed text-pretty">
-                    {d.description}
-                  </dd>
-                </div>
+      <div className="container-site">
+        <div className="border-heading flex flex-wrap gap-x-[clamp(1.5rem,3.4vw,3.5rem)] gap-y-3 border-b pb-[clamp(1.75rem,3vw,2.5rem)]">
+          <div className="flex min-w-0 flex-[1_1_200px] flex-col gap-3.5">
+            <span className="text-brand text-[clamp(1.875rem,3vw,2.5rem)] leading-none font-semibold tracking-[-0.03em] tabular-nums opacity-80">
+              {serviceNumber}
+            </span>
+            <span className="text-heading text-xl font-bold tracking-[-0.025em]">
+              {service.title}
+            </span>
+          </div>
+          <div className="min-w-0 flex-[3_1_520px]">
+            <h2 className="text-heading max-w-[24em] text-[clamp(1.5rem,2.6vw,2rem)] leading-[1.24] font-bold tracking-[-0.03em]">
+              {service.headline}
+            </h2>
+            <div className="text-body-text mt-[22px] flex max-w-[52em] flex-col gap-4 text-[15.5px] leading-[1.85]">
+              {service.intro.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
               ))}
-            </dl>
-          ) : null}
-
-          {service.reviewItems ? (
-            <div className="flex flex-col gap-3">
-              <span className="text-heading text-sm font-semibold">주요 검토 내용</span>
-              <ul className="flex flex-col gap-2">
-                {service.reviewItems.map((item) => (
-                  <li
-                    key={item}
-                    className="text-body-text flex items-start gap-2.5 text-sm"
-                  >
-                    <CheckCircle2
-                      className="text-brand mt-0.5 h-4 w-4 shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span className="leading-relaxed text-pretty">{item}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
-          ) : null}
+          </div>
         </div>
 
-        <div className="border-border bg-surface flex flex-col gap-4 self-start rounded-2xl border p-6">
-          <span className="text-heading text-sm font-semibold">
-            이런 경우에 필요합니다
-          </span>
-          <ul className="flex flex-col gap-3">
-            {service.situations.map((situation) => (
+        <dl>
+          {details.map((detail) => (
+            <div
+              key={detail.name}
+              className="border-border flex flex-wrap gap-x-[clamp(1.5rem,3.4vw,3.5rem)] gap-y-1 border-b py-[22px]"
+            >
+              <dt className="text-heading min-w-0 flex-[1_1_200px] text-[15px] font-bold tracking-[-0.02em]">
+                {detail.name}
+              </dt>
+              <dd className="text-body-text max-w-[58em] min-w-0 flex-[3_1_460px] text-[14.5px] leading-[1.8]">
+                {detail.description}
+              </dd>
+            </div>
+          ))}
+        </dl>
+
+        <div className="mt-[clamp(1.75rem,3.4vw,2.75rem)] flex flex-wrap gap-[clamp(1.25rem,3vw,3rem)] bg-[#f1f6f2] p-[clamp(1.5rem,3vw,2.5rem)]">
+          <div className="flex min-w-0 flex-[1_1_240px] flex-col gap-3">
+            <span className="text-sm font-bold tracking-[0.14em] text-[#094d30]">
+              이런 경우에 필요합니다
+            </span>
+            <p className="text-[12.5px] leading-[1.75] text-[#6e756c]">{service.note}</p>
+          </div>
+          <ol className="grid min-w-0 flex-[2_1_440px] grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-x-[clamp(1.25rem,3vw,2.5rem)]">
+            {service.situations.map((situation, index) => (
               <li
                 key={situation}
-                className="text-body-text flex items-start gap-2.5 text-sm"
+                className="flex gap-[11px] border-b border-[#cde0d4] py-[11px] text-sm leading-[1.65] text-[#2c322c]"
               >
-                <CheckCircle2
-                  className="text-brand mt-0.5 h-4 w-4 shrink-0"
-                  aria-hidden="true"
-                />
-                <span className="leading-relaxed text-pretty">{situation}</span>
+                <span className="text-brand pt-1 text-xs font-bold tracking-[0.08em] tabular-nums">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                {situation}
               </li>
             ))}
-          </ul>
+          </ol>
         </div>
       </div>
-
-      <p className="text-body-text/80 mt-6 text-xs leading-relaxed">{service.note}</p>
     </section>
   );
 }
