@@ -10,7 +10,7 @@ export function ServicesHero() {
     <section className="border-input border-b">
       <div className="container-site flex flex-wrap items-stretch gap-x-[clamp(2rem,4vw,4.75rem)]">
         <div className="reveal-up min-w-0 flex-[1_1_380px]">
-          <ImageSlideshow images={serviceHeroImages} />
+          <ImageSlideshow images={serviceHeroImages} className="lg:min-h-[518px]" />
         </div>
 
         <div className="reveal-up min-w-0 flex-[1_1_420px] py-[clamp(3.25rem,6vw,6rem)] [animation-delay:90ms]">

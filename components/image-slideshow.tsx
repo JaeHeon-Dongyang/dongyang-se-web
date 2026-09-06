@@ -11,7 +11,15 @@ const INTERVAL_MS = 5000;
  * prefers-reduced-motion 이면 줌 효과만 끄고 이미지 전환은 유지.
  * 로드 실패한 슬라이드는 순환에서 제외(이미지 일부만 있어도 동작).
  */
-export function ImageSlideshow({ images, alt = "" }: { images: string[]; alt?: string }) {
+export function ImageSlideshow({
+  images,
+  alt = "",
+  className,
+}: {
+  images: string[];
+  alt?: string;
+  className?: string;
+}) {
   const [index, setIndex] = useState(0);
   const [broken, setBroken] = useState<Record<number, boolean>>({});
 
@@ -33,7 +41,12 @@ export function ImageSlideshow({ images, alt = "" }: { images: string[]; alt?: s
   }, [available]);
 
   return (
-    <div className="bg-surface-muted relative min-h-[280px] w-full overflow-hidden sm:min-h-[380px] lg:min-h-[520px]">
+    <div
+      className={cn(
+        "bg-surface-muted relative min-h-[280px] w-full overflow-hidden sm:min-h-[380px] lg:min-h-[520px]",
+        className,
+      )}
+    >
       {images.map((src, i) =>
         broken[i] ? null : (
           <Image
