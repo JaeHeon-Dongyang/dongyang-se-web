@@ -372,7 +372,7 @@ export function ContactForm() {
           type="submit"
           size="lg"
           disabled={state === "submitting" || !consent}
-          className="h-auto w-full rounded-none px-7 py-4 disabled:bg-[#aeb1ac] disabled:text-white disabled:opacity-100 sm:w-fit"
+          className="h-auto w-full rounded-none px-7 py-4 disabled:bg-[#aeb1ac] disabled:text-white disabled:opacity-100 has-data-[icon=inline-end]:pr-7 sm:w-fit sm:min-w-[150px]"
         >
           {state === "submitting" ? (
             <Loader2 className="animate-spin" data-icon="inline-start" />
