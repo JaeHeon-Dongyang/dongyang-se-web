@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  html, body { margin: 0; padding: 0; }
+  body { background: #FBFBFA; color: #101215; font-family: Pretendard, "Pretendard Variable", "Apple SD Gothic Neo", -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; word-break: keep-all; text-wrap: pretty; }
+  * { box-sizing: border-box; }
+  a { color: #0B6C43; text-decoration: none; }
+  a:hover { color: #094D30; }
+  input, textarea, select, button { font-family: inherit; }
+  svg { stroke-linecap: square; stroke-linejoin: miter; }
+  @keyframes v3Fade { from { opacity: 0 } to { opacity: 1 } }
+</style>
+</helmet>
+
+<div style="--ink: #101215; --mute: #61665F; --faint: #8A8F87; --green: {{ accent }}; --gd: #094D30; --tint: #F1F6F2; --gl: #CDE0D4; --mid: #CFD2CC; --rule: #E5E6E2; --stone: #EFEFEC; --paper: #FBFBFA; --gut: clamp(16px, 2.8vw, 40px); --sy: clamp(56px, 6.5vw, 96px); --big: clamp(84px, 9vw, 144px); background: #FBFBFA; min-height: 100vh; display: flex; flex-direction: column">
+
+  <header style="position: sticky; top: 0; z-index: 40; background: rgba(251,251,250,0.96); border-bottom: 1px solid var(--mid, #CFD2CC); backdrop-filter: saturate(150%) blur(6px)">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 10px var(--gut, 24px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px clamp(16px, 3vw, 48px)">
+      <a href="#" onClick="{{ navHome }}" style="display: inline-flex; align-items: center; gap: 12px; color: inherit">
+        <svg viewBox="0 0 100 100" style="height: 30px; width: 30px; flex-shrink: 0" aria-hidden="true">
+          <mask id="dy31-mark" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+            <rect width="100" height="100" fill="white"></rect>
+            <path d="M58 0 H73 L70 12 Z" fill="black"></path>
+            <path d="M0 31 H52 L70 50 L49 72 H29 V34 H0 Z" fill="black"></path>
+            <path d="M64 100 H72 L100 72 V64 Z" fill="black"></path>
+          </mask>
+          <rect width="100" height="100" fill="var(--green, #0B6C43)" mask="url(#dy31-mark)"></rect>
+        </svg>
+        <span style="display: flex; flex-direction: column; gap: 3px; line-height: 1">
+          <span style="font-size: 15px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap">(주)동양구조엔지니어링</span>
+          <span style="font-size: 9px; font-weight: 500; letter-spacing: 0.14em; white-space: nowrap; color: #61665F">DONGYANG STRUCTURAL ENGINEERING</span>
+        </span>
+      </a>
+      <nav aria-label="주요 내비게이션" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px clamp(2px, 1vw, 10px)">
+        <sc-for list="{{ navs }}" as="n" hint-placeholder-count="4">
+          <a href="#" onClick="{{ n.onClick }}" style="padding: 10px clamp(8px, 1.1vw, 14px); font-size: 14.5px; font-weight: {{ n.fw }}; letter-spacing: -0.015em; white-space: nowrap; color: {{ n.fg }}; box-shadow: {{ n.mark }}">{{ n.label }}</a>
+        </sc-for>
+        <a href="#" onClick="{{ navContact }}" style="display: inline-flex; align-items: center; gap: 9px; margin-left: clamp(4px, 1vw, 14px); padding: 12px clamp(16px, 1.6vw, 22px); background: var(--green, #0B6C43); color: #FBFBFA; font-size: 13.5px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap" style-hover="background: #094D30">
+          문의하기
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 12 H19"></path><path d="M13 6 L19 12 L13 18"></path></svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="flex: 1">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <section data-screen-label="홈 · 히어로" style="border-bottom: 1px solid var(--mid, #CFD2CC)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px); display: flex; flex-wrap: wrap; gap: clamp(28px, 4vw, 64px)">
+          <div style="flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: clamp(26px, 3vw, 40px); padding: clamp(44px, 5vw, 76px) 0 clamp(40px, 4vw, 64px)">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">STRUCTURAL ENGINEERING · DAEJEON</span>
+            <h1 style="margin: 0; font-size: clamp(32px, 4.4vw, 54px); line-height: 1.06; font-weight: 600; letter-spacing: -0.04em">안전을 설계하고,<br>신뢰를 쌓습니다.</h1>
+            <p style="margin: 0; max-width: 30em; font-size: 16px; line-height: 1.75; color: var(--mute, #61665F)">구조설계부터 안전진단·점검, 공사 중 안전관리, 해체공사 구조검토까지. 건축물의 생애주기 전반에서 구조 안전을 판단합니다.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px">
+              <a href="#" onClick="{{ navContact }}" style="display: inline-flex; align-items: center; gap: 10px; padding: 17px 28px; background: var(--green, #0B6C43); color: #FBFBFA; font-size: 14px; font-weight: 600; letter-spacing: -0.01em" style-hover="background: #094D30">
+                프로젝트 문의하기
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 12 H19"></path><path d="M13 6 L19 12 L13 18"></path></svg>
+              </a>
+              <a href="#" onClick="{{ navServices }}" style="display: inline-flex; align-items: center; padding: 17px 26px; border: 1px solid var(--ink, #101215); color: var(--ink, #101215); font-size: 14px; font-weight: 600; letter-spacing: -0.01em" style-hover="background: #EFEFEC">사업분야 보기</a>
+            </div>
+          </div>
+          <div style="flex: 1 1 380px; min-width: 0; position: relative; min-height: clamp(280px, 34vw, 520px); background: var(--stone, #EFEFEC); overflow: hidden">
+            <div role="img" aria-label="구조 프레임 현장" style="position: absolute; inset: 0; background-image: url({{ heroSrc }}); background-size: cover; background-position: center; animation: v3Fade 900ms ease"></div>
+            <div style="position: absolute; left: 0; bottom: 0; display: flex; background: rgba(16,18,21,0.72)">
+              <sc-for list="{{ dots }}" as="dot" hint-placeholder-count="6">
+                <a href="#" onClick="{{ dot.onClick }}" aria-label="{{ dot.label }}" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 32px; font-size: 11px; font-weight: 500; font-variant-numeric: tabular-nums; color: {{ dot.fg }}; background: {{ dot.bg }}">{{ dot.no }}</a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="회사 요약" style="border-bottom: 1px solid var(--mid, #CFD2CC); background: #fff">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <dl style="margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1px; background: var(--rule, #E5E6E2)">
+            <sc-for list="{{ specs }}" as="sp" hint-placeholder-count="4">
+              <div style="display: flex; flex-direction: column; gap: 8px; padding: 22px clamp(0px, 1.6vw, 24px); background: #fff">
+                <dt style="margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: var(--faint, #8A8F87)">{{ sp.k }}</dt>
+                <dd style="margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.015em; font-variant-numeric: tabular-nums; color: var(--ink, #101215)">{{ sp.v }}</dd>
+              </div>
+            </sc-for>
+          </dl>
+        </div>
+      </section>
+
+      <section data-screen-label="홈 · 회사 소개" style="padding: var(--big, 120px) 0 var(--sy, 80px)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px); display: flex; flex-wrap: wrap; gap: clamp(28px, 4vw, 64px)">
+          <div style="flex: 1 1 420px; min-width: 0">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">WHO WE ARE</span>
+            <h2 style="margin: 18px 0 24px; max-width: 22em; font-size: clamp(26px, 2.8vw, 36px); line-height: 1.24; font-weight: 700; letter-spacing: -0.03em">구조안전을 위한 정확한 판단</h2>
+            <div style="display: flex; flex-direction: column; gap: 18px; max-width: 40em; font-size: 15.5px; line-height: 1.85; color: var(--mute, #61665F)">
+              <p style="margin: 0">건축물의 안전은 경험만으로도, 계산만으로도 완성되지 않습니다. 현장의 조건을 정확히 이해하고, 기준과 데이터를 바탕으로 검토하며, 프로젝트 관계자와 충분히 소통하는 과정이 함께해야 합니다.</p>
+              <p style="margin: 0">동양구조엔지니어링은 건축구조설계, 구조감리와 보강, 정기안전점검, 정밀안전진단, 내진성능평가, 공사 중 안전점검 및 해체공사 구조검토 등 다양한 업무를 수행합니다. 각 업무의 목적과 현장 여건을 면밀히 살피고, 안전성과 실현 가능성을 함께 고려한 엔지니어링 서비스를 제공합니다.</p>
+              <p style="margin: 0">우리는 익숙한 방식에 머무르지 않습니다. 더 정확하게 검토하고, 더 효율적으로 협업하며, 더 명확하게 설명하기 위해 업무 방식과 기술 역량을 지속적으로 개선합니다.</p>
+            </div>
+          </div>
+          <div style="flex: 1 1 340px; min-width: 0; position: relative; min-height: clamp(280px, 30vw, 440px); background: var(--stone, #EFEFEC)">
+            <div role="img" aria-label="구조 엔지니어들이 구조도면과 구조해석 모델을 검토하는 모습" style="position: absolute; inset: 0; background-image: url({{ aboutImg }}); background-size: cover; background-position: center"></div>
+          </div>
+        </div>
+      </section>
+
+      <section data-screen-label="홈 · 팀" style="padding: var(--sy, 80px) 0">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px); display: flex; flex-wrap: wrap; gap: clamp(24px, 3.4vw, 56px)">
+          <div style="flex: 1 1 280px; min-width: 0">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">OUR TEAM</span>
+            <h2 style="margin: 18px 0 0; font-size: clamp(22px, 2.2vw, 27px); line-height: 1.32; font-weight: 700; letter-spacing: -0.03em">전문성과 실행력을<br>갖춘 엔지니어링 팀</h2>
+          </div>
+          <div style="flex: 2 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 18px; font-size: 15.5px; line-height: 1.85; color: var(--mute, #61665F)">
+            <p style="margin: 0">동양구조엔지니어링은 젊은 엔지니어들의 민첩한 실행력과 풍부한 현장 경험을 갖춘 전문가의 판단이 조화를 이루는 조직입니다.</p>
+            <p style="margin: 0">구조기술사와 시공기술사를 포함한 다양한 전문 인력이 각자의 경험과 관점을 공유하며 하나의 해답을 만들어갑니다. 세대와 분야를 아우르는 협업을 통해 설계와 시공, 안전점검과 유지관리까지 폭넓게 검토합니다.</p>
+            <p style="margin: 0">빠르게 변화하는 설계 기준과 건설 환경에 대응하기 위해 지속적으로 학습하고 기술을 공유하며, 새로운 도구와 업무 방식을 적극적으로 받아들입니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section data-screen-label="홈 · 생애주기" style="padding: var(--big, 120px) 0 var(--sy, 80px)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 40px; margin-bottom: clamp(28px, 3.4vw, 48px)">
+            <div style="min-width: 0">
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">LIFECYCLE</span>
+              <h2 style="margin: 16px 0 12px; font-size: clamp(26px, 2.8vw, 36px); line-height: 1.22; font-weight: 700; letter-spacing: -0.03em">건축물의 어느 단계에 있더라도<br>필요한 구조 검토가 있습니다</h2>
+              <p style="margin: 0; max-width: 40em; font-size: 16px; line-height: 1.75; color: var(--mute, #61665F)">지금 상황이 어떤 업무에 해당하는지 먼저 확인하세요.</p>
+            </div>
+            <a href="#" onClick="{{ navServices }}" style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--green, #0B6C43); border-bottom: 1px solid var(--gl, #CDE0D4); padding-bottom: 5px">
+              전체 업무 보기
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 12 H19"></path><path d="M13 6 L19 12 L13 18"></path></svg>
+            </a>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--mid, #CFD2CC); border-top: 1px solid var(--ink, #101215)">
+            <sc-for list="{{ lifecycle }}" as="ph" hint-placeholder-count="4">
+              <div style="display: flex; flex-direction: column; gap: 14px; padding: clamp(24px, 2.6vw, 34px) clamp(18px, 2vw, 28px) clamp(28px, 3vw, 40px); background: var(--paper, #FBFBFA)">
+                <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.12em; font-variant-numeric: tabular-nums; color: var(--green, #0B6C43)">{{ ph.no }}</span>
+                <h3 style="margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -0.025em">{{ ph.title }}</h3>
+                <p style="margin: 0; font-size: 13.5px; line-height: 1.7; color: var(--mute, #61665F)">{{ ph.desc }}</p>
+                <ul style="margin: 4px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px">
+                  <sc-for list="{{ ph.items }}" as="it" hint-placeholder-count="3">
+                    <li style="font-size: 13.5px; line-height: 1.5; color: var(--ink, #101215)">— {{ it }}</li>
+                  </sc-for>
+                </ul>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section data-screen-label="홈 · 업무 방식" style="padding: var(--sy, 80px) 0">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">HOW WE WORK</span>
+          <h2 style="margin: 16px 0 clamp(32px, 4vw, 52px); max-width: 24em; font-size: clamp(26px, 2.8vw, 36px); line-height: 1.22; font-weight: 700; letter-spacing: -0.03em">검토하고, 판단하고, 이해할 수 있게 설명합니다</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: clamp(28px, 4vw, 64px)">
+            <sc-for list="{{ workflow }}" as="w" hint-placeholder-count="3">
+              <div style="display: flex; flex-direction: column; gap: 14px">
+                <span style="font-size: clamp(38px, 4vw, 52px); font-weight: 300; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--gl, #CDE0D4)">{{ w.no }}</span>
+                <h3 style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.025em; color: var(--green, #0B6C43)">{{ w.title }}</h3>
+                <p style="margin: 0; font-size: 15px; line-height: 1.8; color: var(--mute, #61665F)">{{ w.desc }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section data-screen-label="홈 · 사업분야" style="padding: var(--big, 120px) 0 var(--sy, 80px)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 32px; padding-bottom: 24px; border-bottom: 1px solid var(--ink, #101215)">
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 20px">
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">SERVICES</span>
+              <h2 style="margin: 0; font-size: clamp(26px, 2.8vw, 36px); line-height: 1.2; font-weight: 700; letter-spacing: -0.03em">구조 엔지니어링 서비스</h2>
+            </div>
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; color: var(--faint, #8A8F87); white-space: nowrap">04 DISCIPLINES</span>
+          </div>
+          <sc-for list="{{ services }}" as="s" hint-placeholder-count="4">
+            <a href="#" onClick="{{ navServices }}" style="display: flex; flex-wrap: wrap; gap: 8px clamp(24px, 3vw, 48px); padding: clamp(26px, 2.6vw, 36px) 0; border-bottom: {{ s.bb }}; color: inherit" style-hover="background: #F1F6F2">
+              <span style="flex: 1 1 220px; min-width: 0; display: flex; align-items: baseline; gap: 14px">
+                <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.1em; font-variant-numeric: tabular-nums; color: var(--green, #0B6C43)">{{ s.no }}</span>
+                <span style="font-size: clamp(20px, 2vw, 24px); font-weight: 700; letter-spacing: -0.03em; color: var(--ink, #101215)">{{ s.title }}</span>
+              </span>
+              <span style="flex: 2 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+                <span style="font-size: 15px; line-height: 1.7; color: var(--mute, #61665F)">{{ s.desc }}</span>
+                <span style="display: flex; flex-wrap: wrap; gap: 7px">
+                  <sc-for list="{{ s.items }}" as="it" hint-placeholder-count="3">
+                    <span style="padding: 6px 12px; background: var(--tint, #F1F6F2); font-size: 12.5px; font-weight: 500; color: var(--gd, #094D30)">{{ it }}</span>
+                  </sc-for>
+                </span>
+              </span>
+              <span style="flex: 0 0 auto; display: flex; align-items: center; padding-top: 6px; color: var(--green, #0B6C43)">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 12 H19"></path><path d="M13 6 L19 12 L13 18"></path></svg>
+              </span>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-screen-label="홈 · 핵심가치" style="padding: var(--big, 120px) 0 var(--sy, 80px)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 20px; padding-bottom: 24px; border-bottom: 1px solid var(--ink, #101215)">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">CORE VALUES</span>
+            <h2 style="margin: 0; font-size: clamp(26px, 2.8vw, 34px); line-height: 1.2; font-weight: 700; letter-spacing: -0.03em">핵심 가치</h2>
+          </div>
+          <sc-for list="{{ coreValues }}" as="cv" hint-placeholder-count="4">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px clamp(24px, 3.4vw, 56px); padding: clamp(24px, 2.6vw, 34px) 0; border-bottom: {{ cv.bb }}">
+              <div style="flex: 1 1 220px; min-width: 0; display: flex; align-items: baseline; gap: 14px">
+                <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.1em; font-variant-numeric: tabular-nums; color: var(--green, #0B6C43)">{{ cv.no }}</span>
+                <h3 style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.025em">{{ cv.title }}</h3>
+              </div>
+              <p style="flex: 2 1 460px; min-width: 0; margin: 0; max-width: 56em; font-size: 15px; line-height: 1.8; color: var(--mute, #61665F)">{{ cv.desc }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-screen-label="홈 · 기술 역량" style="padding: var(--sy, 80px) 0">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; gap: clamp(26px, 3.4vw, 48px); padding: clamp(30px, 3.4vw, 52px); background: var(--tint, #F1F6F2)">
+            <div style="flex: 1 1 300px; min-width: 0">
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--gd, #094D30)">TECHNICAL CAPABILITY</span>
+              <h3 style="margin: 16px 0 14px; font-size: clamp(20px, 2vw, 25px); line-height: 1.32; font-weight: 700; letter-spacing: -0.03em">검토 방식을 문서로 정리하고 공유합니다</h3>
+              <p style="margin: 0 0 22px; font-size: 15px; line-height: 1.8; color: #4A5049">구조해석 모델링 절차와 AI 도구 활용 기준을 사내 매뉴얼과 기술 가이드로 정리하고 있습니다. 같은 기준으로 검토하고, 판단 근거를 설명할 수 있게 하기 위한 작업입니다.</p>
+              <a href="#" onClick="{{ navTech }}" style="display: inline-flex; align-items: center; gap: 9px; padding: 14px 24px; background: var(--green, #0B6C43); color: #FBFBFA; font-size: 14px; font-weight: 600" style-hover="background: #094D30">
+                기술자료 보기
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 12 H19"></path><path d="M13 6 L19 12 L13 18"></path></svg>
+              </a>
+            </div>
+            <div style="flex: 1 1 260px; min-width: 0">
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--gd, #094D30)">INFRASTRUCTURE</span>
+              <h3 style="margin: 16px 0 14px; font-size: clamp(20px, 2vw, 25px); line-height: 1.32; font-weight: 700; letter-spacing: -0.03em">축적된 정보를 연결하는 협업 체계</h3>
+              <div style="display: flex; flex-direction: column; gap: 14px; font-size: 15px; line-height: 1.8; color: #4A5049">
+                <p style="margin: 0">중앙화된 사내 자료관리 및 협업 인프라를 바탕으로 프로젝트 자료, 기술 문서와 업무 이력을 체계적으로 관리합니다.</p>
+                <p style="margin: 0">구성원이 동일한 자료를 기준으로 협업할 수 있도록 업무 환경을 개선해 반복 업무를 줄이고 검토의 연속성을 높입니다.</p>
+              </div>
+            </div>
+            <div style="flex: 1 1 260px; min-width: 0">
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--gd, #094D30)">PUBLIC ADVISORY</span>
+              <h3 style="margin: 16px 0 14px; font-size: clamp(20px, 2vw, 25px); line-height: 1.32; font-weight: 700; letter-spacing: -0.03em">현장 경험을 공공의 안전으로</h3>
+              <p style="margin: 0; font-size: 15px; line-height: 1.8; color: #4A5049">실무에서 축적한 경험을 바탕으로 건축구조·안전 분야의 공공 자문과 기술심의에 참여해 왔습니다.</p>
+              <div style="display: flex; align-items: baseline; gap: 16px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--gl, #CDE0D4)">
+                <span style="font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--green, #0B6C43)">2021</span>
+                <span style="font-size: 14.5px; line-height: 1.7; font-weight: 600; color: var(--ink, #101215)">대전광역시 건설기술심의위원회<br>건축구조 분야 위원 (김용철 대표)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section data-screen-label="홈 · 문의 준비" style="padding: var(--sy, 80px) 0">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px); display: flex; flex-wrap: wrap; gap: clamp(24px, 3.4vw, 56px)">
+          <div style="flex: 1 1 260px; min-width: 0">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">BEFORE YOU ASK</span>
+            <h2 style="margin: 16px 0 12px; font-size: clamp(22px, 2.2vw, 28px); line-height: 1.3; font-weight: 700; letter-spacing: -0.03em">문의 전에 준비하면 좋은 자료</h2>
+            <p style="margin: 0; max-width: 26em; font-size: 15px; line-height: 1.75; color: var(--mute, #61665F)">아래 자료가 없어도 문의는 가능합니다. 있으면 범위와 일정을 더 빠르게 안내할 수 있습니다.</p>
+          </div>
+          <ul style="flex: 2 1 460px; min-width: 0; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0 clamp(20px, 3vw, 48px)">
+            <sc-for list="{{ prep }}" as="p" hint-placeholder-count="6">
+              <li style="display: flex; gap: 12px; padding: 15px 0; border-bottom: 1px solid var(--rule, #E5E6E2); font-size: 14.5px; line-height: 1.6; color: var(--ink, #101215)">
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; color: var(--green, #0B6C43); padding-top: 3px">{{ p.no }}</span>
+                <span>{{ p.text }}</span>
+              </li>
+            </sc-for>
+          </ul>
+        </div>
+      </section>
+
+      <section data-screen-label="홈 · 회사정보" style="padding: var(--sy, 80px) 0 clamp(40px, 5vw, 72px)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 20px; padding-bottom: 24px; border-bottom: 1px solid var(--ink, #101215)">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">COMPANY</span>
+            <h2 style="margin: 0; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.2; font-weight: 700; letter-spacing: -0.03em">회사 기본 정보</h2>
+          </div>
+          <dl style="margin: 0">
+            <sc-for list="{{ companyInfo }}" as="row" hint-placeholder-count="7">
+              <div style="display: flex; flex-wrap: wrap; gap: 4px clamp(24px, 3.4vw, 56px); padding: 16px 0; border-bottom: {{ row.bb }}">
+                <dt style="flex: 1 1 200px; min-width: 0; margin: 0; display: flex; gap: 12px; font-size: 14px; font-weight: 600; color: var(--ink, #101215)"><span style="font-weight: 600; color: var(--gl, #CDE0D4); font-variant-numeric: tabular-nums">{{ row.mono }}</span>{{ row.k }}</dt>
+                <dd style="flex: 3 1 420px; min-width: 0; margin: 0; font-size: 15px; line-height: 1.6; font-variant-numeric: tabular-nums; color: var(--mute, #61665F)">{{ row.v }}</dd>
+              </div>
+            </sc-for>
+          </dl>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isServices }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="사업분야 · 헤드" style="border-bottom: 1px solid var(--ink, #101215)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; gap: 8px clamp(24px, 4vw, 64px); padding: clamp(44px, 5vw, 76px) 0 clamp(40px, 4.4vw, 64px)">
+            <div style="flex: 1 1 200px; min-width: 0">
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">OUR SERVICES</span>
+            </div>
+            <div style="flex: 3 1 520px; min-width: 0">
+              <h1 style="margin: 0 0 24px; max-width: 22em; font-size: clamp(30px, 3.4vw, 46px); line-height: 1.14; font-weight: 800; letter-spacing: -0.035em">구조안전이 필요한<br>순간에 함께합니다</h1>
+              <p style="margin: 0; max-width: 46em; font-size: 17px; line-height: 1.8; color: var(--mute, #61665F)">설계 단계의 구조 계획부터 사용 중 안전진단과 점검, 시공 중 안전관리, 해체 단계의 구조검토까지 각 상황에 필요한 전문적인 기술 검토를 제공합니다. 판단의 근거와 필요한 조치를 명확하게 설명하는 것을 중요하게 생각합니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <nav aria-label="사업분야 바로가기" style="position: sticky; top: 62px; z-index: 30; border-bottom: 1px solid var(--mid, #CFD2CC); background: rgba(251,251,250,0.96); backdrop-filter: blur(6px)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px); display: flex; flex-wrap: wrap; gap: 0 clamp(6px, 1.6vw, 20px)">
+          <sc-for list="{{ anchors }}" as="a" hint-placeholder-count="4">
+            <a href="{{ a.href }}" onClick="{{ a.onClick }}" style="display: inline-flex; align-items: baseline; gap: 10px; padding: 15px clamp(4px, 0.8vw, 10px); color: {{ a.fg }}; box-shadow: {{ a.mark }}">
+              <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; font-variant-numeric: tabular-nums; opacity: 0.75">{{ a.no }}</span>
+              <span style="font-size: 14px; font-weight: 600; letter-spacing: -0.015em; white-space: nowrap">{{ a.label }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </nav>
+
+      <sc-for list="{{ details }}" as="s" hint-placeholder-count="4">
+        <section id="{{ s.slug }}" style="padding: var(--sy, 80px) 0; border-bottom: 1px solid var(--mid, #CFD2CC); scroll-margin-top: 120px">
+          <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+            <div style="display: flex; flex-wrap: wrap; gap: 12px clamp(24px, 3.4vw, 56px); padding-bottom: clamp(28px, 3vw, 40px); border-bottom: 1px solid var(--ink, #101215)">
+              <div style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+                <span style="font-size: clamp(30px, 3vw, 40px); font-weight: 600; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--green, #0B6C43)">{{ s.no }}</span>
+                <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.025em; color: var(--ink, #101215)">{{ s.title }}</span>
+              </div>
+              <div style="flex: 3 1 520px; min-width: 0">
+                <h2 style="margin: 0 0 22px; max-width: 24em; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.24; font-weight: 700; letter-spacing: -0.03em">{{ s.headline }}</h2>
+                <div style="display: flex; flex-direction: column; gap: 16px; max-width: 52em; font-size: 15.5px; line-height: 1.85; color: var(--mute, #61665F)">
+                  <p style="margin: 0">{{ s.p1 }}</p>
+                  <p style="margin: 0">{{ s.p2 }}</p>
+                </div>
+              </div>
+            </div>
+
+            <dl style="margin: 0">
+              <sc-for list="{{ s.items }}" as="d" hint-placeholder-count="3">
+                <div style="display: flex; flex-wrap: wrap; gap: 4px clamp(24px, 3.4vw, 56px); padding: 22px 0; border-bottom: 1px solid var(--rule, #E5E6E2)">
+                  <dt style="flex: 1 1 200px; min-width: 0; margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink, #101215)">{{ d.name }}</dt>
+                  <dd style="flex: 3 1 460px; min-width: 0; margin: 0; max-width: 58em; font-size: 14.5px; line-height: 1.8; color: var(--mute, #61665F)">{{ d.desc }}</dd>
+                </div>
+              </sc-for>
+            </dl>
+
+            <div style="display: flex; flex-wrap: wrap; gap: clamp(20px, 3vw, 48px); margin-top: clamp(28px, 3.4vw, 44px); padding: clamp(24px, 3vw, 40px); background: var(--tint, #F1F6F2)">
+              <div style="flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+                <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.14em; color: var(--gd, #094D30)">이런 경우에 필요합니다</span>
+                <p style="margin: 0; font-size: 12.5px; line-height: 1.75; color: #6E756C">{{ s.note }}</p>
+              </div>
+              <ul style="flex: 2 1 440px; min-width: 0; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0 clamp(20px, 3vw, 40px)">
+                <sc-for list="{{ s.needs }}" as="need" hint-placeholder-count="5">
+                  <li style="display: flex; gap: 11px; padding: 11px 0; border-bottom: 1px solid var(--gl, #CDE0D4); font-size: 14px; line-height: 1.65; color: #2C322C">
+                    <span style="font-weight: 700; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; color: var(--green, #0B6C43); padding-top: 4px; font-size: 12px">{{ need.no }}</span>
+                    <span>{{ need.text }}</span>
+                  </li>
+                </sc-for>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </sc-for>
+
+      <section data-screen-label="사업분야 · 절차" style="padding: var(--sy, 80px) 0 clamp(48px, 6vw, 88px)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">WORKING PROCESS</span>
+          <h2 style="margin: 16px 0 12px; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.22; font-weight: 700; letter-spacing: -0.03em">업무 진행 절차</h2>
+          <p style="margin: 0 0 clamp(30px, 3.4vw, 48px); max-width: 44em; font-size: 15px; line-height: 1.75; color: var(--mute, #61665F)">검토 대상과 목적에 따라 세부 절차는 달라질 수 있으며, 기본적인 업무는 다음과 같은 순서로 진행합니다.</p>
+          <ol style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--mid, #CFD2CC); border-top: 1px solid var(--ink, #101215)">
+            <sc-for list="{{ process }}" as="st" hint-placeholder-count="4">
+              <li style="display: flex; flex-direction: column; gap: 14px; padding: clamp(24px, 2.6vw, 34px) clamp(18px, 2vw, 28px) clamp(28px, 3vw, 40px); background: var(--paper, #FBFBFA)">
+                <span style="font-size: clamp(28px, 3vw, 38px); font-weight: 400; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--green, #0B6C43)">{{ st.no }}</span>
+                <h3 style="margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.025em">{{ st.title }}</h3>
+                <p style="margin: 0; font-size: 14px; line-height: 1.75; color: var(--mute, #61665F)">{{ st.desc }}</p>
+              </li>
+            </sc-for>
+          </ol>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isTech }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="기술자료 · 헤드" style="border-bottom: 1px solid var(--ink, #101215)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; gap: 8px clamp(24px, 4vw, 64px); padding: clamp(44px, 5vw, 76px) 0 clamp(40px, 4.4vw, 64px)">
+            <div style="flex: 1 1 200px; min-width: 0">
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">TECHNICAL RESOURCES</span>
+            </div>
+            <div style="flex: 3 1 520px; min-width: 0">
+              <h1 style="margin: 0 0 24px; max-width: 22em; font-size: clamp(30px, 3.4vw, 46px); line-height: 1.14; font-weight: 800; letter-spacing: -0.035em">검토 방식을 문서로<br>정리합니다</h1>
+              <p style="margin: 0; max-width: 46em; font-size: 17px; line-height: 1.8; color: var(--mute, #61665F)">구조해석 모델링 절차, AI 도구 활용 기준, 설계기준 개정 사항을 사내 매뉴얼과 기술 가이드로 정리하고 있습니다. 같은 기준으로 검토하고 판단 근거를 설명하기 위한 작업이며, 공개 가능한 자료는 이 페이지에서 순차적으로 제공합니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="padding: var(--sy, 80px) 0">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 24px; padding-bottom: 20px; border-bottom: 1px solid var(--ink, #101215)">
+            <h2 style="margin: 0; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.24; font-weight: 700; letter-spacing: -0.03em">자료 목록</h2>
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; color: var(--faint, #8A8F87)">{{ docCount }}</span>
+          </div>
+          <sc-for list="{{ docs }}" as="d" hint-placeholder-count="4">
+            <article style="display: flex; flex-wrap: wrap; gap: 10px clamp(24px, 3.4vw, 56px); padding: clamp(24px, 2.6vw, 34px) 0; border-bottom: 1px solid var(--rule, #E5E6E2)">
+              <div style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+                <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.12em; font-variant-numeric: tabular-nums; color: var(--green, #0B6C43)">{{ d.no }}</span>
+                <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.06em; color: var(--faint, #8A8F87)">{{ d.cat }}</span>
+              </div>
+              <div style="flex: 3 1 440px; min-width: 0">
+                <h3 style="margin: 0 0 10px; font-size: 19px; font-weight: 700; letter-spacing: -0.025em">{{ d.title }}</h3>
+                <p style="margin: 0; max-width: 50em; font-size: 14.5px; line-height: 1.8; color: var(--mute, #61665F)">{{ d.desc }}</p>
+              </div>
+              <div style="flex: 0 0 auto; display: flex; align-items: flex-start">
+                <span style="padding: 7px 14px; background: {{ d.chipBg }}; color: {{ d.chipFg }}; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap">{{ d.status }}</span>
+              </div>
+            </article>
+          </sc-for>
+          <p style="margin: clamp(24px, 3vw, 36px) 0 0; max-width: 52em; font-size: 13px; line-height: 1.8; color: var(--faint, #8A8F87)">게시 자료는 일반적인 참고를 위한 것으로, 개별 프로젝트의 구조 안전에 대한 판단을 대체하지 않습니다. 실제 검토는 대상 건축물의 도면과 현장 조건을 확인한 후 수행합니다.</p>
+        </div>
+      </section>
+
+      <section style="padding: 0 0 clamp(48px, 6vw, 88px)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px clamp(24px, 3vw, 48px); padding: clamp(26px, 3vw, 40px); background: var(--tint, #F1F6F2)">
+            <div style="flex: 1 1 380px; min-width: 0">
+              <h2 style="margin: 0 0 10px; font-size: clamp(19px, 2vw, 24px); line-height: 1.32; font-weight: 700; letter-spacing: -0.03em">찾는 자료가 없거나 특정 기준에 대한 확인이 필요하신가요?</h2>
+              <p style="margin: 0; max-width: 40em; font-size: 14.5px; line-height: 1.8; color: #4A5049">확인이 필요한 기준이나 검토 항목을 남겨주시면 담당 엔지니어가 답변드립니다.</p>
+            </div>
+            <a href="#" onClick="{{ navQna }}" style="display: inline-flex; align-items: center; gap: 9px; padding: 15px 26px; background: var(--green, #0B6C43); color: #FBFBFA; font-size: 14px; font-weight: 600; white-space: nowrap" style-hover="background: #094D30">
+              질문하기
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 12 H19"></path><path d="M13 6 L19 12 L13 18"></path></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isQna }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="질문하기 · 헤드" style="border-bottom: 1px solid var(--ink, #101215)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; gap: 8px clamp(24px, 4vw, 64px); padding: clamp(44px, 5vw, 76px) 0 clamp(40px, 4.4vw, 64px)">
+            <div style="flex: 1 1 200px; min-width: 0">
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">Q &amp; A</span>
+            </div>
+            <div style="flex: 3 1 520px; min-width: 0">
+              <h1 style="margin: 0 0 24px; max-width: 22em; font-size: clamp(30px, 3.4vw, 46px); line-height: 1.14; font-weight: 800; letter-spacing: -0.035em">자주 묻는 질문을<br>먼저 확인하세요</h1>
+              <p style="margin: 0; max-width: 46em; font-size: 17px; line-height: 1.8; color: var(--mute, #61665F)">점검 대상 여부, 필요한 자료, 진행 절차에 대해 자주 받는 질문을 정리했습니다. 여기에 없는 내용은 문의하기를 통해 남겨주시면 담당 엔지니어가 확인 후 회신드립니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="padding: var(--sy, 80px) 0">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="border-top: 1px solid var(--ink, #101215)">
+            <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="6">
+              <div style="border-bottom: 1px solid var(--rule, #E5E6E2)">
+                <button type="button" onClick="{{ f.onClick }}" style="display: flex; align-items: baseline; gap: clamp(14px, 2vw, 28px); width: 100%; padding: 22px 0; border: 0; background: transparent; text-align: left; cursor: pointer">
+                  <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; font-variant-numeric: tabular-nums; color: var(--green, #0B6C43)">{{ f.no }}</span>
+                  <span style="flex: 1; min-width: 0; font-size: clamp(16px, 1.7vw, 19px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.5; color: {{ f.fg }}">{{ f.q }}</span>
+                  <span style="font-size: 18px; font-weight: 400; line-height: 1; color: var(--green, #0B6C43)">{{ f.sign }}</span>
+                </button>
+                <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                  <p style="margin: 0; padding: 0 clamp(20px, 3vw, 44px) 26px clamp(26px, 3.4vw, 46px); max-width: 56em; font-size: 15px; line-height: 1.85; color: var(--mute, #61665F)">{{ f.a }}</p>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section style="padding: 0 0 clamp(48px, 6vw, 88px)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px clamp(24px, 3vw, 48px); padding: clamp(26px, 3vw, 40px); background: var(--tint, #F1F6F2)">
+            <div style="flex: 1 1 380px; min-width: 0">
+              <h2 style="margin: 0 0 10px; font-size: clamp(19px, 2vw, 24px); line-height: 1.32; font-weight: 700; letter-spacing: -0.03em">답을 찾지 못하셨나요?</h2>
+              <p style="margin: 0; max-width: 40em; font-size: 14.5px; line-height: 1.8; color: #4A5049">건축물 개요와 확인하고 싶은 사항을 남겨주시면 담당 엔지니어가 검토 후 답변드립니다.</p>
+            </div>
+            <a href="#" onClick="{{ navContact }}" style="display: inline-flex; align-items: center; gap: 9px; padding: 15px 26px; background: var(--green, #0B6C43); color: #FBFBFA; font-size: 14px; font-weight: 600; white-space: nowrap" style-hover="background: #094D30">
+              문의 남기기
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 12 H19"></path><path d="M13 6 L19 12 L13 18"></path></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="문의하기 · 헤드" style="border-bottom: 1px solid var(--ink, #101215)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+          <div style="display: flex; flex-wrap: wrap; gap: 8px clamp(24px, 4vw, 64px); padding: clamp(44px, 5vw, 76px) 0 clamp(40px, 4.4vw, 64px)">
+            <div style="flex: 1 1 200px; min-width: 0">
+              <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: var(--green, #0B6C43)">CONTACT</span>
+            </div>
+            <div style="flex: 3 1 520px; min-width: 0">
+              <h1 style="margin: 0 0 24px; font-size: clamp(30px, 3.4vw, 46px); line-height: 1.14; font-weight: 800; letter-spacing: -0.035em">안전한 건축을 위한<br>첫 상담</h1>
+              <p style="margin: 0; max-width: 46em; font-size: 17px; line-height: 1.8; color: var(--mute, #61665F)">구조설계부터 안전진단·점검, 공사 중 안전관리, 해체공사 구조검토까지 필요한 사항을 남겨주세요. 담당 기술자가 문의 내용을 검토한 후 안내해 드리겠습니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="padding: var(--sy, 80px) 0">
+        <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px); display: flex; flex-wrap: wrap; gap: clamp(32px, 4vw, 72px)">
+          <form onSubmit="{{ onSubmit }}" style="flex: 2 1 520px; min-width: 0">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px clamp(20px, 3vw, 40px); padding: 8px 0; border-top: 1px solid var(--ink, #101215); border-bottom: 1px solid var(--rule, #E5E6E2)">
+              <label style="flex: 1 1 150px; min-width: 0; display: flex; gap: 10px; font-size: 13.5px; font-weight: 600; color: var(--ink, #101215)"><span style="font-weight: 600; color: var(--gl, #CDE0D4); font-variant-numeric: tabular-nums">01</span>문의 유형</label>
+              <select style="flex: 2 1 280px; min-width: 0; height: 48px; padding: 0; border: 0; background: transparent; font-size: 15px; color: var(--ink, #101215)">
+                <option>사업 문의</option>
+                <option>구조설계</option>
+                <option>안전진단·점검</option>
+                <option>공사 중 안전관리</option>
+                <option>해체공사 구조검토</option>
+                <option>기술자료 · 기준 문의</option>
+                <option>기타</option>
+              </select>
+            </div>
+            <sc-for list="{{ fields }}" as="f" hint-placeholder-count="5">
+              <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px clamp(20px, 3vw, 40px); padding: 8px 0; border-bottom: 1px solid var(--rule, #E5E6E2)">
+                <label style="flex: 1 1 150px; min-width: 0; display: flex; gap: 10px; font-size: 13.5px; font-weight: 600; color: var(--ink, #101215)"><span style="font-weight: 600; color: var(--gl, #CDE0D4); font-variant-numeric: tabular-nums">{{ f.no }}</span>{{ f.label }}<span style="color: var(--green, #0B6C43)">{{ f.req }}</span></label>
+                <input placeholder="{{ f.ph }}" style="flex: 2 1 280px; min-width: 0; height: 48px; padding: 0; border: 0; background: transparent; font-size: 15px; color: var(--ink, #101215)">
+              </div>
+            </sc-for>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px clamp(20px, 3vw, 40px); padding: 14px 0 8px; border-bottom: 1px solid var(--rule, #E5E6E2)">
+              <label style="flex: 1 1 150px; min-width: 0; display: flex; gap: 10px; font-size: 13.5px; font-weight: 600; color: var(--ink, #101215)"><span style="font-weight: 600; color: var(--gl, #CDE0D4); font-variant-numeric: tabular-nums">07</span>문의 내용<span style="color: var(--green, #0B6C43)">*</span></label>
+              <div style="flex: 2 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+                <textarea placeholder="프로젝트 개요, 위치, 규모, 희망 일정 등을 자세히 남겨주시면 상담에 도움이 됩니다." style="width: 100%; min-height: 140px; padding: 0; border: 0; background: transparent; font-size: 15px; line-height: 1.8; color: var(--ink, #101215); resize: vertical"></textarea>
+                <p style="margin: 0 0 10px; font-size: 12.5px; color: var(--faint, #8A8F87)">첨부할 도면이나 자료가 있으면 회신 이메일로 별도 전달해 주세요.</p>
+              </div>
+            </div>
+            <label style="display: flex; align-items: flex-start; gap: 12px; padding: 20px 0; border-bottom: 1px solid var(--rule, #E5E6E2); cursor: pointer">
+              <input type="checkbox" checked="{{ agreed }}" onChange="{{ toggleAgree }}" style="width: 16px; height: 16px; margin: 3px 0 0; accent-color: #0B6C43; flex-shrink: 0">
+              <span style="font-size: 13.5px; line-height: 1.75; color: var(--mute, #61665F)"><strong style="color: var(--ink, #101215); font-weight: 600">개인정보 수집·이용 동의</strong> — 문의 접수 및 회신을 위한 개인정보(이름·연락처·이메일·문의 내용)를 수집·이용하며, 문의 처리 목적으로만 사용합니다.</span>
+            </label>
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 20px; padding-top: 24px">
+              <button type="submit" style="display: inline-flex; align-items: center; gap: 10px; padding: 17px 30px; border: 0; background: {{ submitBg }}; color: #FBFBFA; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; cursor: pointer">
+                문의 보내기
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 12 H19"></path><path d="M13 6 L19 12 L13 18"></path></svg>
+              </button>
+              <span style="font-size: 12.5px; color: var(--faint, #8A8F87)">{{ submitHint }}</span>
+            </div>
+          </form>
+
+          <aside style="flex: 1 1 280px; min-width: 0; align-self: flex-start; display: flex; flex-direction: column; gap: 24px; padding: clamp(24px, 2.6vw, 34px); background: var(--tint, #F1F6F2)">
+            <div>
+              <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: var(--gd, #094D30)">OFFICE</span>
+              <h2 style="margin: 14px 0 0; font-size: 21px; font-weight: 700; letter-spacing: -0.03em">오시는 길</h2>
+            </div>
+            <dl style="margin: 0; display: flex; flex-direction: column">
+              <sc-for list="{{ contactRows }}" as="c" hint-placeholder-count="4">
+                <div style="display: flex; flex-direction: column; gap: 5px; padding: 14px 0; border-bottom: 1px solid var(--gl, #CDE0D4)">
+                  <dt style="margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: #6E756C">{{ c.k }}</dt>
+                  <dd style="margin: 0; font-size: 15px; line-height: 1.6; font-variant-numeric: tabular-nums; color: var(--ink, #101215)">{{ c.v }}</dd>
+                </div>
+              </sc-for>
+            </dl>
+            <a href="https://map.naver.com/p/search/%EB%8C%80%EC%A0%84%EA%B4%91%EC%97%AD%EC%8B%9C%20%EC%9C%A0%EC%84%B1%EA%B5%AC%20%EC%9C%A0%EC%84%B1%EB%8C%80%EB%A1%9C654%EB%B2%88%EA%B8%B8%2038%2C%205%EC%B8%B5" target="_blank" rel="noreferrer" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 20px; background: var(--green, #0B6C43); color: #FBFBFA; font-size: 14px; font-weight: 600" style-hover="background: #094D30">
+              네이버 지도에서 보기
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 4 H20 V10"></path><path d="M20 4 L11 13"></path><path d="M18 14 V20 H4 V6 H10"></path></svg>
+            </a>
+          </aside>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ showCta }}" hint-placeholder-val="{{ true }}">
+      <section data-screen-label="공통 CTA" style="background: var(--ink, #101215)">
+        <div style="max-width: 1360px; margin: 0 auto; padding: clamp(48px, 6vw, 80px) var(--gut, 24px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px clamp(32px, 4vw, 64px)">
+          <div style="flex: 1 1 420px; min-width: 0">
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; color: #6FC79E">GET IN TOUCH</span>
+            <h2 style="margin: 16px 0 14px; max-width: 22em; font-size: clamp(24px, 2.8vw, 36px); line-height: 1.2; font-weight: 800; letter-spacing: -0.035em; color: #FBFBFA">구조 안전에 관한 검토가 필요하신가요?</h2>
+            <p style="margin: 0; max-width: 40em; font-size: 15.5px; line-height: 1.8; color: rgba(251,251,250,0.72)">건축물 개요와 확인하고 싶은 사항을 알려주시면 담당 엔지니어가 검토 범위와 절차를 안내드립니다.</p>
+          </div>
+          <div style="flex: 0 1 auto; display: flex; flex-wrap: wrap; gap: 12px">
+            <a href="#" onClick="{{ navContact }}" style="display: inline-flex; align-items: center; gap: 11px; padding: 18px 30px; background: #FBFBFA; color: var(--ink, #101215); font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap" style-hover="background: #EFEFEC">
+              문의하기
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 12 H19"></path><path d="M13 6 L19 12 L13 18"></path></svg>
+            </a>
+            
+          </div>
+        </div>
+      </section>
+    </sc-if>
+  </main>
+
+  <footer style="border-top: 1px solid var(--mid, #CFD2CC); background: #FBFBFA">
+    <div style="max-width: 1360px; margin: 0 auto; padding: 0 var(--gut, 24px)">
+      <div style="display: flex; flex-wrap: wrap; gap: clamp(28px, 4vw, 72px); padding: clamp(40px, 4.4vw, 64px) 0 clamp(32px, 3.4vw, 48px)">
+        <div style="flex: 2 1 380px; min-width: 0">
+          <span style="display: inline-flex; align-items: center; gap: 12px">
+            <svg viewBox="0 0 100 100" style="height: 30px; width: 30px; flex-shrink: 0" aria-hidden="true">
+              <mask id="dy31-mark-2" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+                <rect width="100" height="100" fill="white"></rect>
+                <path d="M58 0 H73 L70 12 Z" fill="black"></path>
+                <path d="M0 31 H52 L70 50 L49 72 H29 V34 H0 Z" fill="black"></path>
+                <path d="M64 100 H72 L100 72 V64 Z" fill="black"></path>
+              </mask>
+              <rect width="100" height="100" fill="var(--green, #0B6C43)" mask="url(#dy31-mark-2)"></rect>
+            </svg>
+            <span style="display: flex; flex-direction: column; gap: 3px; line-height: 1">
+              <span style="font-size: 15px; font-weight: 700; letter-spacing: -0.02em">(주)동양구조엔지니어링</span>
+              <span style="font-size: 9px; font-weight: 500; letter-spacing: 0.14em; color: #61665F">DONGYANG STRUCTURAL ENGINEERING</span>
+            </span>
+          </span>
+          <p style="margin: 22px 0 0; max-width: 32em; font-size: 14px; line-height: 1.8; color: var(--mute, #61665F)">구조설계, 안전진단·점검, 공사 중 안전관리, 해체공사 구조검토 분야에서 안전하고 신뢰할 수 있는 전문 엔지니어링 서비스를 제공합니다.</p>
+        </div>
+        <nav aria-label="푸터 내비게이션" style="flex: 1 1 180px; min-width: 0; display: flex; flex-direction: column; gap: 13px">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink, #101215)">MENU</span>
+          <sc-for list="{{ navs }}" as="n" hint-placeholder-count="4">
+            <a href="#" onClick="{{ n.onClick }}" style="font-size: 14px; color: var(--mute, #61665F)" style-hover="color: #0B6C43">{{ n.label }}</a>
+          </sc-for>
+          <a href="#" onClick="{{ navContact }}" style="font-size: 14px; color: var(--mute, #61665F)" style-hover="color: #0B6C43">문의하기</a>
+        </nav>
+        <div style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 13px">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink, #101215)">CONTACT</span>
+          <a href="tel:042-472-9782" style="font-size: 14px; font-variant-numeric: tabular-nums; color: var(--mute, #61665F)">T. 042-472-9782</a>
+          <span style="font-size: 14px; font-variant-numeric: tabular-nums; color: var(--mute, #61665F)">F. 042-482-9782</span>
+          <a href="mailto:dy8000@daum.net" style="font-size: 14px; color: var(--mute, #61665F)">dy8000@daum.net</a>
+          <span style="font-size: 14px; line-height: 1.7; color: var(--mute, #61665F)">대전광역시 유성구<br>유성대로654번길 38, 5층</span>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; padding: 18px 0 36px; border-top: 1px solid var(--rule, #E5E6E2); font-size: 11.5px; letter-spacing: 0.02em; color: var(--faint, #8A8F87)">
+        <span>(주)동양구조엔지니어링 · 대표 김용철 · 사업자등록번호 314-81-44186</span>
+        <span>© 2026 DONGYANG SE</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1440 },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#0B6C43&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#0B6C43&quot;, &quot;#72B91F&quot;, &quot;#1F4E79&quot;, &quot;#101215&quot;], &quot;section&quot;: &quot;브랜드&quot; },
+  &quot;startPage&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;home&quot;, &quot;options&quot;: [&quot;home&quot;, &quot;services&quot;, &quot;tech&quot;, &quot;qna&quot;, &quot;contact&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;페이지&quot; },
+  &quot;heroSlideshow&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;페이지&quot; }
+}">
+const BASE = "https://dongyang-se-web-tu.vercel.app/_next/image?url=%2Fimages%2F";
+const HERO = [1, 2, 3, 4, 5, 6].map((n) => `${BASE}hero-structural-frame-${n}.jpg&w=1920&q=75`);
+const ABOUT_IMG = `${BASE}about-engineers-review.png&w=1920&q=75`;
+const RULE = "1px solid #E5E6E2";
+
+const DETAILS = [
+  {
+    slug: "structural-design",
+    no: "01",
+    title: "구조설계",
+    headline: "안전성과 사용성을 함께 고려하는 구조계획",
+    p1: "건축구조설계는 건축물의 안전을 확보하는 동시에 공간의 목적과 시공 조건을 합리적으로 구현하는 과정입니다. 동양구조엔지니어링은 건축계획과 구조 시스템, 재료 특성, 하중 조건 및 현장 여건을 종합적으로 검토하여 프로젝트에 적합한 구조계획을 수립합니다.",
+    p2: "설계 단계부터 시공 과정, 기존 건축물의 구조 보강까지 각 단계에서 필요한 기술 검토를 제공하며, 명확한 근거와 원활한 협의를 바탕으로 프로젝트의 완성도를 높입니다.",
+    short: "건축계획·구조 시스템·재료·현장 여건을 종합 검토해 프로젝트에 적합한 구조계획을 수립합니다.",
+    items: [
+      { name: "건축구조설계", desc: "건축물의 용도, 규모, 형태와 하중 조건을 검토하여 적합한 구조 시스템을 계획하고 구조해석과 부재 설계를 수행합니다. 건축·설비·시공 분야와의 협업을 통해 구조적 안전성과 설계 의도가 조화를 이루도록 지원합니다." },
+      { name: "구조감리", desc: "구조도면과 관련 기준에 따라 주요 구조부가 적정하게 시공되고 있는지 검토합니다. 현장에서 확인된 구조 관련 사항을 관계자와 공유하고, 필요한 기술적 검토와 협의를 통해 설계와 시공 사이의 차이를 줄입니다." },
+      { name: "구조 보강", desc: "용도 변경, 증축, 노후화, 손상 또는 성능 개선이 필요한 건축물의 현재 상태와 요구 성능을 검토합니다. 기존 구조체와 현장 조건을 고려하여 적용 가능한 보강 방향을 제안하고, 안전성과 시공성을 함께 검토합니다." }
+    ],
+    needs: [
+      "신축 또는 증축 건축물의 구조설계가 필요한 경우",
+      "구조도면과 현장 시공 상태에 대한 전문 검토가 필요한 경우",
+      "용도 변경이나 하중 증가를 검토해야 하는 경우",
+      "구조부의 손상 또는 성능 저하가 우려되는 경우",
+      "기존 건축물의 구조 보강 방향을 수립해야 하는 경우"
+    ],
+    note: "세부 업무 범위와 제출 성과품은 건축물의 규모, 구조 형식, 현장 조건 및 계약 범위에 따라 달라질 수 있습니다."
+  },
+  {
+    slug: "safety-inspection",
+    no: "02",
+    title: "안전진단·점검",
+    headline: "건축물의 현재 상태를 정확하게 파악합니다",
+    p1: "안전진단과 점검은 건축물의 상태를 객관적으로 확인하고 필요한 조치를 판단하기 위한 과정입니다. 동양구조엔지니어링은 현장조사, 자료 검토와 구조적 판단을 바탕으로 주요 부재의 상태와 안전성을 확인합니다.",
+    p2: "점검 결과를 단순히 나열하는 데 그치지 않고, 확인된 현상의 원인과 중요도를 검토하여 유지관리, 정밀조사 또는 보강 등 다음 단계의 의사결정에 도움이 되는 정보를 제공합니다.",
+    short: "현장조사와 자료 검토, 구조적 판단으로 주요 부재의 상태와 안전성을 확인합니다.",
+    items: [
+      { name: "정기안전점검(3종시설물)", desc: "제3종시설물의 주요 구조부와 주변 상태를 정기적으로 확인하고, 손상 및 결함 여부를 조사합니다. 점검 대상과 주기는 관련 기준 및 시설물의 관리 조건에 따라 확인하며, 발견된 사항은 상태와 중요도에 따라 정리합니다." },
+      { name: "정밀안전진단 및 정밀안전점검", desc: "건축물의 상태와 구조적 안전성을 보다 면밀하게 평가하기 위해 자료조사, 현장조사, 시험 및 구조 검토 등을 수행합니다. 조사 결과를 종합하여 현재 상태를 평가하고 필요한 유지관리 또는 보수·보강 방향을 검토합니다." },
+      { name: "내진성능평가 및 내진보강", desc: "건축물의 구조 형식, 재료 특성, 도면과 현장 조건을 바탕으로 지진에 대한 구조 성능을 평가합니다. 평가 결과에 따라 취약 요소를 파악하고, 목표 성능과 현장 여건을 고려한 내진보강 방향을 검토합니다." },
+      { name: "건축물관리점검", desc: "건축물의 안전한 사용과 체계적인 관리를 위해 주요 구조부와 관련 시설의 상태를 확인합니다. 점검 대상과 범위는 건축물의 용도, 규모, 사용승인 시기 및 관련 기준을 확인하여 결정합니다." }
+    ],
+    needs: [
+      "정기적인 안전점검 대상 여부와 수행이 필요한 경우",
+      "균열, 누수, 처짐 또는 변형 등 이상 징후가 발견된 경우",
+      "노후 건축물의 현재 상태와 안전성을 확인해야 하는 경우",
+      "내진성능을 평가하거나 내진보강 방향을 검토해야 하는 경우",
+      "건축물 유지관리 계획 수립을 위한 전문적인 점검이 필요한 경우"
+    ],
+    note: "적용되는 점검 종류, 범위와 절차는 관련 법령, 시설물의 분류 및 관할 기관의 요구사항을 확인하여 결정합니다."
+  },
+  {
+    slug: "construction-safety",
+    no: "03",
+    title: "공사 중 안전관리",
+    headline: "시공 과정에서 발생할 수 있는 위험을 점검합니다",
+    p1: "건축물의 안전은 완성된 결과뿐 아니라 시공 과정에서도 지속적으로 관리되어야 합니다. 동양구조엔지니어링은 공사 단계별 현장 조건과 주요 구조부의 시공 상태를 확인하고, 계획과 현장 사이에 차이가 발생하지 않도록 필요한 기술 검토를 수행합니다.",
+    p2: "현장 관계자와 주요 확인 사항을 공유하며, 공사 과정에서 발견된 구조 및 안전 관련 사항에 대해 현실적인 대응 방향을 함께 검토합니다.",
+    short: "공사 단계별 현장 조건과 주요 구조부의 시공 상태를 확인하고 기술 검토를 수행합니다.",
+    items: [
+      { name: "공사 중 안전점검", desc: "공사 단계별로 주요 구조부, 가설 상태와 현장 안전 관련 사항을 확인합니다. 공정과 현장 조건을 고려하여 점검 대상을 살피고, 확인된 사항은 관계자에게 명확히 전달하여 필요한 조치가 이루어질 수 있도록 지원합니다." },
+      { name: "안전관리계획서 검토", desc: "공사 특성과 현장 조건을 고려하여 작성된 안전관리계획서의 주요 내용을 검토합니다. 공사 개요, 시공 절차, 안전관리 항목 및 구조 관련 계획 사이의 정합성을 살피고 보완이 필요한 사항을 정리합니다." }
+    ],
+    needs: [
+      "공사 단계별 안전점검이 요구되는 현장",
+      "주요 구조부 시공 상태에 대한 전문적인 확인이 필요한 경우",
+      "복잡한 공정이나 인접 구조물로 인해 추가 검토가 필요한 경우",
+      "안전관리계획서의 구조·시공 관련 내용을 검토해야 하는 경우",
+      "계획 변경 또는 현장 조건 변화에 따른 안전성 검토가 필요한 경우"
+    ],
+    note: "현장 점검은 계약된 범위와 시점의 상태를 기준으로 수행하며, 시공사의 품질관리 및 안전관리 책임을 대체하지 않습니다."
+  },
+  {
+    slug: "demolition-review",
+    no: "04",
+    title: "해체공사 구조검토",
+    headline: "해체 순서와 구조 거동을 함께 검토합니다",
+    p1: "해체공사는 기존 구조체의 일부 또는 전체가 단계적으로 제거되면서 구조 상태가 계속 변화하는 작업입니다. 따라서 완성된 건축물의 구조 검토와는 다른 관점에서 해체 순서, 잔존 구조체, 가설 지지와 주변 조건을 종합적으로 살펴야 합니다.",
+    p2: "동양구조엔지니어링은 기존 자료와 현장 조건을 바탕으로 주요 구조체의 특성을 파악하고, 계획된 해체 절차에 따른 구조적 영향을 검토합니다. 해체 과정에서 고려해야 할 주요 위험 요소와 보완 사항을 관계자에게 명확히 전달합니다.",
+    short: "해체 순서, 잔존 구조체, 가설 지지와 주변 조건을 종합적으로 검토합니다.",
+    items: [
+      { name: "기존 구조도면과 현장 상태 검토", desc: "확보된 구조도면과 실제 현장 상태를 비교하여 주요 구조부와 하중 전달 경로를 파악합니다." },
+      { name: "단계별 해체 순서와 잔존 구조체 검토", desc: "단계별 해체 순서에 따른 잔존 구조체의 거동을 검토하고, 가설 지지 또는 보강의 필요성을 판단합니다." },
+      { name: "장비 운용 및 주변 조건 검토", desc: "장비 운용과 적재하중에 대한 구조적 영향, 인접 건축물과 주변 조건을 검토하고 계획 변경 시 구조안전 관련 사항을 재검토합니다." }
+    ],
+    needs: [
+      "건축물 전체 또는 일부를 해체하는 경우",
+      "구조도면과 실제 현장 상태 사이에 차이가 있는 경우",
+      "대형 장비를 건축물 내부 또는 상부에서 운용하는 경우",
+      "부분 해체 중 잔존 구조체의 안전성을 검토해야 하는 경우",
+      "인접 건축물 또는 주변 시설에 대한 영향 검토가 필요한 경우"
+    ],
+    note: "해체공사 구조검토의 세부 범위는 대상 건축물, 해체 방법, 장비 계획, 현장 조건과 관계 기관의 요구사항에 따라 결정합니다."
+  }
+];
+
+const FAQ = [
+  { q: "우리 건축물이 정기안전점검 대상인지 어떻게 확인하나요?", a: "제3종시설물 등 관련 법령에서 정한 대상 여부는 건축물의 용도, 규모, 사용승인 시기에 따라 달라집니다. 건축물 개요(용도·연면적·층수·준공 연도)를 알려주시면 대상 여부와 필요한 점검 종류, 주기를 확인해 안내드립니다." },
+  { q: "문의나 견적을 받으려면 어떤 자료가 필요한가요?", a: "건축물 개요, 확보 가능한 구조도면 또는 건축도면, 이전 점검·진단 보고서, 희망 일정이 있으면 검토 범위를 빠르게 산정할 수 있습니다. 자료가 부족한 경우에도 현재 상황을 알려주시면 확인 절차부터 함께 정리해 드립니다." },
+  { q: "용도 변경이나 증축을 검토하고 있습니다. 무엇부터 확인해야 하나요?", a: "먼저 기존 구조체가 변경된 하중과 사용 조건을 견딜 수 있는지 검토해야 합니다. 구조도면과 현재 사용 상태를 확인한 후 보강 필요 여부와 적용 가능한 보강 방향을 검토해 알려드립니다." },
+  { q: "내진성능평가는 어떤 순서로 진행되나요?", a: "자료조사와 현장조사, 구조 모델링과 성능 평가, 결과 보고 순으로 진행합니다. 평가 결과에서 취약 요소가 확인되면 목표 성능과 현장 여건을 고려한 내진보강 방향을 함께 검토합니다." },
+  { q: "공사 중 안전점검이 시공사의 안전관리 책임을 대신하나요?", a: "아니요. 점검은 계약된 범위와 시점의 상태를 확인하고 구조·안전 관련 사항을 관계자에게 전달하는 업무이며, 시공사의 품질관리 및 안전관리 책임을 대체하지 않습니다." },
+  { q: "해체공사에도 구조검토가 필요한가요?", a: "필요합니다. 해체가 진행되면서 구조 상태가 계속 변하기 때문에 해체 순서, 잔존 구조체의 거동, 가설 지지와 인접 건축물에 대한 영향을 함께 검토해야 합니다." }
+];
+
+const DOCS = [
+  { cat: "PF3D · 매뉴얼", title: "PF3D 구조해석 모델링 매뉴얼", desc: "모델 작성부터 하중 입력, 결과 검토까지의 절차와 확인 항목을 정리한 사내 매뉴얼입니다. 검토자가 달라도 같은 기준으로 모델을 작성하고 결과를 읽을 수 있도록 하는 것이 목적입니다.", status: "작성 중" },
+  { cat: "AI · 기술 가이드", title: "구조 실무에서의 AI 도구 활용 가이드", desc: "AI 도구를 자료 정리와 검토 보조 수단으로 사용할 때의 적용 범위, 확인 절차와 한계를 정리합니다. 최종 판단은 담당 엔지니어의 검토를 거친다는 원칙을 전제로 합니다.", status: "작성 중" },
+  { cat: "기술 노트", title: "설계기준 개정 사항 정리", desc: "구조설계 및 내진 관련 기준의 개정 내용과 실무 검토 시 유의할 점을 정리해 공유합니다.", status: "준비 중" },
+  { cat: "체크리스트", title: "점검·진단 준비 자료 체크리스트", desc: "안전점검과 정밀안전진단을 준비할 때 미리 확인하면 좋은 도면, 이력 자료와 현황 정보를 항목별로 정리한 문서입니다.", status: "준비 중" }
+];
+
+const last = (arr, i) => i === arr.length - 1;
+
+class Component extends DCLogic {
+  state = { page: null, hero: 0, anchor: "structural-design", agreed: false, faq: 0 };
+
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      if (this.props.heroSlideshow === false) return;
+      this.setState((s) => ({ hero: (s.hero + 1) % HERO.length }));
+    }, 5000);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  go = (page) => (e) => {
+    if (e) e.preventDefault();
+    this.setState({ page });
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
+  };
+
+  renderVals() {
+    const accent = this.props.accentColor || "#0B6C43";
+    const page = this.state.page || this.props.startPage || "home";
+    const ink = "#101215";
+    const mute = "#61665F";
+    const on = (p) => page === p;
+
+    const pages = [
+      { id: "home", label: "회사소개" },
+      { id: "services", label: "사업분야" },
+      { id: "tech", label: "기술자료" },
+      { id: "qna", label: "질문하기" }
+    ];
+
+    return {
+      accent,
+      isHome: on("home"),
+      isServices: on("services"),
+      isTech: on("tech"),
+      isQna: on("qna"),
+      isContact: on("contact"),
+      showCta: !on("contact"),
+
+      navHome: this.go("home"),
+      navServices: this.go("services"),
+      navTech: this.go("tech"),
+      navQna: this.go("qna"),
+      navContact: this.go("contact"),
+
+      navs: pages.map((p) => ({
+        label: p.label,
+        onClick: this.go(p.id),
+        fg: on(p.id) ? accent : mute,
+        fw: on(p.id) ? 600 : 400,
+        mark: on(p.id) ? `inset 0 -2px 0 0 ${accent}` : "none"
+      })),
+
+      heroSrc: HERO[this.state.hero],
+      aboutImg: ABOUT_IMG,
+      dots: HERO.map((_, i) => ({
+        no: String(i + 1).padStart(2, "0"),
+        label: `${i + 1}번째 이미지 보기`,
+        bg: i === this.state.hero ? "#FBFBFA" : "transparent",
+        fg: i === this.state.hero ? ink : "rgba(251,251,250,0.65)",
+        onClick: (e) => { e.preventDefault(); this.setState({ hero: i }); }
+      })),
+
+      specs: [
+        { k: "분야", v: "구조설계 · 진단 · 안전 · 해체" },
+        { k: "소재", v: "대전광역시 유성구" },
+        { k: "공공 자문", v: "대전시 건설기술심의위원 (2021)" },
+        { k: "문의", v: "042-472-9782" }
+      ],
+
+      lifecycle: [
+        { no: "01", title: "설계", desc: "구조 시스템과 하중 조건을 정해 도면으로 확정하는 단계", items: ["건축구조설계", "구조계획 검토"] },
+        { no: "02", title: "시공", desc: "도면과 현장 시공 상태의 차이를 확인하는 단계", items: ["구조감리", "공사 중 안전점검", "안전관리계획서 검토"] },
+        { no: "03", title: "사용", desc: "사용 중 건축물의 상태와 성능을 확인하는 단계", items: ["정기안전점검", "정밀안전진단", "내진성능평가", "구조 보강"] },
+        { no: "04", title: "해체", desc: "구조 상태가 단계적으로 변하는 작업을 검토하는 단계", items: ["해체공사 구조검토", "잔존 구조체 검토"] }
+      ],
+
+      workflow: [
+        { no: "01", title: "검토", desc: "도면과 기존 자료, 현장 상태를 같은 기준으로 확인합니다. 자료와 현장이 다른 경우 무엇이 다른지부터 정리합니다." },
+        { no: "02", title: "판단", desc: "관련 설계기준과 구조해석 결과를 근거로 안전성과 필요한 조치를 판단합니다. 근거 없는 결론은 내지 않습니다." },
+        { no: "03", title: "설명", desc: "판단의 기준과 이유, 이어질 조치를 발주자와 현장 관계자가 이해할 수 있는 언어로 전달합니다." }
+      ],
+
+      services: DETAILS.map((d, i, a) => ({
+        no: d.no,
+        title: d.title,
+        desc: d.short,
+        items: d.items.map((it) => it.name),
+        bb: last(a, i) ? "1px solid #101215" : RULE
+      })),
+
+      prep: [
+        "건축물 개요 (용도 · 연면적 · 층수 · 준공 연도)",
+        "확보 가능한 구조도면 또는 건축도면",
+        "이전 점검 · 진단 보고서",
+        "확인된 균열 · 처짐 등 이상 징후 사진",
+        "희망 일정과 제출 기한",
+        "관할 기관의 요구사항 또는 공문"
+      ].map((text, i) => ({ no: String(i + 1).padStart(2, "0"), text })),
+
+      coreValues: [
+        { no: "01", title: "Safety · 안전성", desc: "모든 판단의 출발점은 안전입니다. 관련 기준과 현장 조건을 면밀히 검토하고, 작은 위험 요소도 놓치지 않도록 책임 있게 업무를 수행합니다." },
+        { no: "02", title: "Expertise · 전문성", desc: "구조설계, 시공, 안전진단과 내진 분야의 전문 인력이 지식과 경험을 공유합니다. 복합적인 문제를 한 가지 관점으로 판단하지 않고 여러 분야의 시각에서 검토합니다." },
+        { no: "03", title: "Trust · 신뢰성", desc: "근거가 분명한 검토와 일관된 품질을 통해 신뢰를 쌓습니다. 결과만 전달하는 것이 아니라 판단의 기준과 이유를 이해하기 쉽게 설명합니다." },
+        { no: "04", title: "Communication · 소통", desc: "좋은 엔지니어링은 충분한 소통에서 시작됩니다. 고객과 프로젝트 관계자의 요구를 정확히 이해하고, 검토 과정과 주요 판단 사항을 투명하게 공유합니다." }
+      ].map((cv, i, a) => ({ ...cv, bb: last(a, i) ? "1px solid #101215" : RULE })),
+
+      companyInfo: [
+        { k: "회사명", v: "(주)동양구조엔지니어링" },
+        { k: "대표", v: "김용철" },
+        { k: "사업자등록번호", v: "314-81-44186" },
+        { k: "주소", v: "대전광역시 유성구 유성대로654번길 38, 5층" },
+        { k: "전화", v: "042-472-9782" },
+        { k: "팩스", v: "042-482-9782" },
+        { k: "이메일", v: "dy8000@daum.net" }
+      ].map((row, i, a) => ({ ...row, mono: String(i + 1).padStart(2, "0"), bb: last(a, i) ? "1px solid #101215" : RULE })),
+
+      anchors: DETAILS.map((d) => ({
+        no: d.no,
+        label: d.title,
+        href: `#${d.slug}`,
+        fg: this.state.anchor === d.slug ? accent : mute,
+        mark: this.state.anchor === d.slug ? `inset 0 -2px 0 0 ${accent}` : "none",
+        onClick: () => this.setState({ anchor: d.slug })
+      })),
+
+      details: DETAILS.map((d) => ({
+        ...d,
+        needs: d.needs.map((text, j) => ({ no: String(j + 1).padStart(2, "0"), text }))
+      })),
+
+      docs: DOCS.map((d, i) => ({
+        ...d,
+        no: String(i + 1).padStart(2, "0"),
+        chipBg: d.status === "공개" ? accent : "#EFEFEC",
+        chipFg: d.status === "공개" ? "#FBFBFA" : "#61665F"
+      })),
+      docCount: `${String(DOCS.length).padStart(2, "0")} DOCUMENTS`,
+
+      faqs: FAQ.map((f, i) => ({
+        no: String(i + 1).padStart(2, "0"),
+        q: f.q,
+        a: f.a,
+        open: this.state.faq === i,
+        sign: this.state.faq === i ? "−" : "+",
+        fg: this.state.faq === i ? accent : ink,
+        onClick: () => this.setState((s) => ({ faq: s.faq === i ? -1 : i }))
+      })),
+
+      process: [
+        { no: "01", title: "상담 및 자료 검토", desc: "건축물 현황과 요청 사항을 파악하고 기존 도면·점검자료를 검토합니다." },
+        { no: "02", title: "현장조사", desc: "실측과 육안조사를 통해 구조 부재의 실제 상태와 손상 여부를 확인합니다." },
+        { no: "03", title: "구조해석 및 검토", desc: "조사 결과를 바탕으로 구조해석을 수행하고 안전성을 정량적으로 평가합니다." },
+        { no: "04", title: "보고서 및 자문", desc: "검토 결과와 조치 방안을 담은 보고서를 전달하고, 필요 시 후속 자문을 진행합니다." }
+      ],
+
+      fields: [
+        { no: "02", label: "이름", req: "*", ph: "홍길동" },
+        { no: "03", label: "회사 / 소속", req: "", ph: "(주)동양건설" },
+        { no: "04", label: "연락처", req: "*", ph: "010-0000-0000" },
+        { no: "05", label: "이메일", req: "", ph: "example@company.com" },
+        { no: "06", label: "제목", req: "", ph: "문의 제목 (선택)" }
+      ],
+
+      contactRows: [
+        { k: "주소", v: "대전광역시 유성구 유성대로654번길 38, 5층" },
+        { k: "전화", v: "042-472-9782" },
+        { k: "팩스", v: "042-482-9782" },
+        { k: "이메일", v: "dy8000@daum.net" }
+      ],
+
+      agreed: this.state.agreed,
+      toggleAgree: () => this.setState((s) => ({ agreed: !s.agreed })),
+      submitBg: this.state.agreed ? accent : "#A9ADA6",
+      submitHint: this.state.agreed ? "담당 엔지니어가 확인 후 회신드립니다." : "개인정보 수집·이용 동의 후 전송할 수 있습니다.",
+      onSubmit: (e) => e.preventDefault()
+    };
+  }
+}
+
+</script>
+</body>
+</html>
