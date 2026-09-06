@@ -419,7 +419,7 @@ export function ContactForm() {
           {state !== "submitting" ? <ArrowRight data-icon="inline-end" /> : null}
         </Button>
         {!requiredFieldsComplete ? (
-          <p className="text-destructive/80 text-xs">필수 항목을 작성해 주세요.</p>
+          <p className="text-destructive text-xs">필수 항목을 작성해 주세요.</p>
         ) : null}
       </div>
     </form>
