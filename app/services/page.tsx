@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { ContactCta } from "@/components/contact-cta";
 import { ProcessSteps } from "@/components/services/process-steps";
+import { ServiceContactCta } from "@/components/services/service-contact-cta";
 import { ServiceDetailSection } from "@/components/services/service-detail-section";
 import { ServiceIndex } from "@/components/services/service-index";
 import { ServicesHero } from "@/components/services/services-hero";
@@ -44,7 +44,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <ContactCta />
+      <ServiceContactCta />
     </div>
   );
 }

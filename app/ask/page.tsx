@@ -1,6 +1,5 @@
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PageHero } from "@/components/page-hero";
 import { askGroups } from "@/lib/ask-data";
 import { buildMetadata } from "@/lib/seo";
@@ -103,27 +102,6 @@ export default function AskPage() {
           수행합니다. 발주처에서 제공받은 자료는 노트북에 추가하지 않습니다.
         </p>
       </div>
-
-      <section className="container-site pb-16 md:pb-20">
-        <div className="flex flex-wrap items-center justify-between gap-6 bg-[#f1f6f2] p-7 md:p-10">
-          <div>
-            <h2 className="text-heading text-xl font-bold tracking-[-0.03em] md:text-2xl">
-              노트북에 없는 내용이거나, 실제 프로젝트 검토가 필요하신가요?
-            </h2>
-            <p className="mt-2 text-[14.5px] leading-[1.8] text-[#4a5049]">
-              건축물 개요와 확인하고 싶은 사항을 남겨주시면 담당 엔지니어가 검토 후
-              답변드립니다.
-            </p>
-          </div>
-          <Link
-            href="/contact"
-            className="bg-brand hover:bg-brand-hover inline-flex items-center gap-2.5 px-6 py-4 text-sm font-semibold text-white"
-          >
-            문의 남기기
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
-        </div>
-      </section>
     </div>
   );
 }
