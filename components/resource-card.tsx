@@ -1,34 +1,23 @@
-import { FileText } from "lucide-react";
 import Link from "next/link";
-import { CategoryBadge } from "@/components/category-badge";
 import type { Resource } from "@/lib/resources-data";
 
 export function ResourceCard({ resource }: { resource: Resource }) {
   return (
     <Link
       href={`/resources/${resource.slug}`}
-      className="group border-border bg-surface hover:border-brand/40 focus-visible:ring-focus-ring flex flex-col gap-4 rounded-2xl border p-6 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+      className="group border-border bg-surface hover:border-brand focus-visible:ring-focus-ring flex min-h-[238px] flex-col gap-5 border p-7 transition-colors focus-visible:ring-2 focus-visible:outline-none md:min-h-[250px] md:p-8"
     >
-      <div className="flex items-center justify-between gap-3">
-        <CategoryBadge>{resource.category}</CategoryBadge>
-        {resource.attachments?.length ? (
-          <FileText className="text-body-text h-4 w-4 shrink-0" aria-hidden="true" />
-        ) : null}
-      </div>
-      <div className="flex flex-col gap-2">
-        <h3 className="text-heading group-hover:text-brand text-base font-bold text-balance">
+      <span className="text-brand w-fit bg-[#f1f6f2] px-3 py-1.5 text-xs font-semibold">
+        {resource.category}
+      </span>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-heading group-hover:text-brand text-xl leading-[1.42] font-bold tracking-[-0.032em] text-balance">
           {resource.title}
         </h3>
-        <p className="text-body-text line-clamp-2 text-sm leading-relaxed text-pretty">
+        <p className="text-body-text line-clamp-3 text-[15px] leading-[1.8] text-pretty">
           {resource.summary}
         </p>
       </div>
-      <time
-        dateTime={resource.updatedAt}
-        className="text-body-text/80 mt-auto text-xs font-medium"
-      >
-        {resource.updatedAt}
-      </time>
     </Link>
   );
 }

@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { ResourceCard } from "@/components/resource-card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { resourceCategories, type Resource } from "@/lib/resources-data";
+import { cn } from "@/lib/utils";
 
 function resourceText(r: Resource): string {
   const parts: string[] = [r.title, r.summary, r.category];
@@ -49,9 +50,9 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
   const hasResources = resources.length > 0;
 
   return (
-    <div className="flex flex-col gap-8">
+    <div>
       <div className="flex flex-col gap-4">
-        <div className="relative max-w-md">
+        <div className="relative w-full max-w-[420px]">
           <Search
             className="text-body-text pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2"
             aria-hidden="true"
@@ -60,9 +61,9 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="자료 검색 (제목·내용·키워드)"
+            placeholder="자료 검색 (제목 · 요약 · 키워드)"
             aria-label="기술자료 검색"
-            className="border-border bg-surface text-heading placeholder:text-body-text/70 focus-visible:border-brand focus-visible:ring-focus-ring/40 h-11 w-full rounded-full border pr-4 pl-10 text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            className="border-input bg-surface text-heading placeholder:text-body-text/70 focus-visible:border-brand h-[46px] w-full border pr-4 pl-10 text-sm transition-colors focus-visible:outline-none"
           />
         </div>
 
@@ -72,15 +73,48 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
             if (value.length > 0) setCategory(value[0] as string);
           }}
           variant="outline"
-          className="flex-wrap"
+          className="flex-wrap justify-start gap-2"
           aria-label="기술자료 카테고리 필터"
         >
           {resourceCategories.map((cat) => (
-            <ToggleGroupItem key={cat} value={cat} className="rounded-full px-4">
+            <ToggleGroupItem
+              key={cat}
+              value={cat}
+              className={cn(
+                "h-auto rounded-none px-5 py-3.5 text-sm font-semibold transition-colors",
+                category === cat
+                  ? "border-brand bg-brand hover:bg-brand-hover aria-pressed:bg-brand data-[state=on]:bg-brand text-white hover:text-white aria-pressed:text-white data-[state=on]:text-white"
+                  : "text-heading hover:border-brand hover:text-brand hover:bg-transparent",
+              )}
+            >
               {cat}
+              <span className="ml-2 text-xs font-medium tabular-nums opacity-70">
+                {String(
+                  cat === "전체"
+                    ? resources.length
+                    : resources.filter((resource) => resource.category === cat).length,
+                ).padStart(2, "0")}
+              </span>
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
+      </div>
+
+      <div className="border-heading mt-9 mb-5 flex items-baseline justify-between border-b pb-3.5">
+        <span className="text-body-text/70 text-xs font-bold tracking-[0.12em]">
+          {String(filtered.length).padStart(2, "0")} DOCUMENTS
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            setCategory("전체");
+            setQuery("");
+          }}
+          className="text-brand disabled:text-body-text/60 text-xs font-semibold"
+          disabled={!q && category === "전체"}
+        >
+          전체 보기
+        </button>
       </div>
 
       {!hasResources ? (
@@ -88,18 +122,11 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
           등록된 기술자료가 아직 없습니다. 준비되는 대로 이곳에 게시됩니다.
         </p>
       ) : filtered.length > 0 ? (
-        <>
-          <p className="text-body-text/80 text-xs">
-            {q || category !== "전체"
-              ? `${filtered.length}건`
-              : `전체 ${filtered.length}건`}
-          </p>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((resource) => (
-              <ResourceCard key={resource.slug} resource={resource} />
-            ))}
-          </div>
-        </>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,380px),1fr))] gap-4">
+          {filtered.map((resource) => (
+            <ResourceCard key={resource.slug} resource={resource} />
+          ))}
+        </div>
       ) : (
         <p className="text-body-text py-16 text-center text-sm">
           {q
@@ -107,6 +134,12 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
             : "해당 조건의 자료가 없습니다."}
         </p>
       )}
+
+      <p className="text-body-text/70 mt-9 max-w-[52em] text-[13px] leading-[1.8]">
+        게시 자료는 일반적인 참고를 위한 것으로, 개별 프로젝트의 구조 안전에 대한 판단을
+        대체하지 않습니다. 실제 검토는 대상 건축물의 도면과 현장 조건을 확인한 후
+        수행합니다.
+      </p>
     </div>
   );
 }

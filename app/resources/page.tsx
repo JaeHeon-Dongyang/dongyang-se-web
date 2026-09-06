@@ -11,13 +11,14 @@ export const metadata: Metadata = {
 
 export default function ResourcesPage() {
   return (
-    <div className="flex flex-col gap-14 pb-24 md:gap-16">
+    <div>
       <PageHero
         eyebrow="TECHNICAL RESOURCES"
+        badge="사내 전용"
         title="기술자료"
-        description="점검 주기, 평가 절차, 보강 공법, 프로그램 매뉴얼 등 실무에 참고할 수 있는 기술 자료를 정리했습니다."
+        description="점검 주기와 평가 절차, 구조해석 모델링 과정, AI 도구 활용 기준을 사내 매뉴얼과 기술 가이드로 정리했습니다. 검토자가 달라도 같은 기준으로 판단하고 그 근거를 설명하기 위한 자료입니다."
       />
-      <section className="container-site">
+      <section className="container-site py-16 md:py-20">
         <ResourceFilter resources={resources} />
       </section>
     </div>

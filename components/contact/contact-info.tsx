@@ -1,62 +1,58 @@
-import { ExternalLink, Mail, MapPin, Phone, Printer } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { NaverMapEmbed } from "@/components/contact/naver-map-embed";
 import { company, contactLinks } from "@/lib/site";
 
-const infoItems: Array<{
-  icon: typeof MapPin;
-  label: string;
-  value: string;
-  href?: string;
-}> = [
-  { icon: MapPin, label: "주소", value: company.address },
-  { icon: Phone, label: "전화", value: company.tel, href: contactLinks.tel },
-  { icon: Printer, label: "팩스", value: company.fax },
-  { icon: Mail, label: "이메일", value: company.email, href: contactLinks.mailto },
+const infoItems: Array<{ label: string; value: string; href?: string }> = [
+  { label: "주소", value: company.address },
+  { label: "전화", value: company.tel, href: contactLinks.tel },
+  { label: "팩스", value: company.fax },
+  { label: "이메일", value: company.email, href: contactLinks.mailto },
 ];
 
 const naverMapUrl = `https://map.naver.com/p/search/${encodeURIComponent(company.address)}`;
 
 export function ContactInfo() {
   return (
-    <div className="border-border bg-surface flex flex-col gap-6 rounded-2xl border p-8">
-      <h3 className="text-heading text-lg font-bold">오시는 길</h3>
-      <ul className="flex flex-col gap-5">
+    <aside className="flex flex-col gap-6 self-start bg-[#f1f6f2] p-6 md:p-8">
+      <div>
+        <span className="text-brand text-xs font-bold tracking-[0.14em]">OFFICE</span>
+        <h2 className="text-heading mt-3.5 text-xl font-bold tracking-[-0.03em]">
+          오시는 길
+        </h2>
+      </div>
+      <dl>
         {infoItems.map((item) => {
-          const Icon = item.icon;
           return (
-            <li key={item.label} className="flex items-start gap-3">
-              <span className="bg-accent-green-light text-brand mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full">
-                <Icon className="size-4" aria-hidden="true" />
-              </span>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-muted-foreground text-xs font-medium">
-                  {item.label}
-                </span>
+            <div
+              key={item.label}
+              className="flex flex-col gap-1.5 border-b border-[#cde0d4] py-3.5"
+            >
+              <dt className="text-[11px] font-bold tracking-[0.14em] text-[#6e756c]">
+                {item.label}
+              </dt>
+              <dd className="text-heading text-[15px] leading-[1.6] tabular-nums">
                 {item.href ? (
-                  <a
-                    href={item.href}
-                    className="text-body-text hover:text-brand text-sm leading-relaxed underline-offset-4 hover:underline"
-                  >
+                  <a href={item.href} className="hover:text-brand">
                     {item.value}
                   </a>
                 ) : (
-                  <span className="text-body-text text-sm leading-relaxed">
-                    {item.value}
-                  </span>
+                  item.value
                 )}
-              </div>
-            </li>
+              </dd>
+            </div>
           );
         })}
-      </ul>
+      </dl>
+      <NaverMapEmbed address={company.address} />
       <a
         href={naverMapUrl}
         target="_blank"
         rel="noreferrer"
-        className="border-border bg-surface text-heading hover:border-brand/50 hover:text-brand focus-visible:ring-focus-ring inline-flex items-center justify-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none"
+        className="bg-brand hover:bg-brand-hover focus-visible:ring-focus-ring inline-flex items-center justify-between gap-2 px-5 py-4 text-sm font-semibold text-white transition-colors focus-visible:ring-2 focus-visible:outline-none"
       >
-        네이버 지도에서 위치 보기
+        네이버 지도에서 보기
         <ExternalLink className="size-4" aria-hidden="true" />
       </a>
-    </div>
+    </aside>
   );
 }

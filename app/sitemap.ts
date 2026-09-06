@@ -6,7 +6,7 @@ import { siteUrl } from "@/lib/site";
  * (콘텐츠 검증 후 노출 예정 — docs/PLAN.md)
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ["", "/about", "/services", "/contact"];
+  const routes = ["", "/services", "/contact"];
   const lastModified = new Date();
   return routes.map((route) => ({
     url: `${siteUrl}${route}`,

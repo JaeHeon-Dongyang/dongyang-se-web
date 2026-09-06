@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
     "/apple-icon": ["./app/fonts/*.woff"],
   },
 
+  // 회사소개는 홈(`/`)으로 통합됐다. 기존 /about 링크·북마크를 홈으로 넘긴다.
+  async redirects() {
+    return [{ source: "/about", destination: "/", permanent: true }];
+  },
+
   async headers() {
     return [
       {

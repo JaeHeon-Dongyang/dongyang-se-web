@@ -14,14 +14,19 @@ export default function ContactPage() {
   return (
     <>
       <PageHero
-        eyebrow="문의하기"
-        title="안전한 건축을 위한 첫 상담"
-        description="구조설계부터 안전진단·점검, 공사 중 안전관리, 해체공사 구조검토까지 필요한 사항을 남겨주세요. 담당 기술자가 문의 내용을 검토한 후 안내해 드리겠습니다."
+        eyebrow="CONTACT"
+        title={
+          <>
+            안전한 건축물을 위한
+            <br />첫 상담
+          </>
+        }
+        description="구조설계부터 안전점검·진단, 공사 중 안전관리, 해체공사 구조검토까지 필요한 사항을 남겨주세요. 담당 기술자가 문의 내용을 검토한 후 안내해 드리겠습니다."
       />
 
-      <section className="border-border bg-background border-b py-16 md:py-24">
-        <div className="mx-auto grid max-w-6xl gap-10 px-6 lg:grid-cols-[1.4fr_1fr]">
-          <div className="border-border bg-surface rounded-2xl border p-8 md:p-10">
+      <section className="py-16 md:py-20">
+        <div className="container-site grid gap-10 lg:grid-cols-[2fr_1fr] lg:gap-16">
+          <div>
             <ContactForm />
           </div>
           <ContactInfo />

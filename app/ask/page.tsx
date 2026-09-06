@@ -1,7 +1,6 @@
-import { ExternalLink, Info } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
 import { PageHero } from "@/components/page-hero";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { askGroups } from "@/lib/ask-data";
 import { buildMetadata } from "@/lib/seo";
 
@@ -20,40 +19,39 @@ export const metadata: Metadata = buildMetadata({
 
 export default function AskPage() {
   return (
-    <div className="flex flex-col gap-16 pb-24 md:gap-20">
+    <div>
       <PageHero
-        eyebrow="사내 전용"
+        eyebrow="AI NOTEBOOKS"
+        badge="사내 전용"
         title="질문하기"
-        description="분야를 고르면 해당 노트북으로 이동합니다. 설계기준·점검 절차·사내 규정을 물어볼 수 있습니다."
+        description="사업분야별로 근거 법령과 기준 문서를 학습시킨 AI 노트북을 나누어 두었습니다. 대상 시설물과 점검 목적에 맞는 노트북을 고르면 설계기준·절차·사내 규정을 바로 물어볼 수 있습니다. 노트북은 초대받은 사내 계정만 열람할 수 있으며, AI 답변은 참고용으로 성과품에 반영하기 전 원문을 대조합니다."
       />
 
-      <section className="container-site">
-        <Alert className="border-border bg-surface-muted content-measure flex items-center gap-2.5 [&>svg]:translate-y-0">
-          <Info className="text-brand shrink-0" />
-          <AlertDescription className="text-body-text text-sm leading-relaxed text-pretty">
-            AI 답변은 참고용입니다. 성과품에 반영하기 전 반드시 원문을 대조하세요.
-            노트북은 초대받은 사내 계정만 열람할 수 있으며, 발주처 자료를 노트북에 추가로
-            올리지 않습니다.
-          </AlertDescription>
-        </Alert>
-      </section>
-
-      <div className="container-site flex flex-col gap-14">
-        {askGroups.map((group) => (
-          <section key={group.id} aria-labelledby={`group-${group.id}`}>
-            <div className="flex flex-col gap-2">
-              <h2
-                id={`group-${group.id}`}
-                className="text-heading text-xl font-bold tracking-tight md:text-2xl"
-              >
-                {group.title}
-              </h2>
-              <p className="text-body-text text-sm leading-relaxed text-pretty">
+      <div className="container-site py-16 md:py-20">
+        {askGroups.map((group, groupIndex) => (
+          <section
+            key={group.id}
+            aria-labelledby={`group-${group.id}`}
+            className="border-border border-t py-8 first:pt-10 md:py-11"
+          >
+            <div className="grid gap-4 lg:grid-cols-[1fr_2fr] lg:gap-14">
+              <div className="flex items-baseline gap-3.5">
+                <span className="text-brand font-bold tracking-[0.12em] tabular-nums opacity-80">
+                  {String(groupIndex + 1).padStart(2, "0")}
+                </span>
+                <h2
+                  id={`group-${group.id}`}
+                  className="text-heading text-xl font-bold tracking-[-0.032em] md:text-[26px]"
+                >
+                  {group.title}
+                </h2>
+              </div>
+              <p className="text-body-text max-w-[48em] text-[14.5px] leading-[1.8] text-pretty">
                 {group.description}
               </p>
             </div>
 
-            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-6 grid grid-cols-[repeat(auto-fill,minmax(min(100%,290px),1fr))] gap-4">
               {group.notebooks.map((notebook) => (
                 <li key={notebook.title}>
                   {notebook.url ? (
@@ -61,7 +59,7 @@ export default function AskPage() {
                       href={notebook.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="border-border bg-surface hover:border-brand focus-visible:ring-focus-ring flex h-full flex-col gap-2 rounded-xl border p-5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                      className="border-border bg-surface hover:border-brand focus-visible:ring-focus-ring flex h-full flex-col gap-2.5 border p-5 transition-colors focus-visible:ring-2 focus-visible:outline-none md:p-6"
                     >
                       <span className="text-heading flex items-start justify-between gap-2 text-base font-semibold">
                         {notebook.title}
@@ -79,10 +77,10 @@ export default function AskPage() {
                       <span className="sr-only">새 창에서 열림</span>
                     </a>
                   ) : (
-                    <div className="border-border bg-surface-muted flex h-full flex-col gap-2 rounded-xl border border-dashed p-5">
+                    <div className="border-border bg-surface-muted flex h-full flex-col gap-2 border border-dashed p-5">
                       <span className="text-heading flex items-start justify-between gap-2 text-base font-semibold">
                         {notebook.title}
-                        <span className="text-body-text bg-surface shrink-0 rounded-full px-2 py-0.5 text-xs font-medium">
+                        <span className="text-body-text bg-surface shrink-0 px-2 py-0.5 text-xs font-medium">
                           준비 중
                         </span>
                       </span>
@@ -99,6 +97,10 @@ export default function AskPage() {
             </ul>
           </section>
         ))}
+        <p className="text-body-text/70 mt-8 max-w-[52em] text-[13px] leading-[1.8]">
+          노트북은 전원 뷰어 권한의 비공개 상태로 운영하며, 초대·해제는 관리자 계정에서만
+          수행합니다. 발주처에서 제공받은 자료는 노트북에 추가하지 않습니다.
+        </p>
       </div>
     </div>
   );

@@ -52,11 +52,10 @@
 - [ ] 테스트 환경: Vitest + Playwright 설정, 스모크 각 1개
 - [ ] `/api/contact` 검증 로직 유닛테스트
 
-## M1.5 — 콘텐츠 반영 (UTF-8 원고 수령 후)
+## M1.5 — 콘텐츠 반영 (진행 중, 원고 순차 수령)
 
-- [ ] `content/services/*` — 사업분야 원고 → `lib/services-data.ts` 정교화 / `/services` 반영
-- [ ] `content/legal/privacy-policy*` — `/privacy` 실문안 (내비/푸터 링크·색인은 검증 후)
-- [ ] `content/resources/pf3d-manual/*` — `lib/resources-data.ts` + `/resources/pf3d-manual` (내비/링크 없음)
+- [~] `content/resources/pf3d-manual/*` — `lib/resources-data.ts` + `/resources/pf3d-manual` (내비/링크 없음).
+      장기적으로 계속 업로드됨 — 후순위 아님
 
 ## M2 — 기술 사이트 MVP
 
@@ -65,7 +64,7 @@
 - [ ] `/services` — 4개 분야 딥페이지 + 앵커 네비게이션, 각 분야 카드(업무·상황·범위·CTA)
       · 콘텐츠 미비 항목은 "콘텐츠 준비 중"
 - [ ] 홈 세부 카피 반영 (사용자 제공 시)
-- [ ] 네이버 지도 연동 (`/contact`) — API 키 없을 때 주소 링크 폴백
+- [x] 네이버 지도 연동 (`/contact`) — `NaverMapEmbed`(geocode+marker), 키 없으면 주소 링크만
 - [x] `/contact` — 통합 문의 폼 UI + 회사정보 + 네이버 지도 링크 (V0 + 백엔드 연결)
 - [x] `/privacy`, `not-found`/`error`/`global-error` (M0.5·M1 에서 완료)
 - [ ] 첨부파일 지원 (현재는 "회신 이메일로 별도 전달" 안내) — 후순위
@@ -79,7 +78,7 @@
 - [ ] `/resources/pf3d-manual` — 목차(TOC), 제목 앵커, 문서 내 검색, 버전 표시, 인쇄 스타일
 - [ ] 하위 문서 확장 대비 라우팅 구조(`/resources/pf3d-manual/[section]`) 경계만 마련
 - [ ] `src/lib/search` — 정적 인덱스(제목/요약/본문/키워드), 한글 부분 일치, 결과 하이라이트, 빈 상태
-- [ ] `/contact` 지도 섹션 — 선택된 지도 공급자 임베드 또는 주소 링크
+- [x] `/contact` 지도 섹션 — 네이버 지도 임베드(M2 에서 완료) 또는 주소 링크
 - [ ] 첨부파일 보안 — 확장자 화이트리스트, 용량 제한, `public/documents` 정리 규칙
 - [ ] 완료 조건: 매뉴얼 TOC/앵커/검색 동작, 첨부 다운로드 동작, 목록↔상세 왕복 E2E 통과
 
@@ -101,3 +100,10 @@
 - [ ] 콘텐츠 최종 감수 (임의 생성물·placeholder 잔존 여부)
 - [ ] Vercel 프로덕션 배포 · 롤백 절차 확인 · `docs/deployment.md` 확정
 - [ ] 완료 조건: 핵심 사용자 플로우 E2E 통과, CI 그린, 목표 지표 달성
+
+## 후순위 — 원고 대기 (2026-09-02 재조정)
+
+원고 미수령으로 보류. 수령 즉시 해당 마일스톤으로 복귀.
+
+- [ ] `content/services/*` — 사업분야 원고 → `lib/services-data.ts` 정교화 / `/services` 반영 (M2)
+- [ ] `content/legal/privacy-policy*` — `/privacy` 실문안 (내비/푸터 링크·색인은 검증 후) (M1.5)

@@ -21,14 +21,19 @@ const steps = [
 
 export function ProcessSteps() {
   return (
-    <ol className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <ol className="flex flex-col gap-[clamp(1.875rem,3.4vw,3.25rem)]">
       {steps.map((step, index) => (
-        <li key={step.title} className="flex flex-col gap-3">
-          <span className="text-brand text-sm font-bold tabular-nums">
+        <li
+          key={step.title}
+          className="border-input flex flex-wrap items-baseline gap-x-[clamp(1.5rem,3.4vw,4rem)] gap-y-2.5 border-t pt-[clamp(1.375rem,2.4vw,2rem)]"
+        >
+          <span className="text-[clamp(2.125rem,3.6vw,3rem)] leading-none font-extralight tracking-[-0.03em] text-[#cde0d4] tabular-nums">
             {String(index + 1).padStart(2, "0")}
           </span>
-          <h3 className="text-heading text-base font-semibold">{step.title}</h3>
-          <p className="text-body-text text-sm leading-relaxed text-pretty">
+          <h3 className="text-heading min-w-0 flex-[0_1_300px] text-[clamp(1.125rem,1.9vw,1.375rem)] leading-[1.3] font-bold tracking-[-0.028em]">
+            {step.title}
+          </h3>
+          <p className="text-body-text max-w-[44em] min-w-0 flex-[1_1_400px] text-[15.5px] leading-[1.85] text-pretty">
             {step.description}
           </p>
         </li>

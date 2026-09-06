@@ -4,8 +4,7 @@
  * URL 접근·북마크에 대비한 방어선으로 not-found 를 반환).
  */
 export const primaryNav = [
-  { label: "홈", href: "/", intranetOnly: false },
-  { label: "회사소개", href: "/about", intranetOnly: false },
+  { label: "회사소개", href: "/", intranetOnly: false },
   { label: "사업분야", href: "/services", intranetOnly: false },
   { label: "기술자료", href: "/resources", intranetOnly: true },
   { label: "질문하기", href: "/ask", intranetOnly: true },

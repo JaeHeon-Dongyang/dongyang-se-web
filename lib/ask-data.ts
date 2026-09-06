@@ -30,7 +30,7 @@ export type AskGroup = {
 export const askGroups: AskGroup[] = [
   {
     id: "design",
-    title: "설계",
+    title: "구조설계",
     description: "구조 계획·해석과 내진설계 관련 기준을 다룹니다.",
     notebooks: [
       {
@@ -49,7 +49,7 @@ export const askGroups: AskGroup[] = [
   },
   {
     id: "inspection",
-    title: "안전진단 · 점검",
+    title: "안전점검 · 진단",
     description:
       "근거 법령이 서로 다릅니다. 대상 시설물과 점검 목적을 먼저 확인하고 선택하세요.",
     notebooks: [
@@ -81,8 +81,8 @@ export const askGroups: AskGroup[] = [
   },
   {
     id: "construction",
-    title: "공사 단계",
-    description: "시공 중 안전관리와 해체공사 구조검토를 다룹니다.",
+    title: "공사 중 안전관리",
+    description: "시공 단계의 안전점검 대상과 검토 항목을 다룹니다.",
     notebooks: [
       {
         title: "공사 중 안전점검",
@@ -90,6 +90,13 @@ export const askGroups: AskGroup[] = [
         basis: "건설기술진흥법",
         url: "https://notebook.google.com/notebook/c58b1ebd-1249-4699-a5e5-4b89d9a4238d",
       },
+    ],
+  },
+  {
+    id: "demolition",
+    title: "해체공사 구조검토",
+    description: "해체계획과 해체 단계별 구조 안전성 검토를 다룹니다.",
+    notebooks: [
       {
         title: "해체공사",
         description: "해체계획서 작성과 해체 단계별 구조 안전성 검토",
@@ -100,7 +107,7 @@ export const askGroups: AskGroup[] = [
   },
   {
     id: "internal",
-    title: "사내 규정 · 행정",
+    title: "사내규정 · 행정",
     description: "사내 규정과 행정 절차에 대한 질문입니다.",
     notebooks: [
       {

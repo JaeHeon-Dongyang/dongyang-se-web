@@ -68,7 +68,7 @@ export default function OpengraphImage() {
       </div>
 
       <span style={{ fontSize: 27, fontWeight: 600, color: "#686f7d" }}>
-        구조설계 · 안전진단·점검 · 공사 중 안전관리 · 해체공사 구조검토
+        구조설계 · 안전점검·진단 · 공사 중 안전관리 · 해체공사 구조검토
       </span>
     </div>,
     {

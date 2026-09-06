@@ -74,7 +74,7 @@ function MarkedImage({
 }) {
   return (
     <div
-      className="border-border bg-surface relative mx-auto w-full overflow-hidden rounded-xl border"
+      className="border-border bg-surface relative mx-auto w-full overflow-hidden border"
       style={{ maxWidth: width }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -86,7 +86,7 @@ function MarkedImage({
             {marker.box ? (
               <span
                 aria-hidden="true"
-                className="border-destructive absolute -translate-x-1/2 -translate-y-1/2 rounded-md"
+                className="border-destructive absolute -translate-x-1/2 -translate-y-1/2"
                 style={{
                   left: `${marker.x}%`,
                   top: `${marker.y}%`,
@@ -226,7 +226,7 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
             return (
               <div
                 key={index}
-                className="border-border bg-surface-muted flex flex-col gap-5 rounded-xl border p-6"
+                className="border-border bg-surface-muted flex flex-col gap-5 border p-6"
               >
                 <span className="text-brand text-xs font-semibold tracking-wide uppercase">
                   {block.eyebrow}
@@ -243,7 +243,7 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                   </p>
                 ))}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="border-border bg-surface rounded-lg border p-4">
+                  <div className="border-border bg-surface border p-4">
                     <p className="text-body-text/80 mb-1.5 text-xs font-semibold">
                       {block.comparison.leftLabel}
                     </p>
@@ -251,7 +251,7 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                       {block.comparison.leftText}
                     </p>
                   </div>
-                  <div className="border-border bg-surface rounded-lg border p-4">
+                  <div className="border-border bg-surface border p-4">
                     <p className="text-body-text/80 mb-1.5 text-xs font-semibold">
                       {block.comparison.rightLabel}
                     </p>
@@ -287,7 +287,7 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
                 <img
                   src={block.src}
                   alt={block.alt}
-                  className="border-border w-full rounded-xl border"
+                  className="border-border w-full border"
                 />
                 {block.caption ? (
                   <figcaption className="text-body-text/70 text-center text-xs">
@@ -379,18 +379,12 @@ export function ResourceBody({ blocks }: { blocks: ContentBlock[] }) {
             );
           case "table":
             return (
-              <div
-                key={index}
-                className="border-border overflow-x-auto rounded-xl border"
-              >
+              <div key={index} className="border-border overflow-x-auto border">
                 <table className="w-full text-left text-sm">
                   <thead>
                     <tr className="bg-surface-muted">
                       {block.headers.map((header) => (
-                        <th
-                          key={header}
-                          className="text-heading px-4 py-3 font-semibold first:rounded-tl-xl last:rounded-tr-xl"
-                        >
+                        <th key={header} className="text-heading px-4 py-3 font-semibold">
                           {header}
                         </th>
                       ))}

@@ -72,7 +72,7 @@ Next 16의 주요 변경(Turbopack 기본, async request API, `middleware`→`pr
 /about                회사소개  (하위 메뉴 없는 단일 딥페이지)
 /services             사업분야  (단일 딥페이지 + 4개 앵커)
   #structural-design      구조설계
-  #safety-inspection      안전진단·점검
+  #safety-inspection      안전점검·진단
   #construction-safety    공사 중 안전관리
   #demolition-review      해체공사 구조검토
 /resources            기술자료 목록
