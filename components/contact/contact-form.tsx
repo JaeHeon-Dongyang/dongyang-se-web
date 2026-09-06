@@ -45,8 +45,10 @@ export function ContactForm() {
     message: "",
   });
 
-  const requiredFieldsComplete =
-    consent && Object.values(requiredValues).every((value) => value.trim().length > 0);
+  const requiredFieldsComplete = Object.values(requiredValues).every(
+    (value) => value.trim().length > 0,
+  );
+  const canSubmit = requiredFieldsComplete && consent;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -409,7 +411,7 @@ export function ContactForm() {
         <Button
           type="submit"
           size="lg"
-          disabled={state === "submitting" || !requiredFieldsComplete}
+          disabled={state === "submitting" || !canSubmit}
           className="h-auto w-full rounded-none px-7 py-4 disabled:bg-[#aeb1ac] disabled:text-white disabled:opacity-100 has-data-[icon=inline-end]:pr-7 sm:w-fit sm:min-w-[150px]"
         >
           {state === "submitting" ? (
@@ -420,6 +422,10 @@ export function ContactForm() {
         </Button>
         {!requiredFieldsComplete ? (
           <p className="text-destructive text-xs">필수 항목을 작성해 주세요.</p>
+        ) : !consent ? (
+          <p className="text-muted-foreground text-xs">
+            개인정보 수집·이용 동의 후 전송할 수 있습니다.
+          </p>
         ) : null}
       </div>
     </form>
