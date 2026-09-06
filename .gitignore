@@ -50,3 +50,8 @@ __v0_jsx-dev-runtime.ts
 
 # Understand Anything (regenerable analysis artifacts)
 .ua/
+
+# Local IDE / tool artifacts
+.vscode/
+.impeccable/
+*.stackdump

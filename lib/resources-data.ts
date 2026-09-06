@@ -788,7 +788,12 @@ export const resources: Resource[] = [
           },
         ],
       },
-      { type: "heading", text: "2-11. 모델링 mgt 파일 Export", id: "gen-export" },
+      { type: "heading", text: "2-11. 모델링 mgtx 파일 Export", id: "gen-export" },
+      {
+        type: "callout",
+        tone: "info",
+        text: "**반드시 해석을 먼저 돌린 뒤** Export 합니다. 해석하지 않으면 정상적인 mgtx 파일을 추출할 수 없습니다.",
+      },
       {
         type: "annotated-image",
         src: "/images/resources/pf3d-ads-to-gen/s2-11-gen-export-menu.webp",
@@ -803,7 +808,7 @@ export const resources: Resource[] = [
           {
             x: 68,
             y: 11,
-            note: "[MGTX file (for GEN NX)] 을 클릭해 mgt 파일로 저장합니다.",
+            note: "[MGTX file (for GEN NX)] 을 클릭해 mgtx 파일로 저장합니다.",
           },
         ],
       },
@@ -896,11 +901,698 @@ export const resources: Resource[] = [
     ],
   },
   {
+    slug: "pf3d-pre-processor",
+    category: "PF3D 매뉴얼",
+    title: "02 · PERFORM-3D 전처리 프로그램 사용법",
+    summary:
+      "PF3D Pre Processor 로 Midas Gen 의 mgtx 와 BeST 의 Wall List 를 PERFORM-3D 입력 파일로 바꾸는 방법입니다. 세 가지 작업(MGTX 추출 · Nodal Mass · Wall List 정리)과 프로그램이 무엇을 어떤 기준으로 뽑는지 정리했습니다.",
+    updatedAt: "2026-09-02",
+    version: "v4.02",
+    body: [
+      {
+        type: "callout",
+        tone: "info",
+        text: "**프로그램 받는 곳** — 아래 경로를 복사해 파일 탐색기 주소창에 붙여넣으면 폴더가 열립니다. 폴더 안의 **가장 최신 버전**을 받아 쓰세요.",
+      },
+      {
+        type: "paragraph",
+        text: "\\\\Dongyang\\01. 용역\\1000. 구조\\1300. 성능설계",
+      },
+      {
+        type: "paragraph",
+        text: "PF3D Pre Processor 는 Midas Gen 에서 내보낸 mgtx(또는 mgt)와 BeST 의 Wall List 를 읽어 PERFORM-3D 가 바로 Import 할 수 있는 텍스트 파일로 바꿔 주는 프로그램입니다. 손으로 좌표를 옮기거나 메모장에서 줄 끝 문자를 고치던 작업을 대신합니다. 이 문서는 **v4.02 화면 기준**입니다.",
+      },
+      { type: "heading", text: "화면 구성", id: "layout" },
+      {
+        type: "paragraph",
+        text: "위쪽 SETTINGS 는 세 작업이 함께 쓰는 공통 설정이고, 왼쪽 목록에서 할 일을 고르면 오른쪽 화면이 바뀝니다. 각 작업은 아래쪽 RUN 버튼 하나로 끝납니다.",
+      },
+      {
+        type: "table",
+        headers: ["공통 설정", "하는 일"],
+        rows: [
+          [
+            "건물명",
+            "모든 출력 파일 이름의 앞머리. 비어 있으면 실행되지 않습니다. 설정 저장 이름으로도 쓰입니다. 예) 204D → 204D-01.node.txt",
+          ],
+          [
+            "저장 위치",
+            "비워 두면 자동 — 고른 입력 파일이 있는 폴더에 저장합니다. 탐색기에서 복사한 경로를 그대로 붙여넣어도 됩니다.",
+          ],
+          [
+            "MGTX 파일",
+            "공통 자리. 01(MGTX 추출)과 02(우발편심)의 파일 칸이 비어 있을 때만 자동으로 채워집니다. 이미 고른 파일은 건드리지 않습니다.",
+          ],
+          [
+            "설정 저장 / 불러오기 / 초기화",
+            "화면에 넣은 입력 전부를 건물명으로 저장·복원합니다. 자세한 내용은 아래 설정 저장 항목 참고.",
+          ],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "드래그 앤 드롭이 되는 자리(점선 테두리)에는 파일을 끌어다 놓아도 됩니다. 파일이 들어가면 점선이 실선으로 바뀝니다.",
+      },
+      { type: "heading", text: "01 · MGTX 추출", id: "mgtx" },
+      {
+        type: "paragraph",
+        text: "Midas Gen 의 mgtx(또는 mgt) 한 개에서 PF3D 입력 12종을 뽑습니다. 파일을 고르면 곧바로 형식을 검사해 ✓ 또는 ⚠ 로 알려 줍니다(파일 안에 *NODE 블록이 있는지). 필요한 항목만 체크하고 RUN 하면 됩니다.",
+      },
+      {
+        type: "table",
+        headers: ["항목", "무엇을 뽑나", "판정 기준"],
+        rows: [
+          ["1. NODE", "절점 좌표 x, y, z", "*NODE 블록 전체"],
+          ["2. BEAM", "보의 양 끝 좌표", "ELEMENT 중 BEAM 이면서 양 끝 z 가 같은 것"],
+          [
+            "3. COLUMN",
+            "기둥의 아래→위 좌표",
+            "ELEMENT 중 BEAM 이면서 양 끝 z 가 다른 것. 낮은 절점을 먼저 씁니다",
+          ],
+          ["4. WALL", "벽 4절점 좌표", "ELEMENT 중 WALL. N1·N2·N4·N3 순서"],
+          [
+            "5. ROTATION GAGE",
+            "벽·층마다 4꼭짓점 한 줄",
+            "같은 Wall ID(iWID) + 같은 층(하단 z·상단 z)인 패널을 하나로 합칩니다. 중간 분할 절점은 빠지고 바깥 4꼭짓점만 남습니다. 수평 부재(슬래브류)는 제외",
+          ],
+          [
+            "6. AXIAL GAGE",
+            "벽의 수직변",
+            "WALL 4절점 중 x·y 가 같은 두 절점. 낮은 z → 높은 z 순서. 인접한 벽이 공유하는 변은 한 번만",
+          ],
+          [
+            "7. EMBEDDED BEAM",
+            "벽 상단 수평변",
+            "각 WALL 에서 z 가 가장 큰 두 절점. 층·인접 벽이 공유하는 변은 한 번만",
+          ],
+          [
+            "8. DL Nodal",
+            "고정하중 절점하중 + 좌표",
+            "*USE-STLD, DL 구간의 *CONLOAD 를 절점 좌표에 붙입니다",
+          ],
+          ["9. LL Nodal", "활하중 절점하중 + 좌표", "위와 같고 LL 구간"],
+          [
+            "10. Frame",
+            "벽체 마크 목록 (MARKNAME_WID)",
+            "*WALLMARK 블록. 1001TO1006 같은 범위 표기는 낱개로 펼칩니다",
+          ],
+          [
+            "11. Structure Section",
+            "벽체 마크 × 층 (Markname_WID_층)",
+            "*WALLMARK × *STORY. 층은 위에서 아래 순서",
+          ],
+          ["12. Slaving", "층별 DIAPH_층", "*STORY 에서 최하층만 빼고"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "저장되는 이름은 **건물명-번호.항목.확장자** 입니다. 예) 204D-01.node.txt · 204D-05.rotgage.txt · 204D-11.section.csv. **번호는 위 목록의 순번으로 고정**이라 체크를 몇 개만 해도 번호가 밀리지 않습니다. 1~9 는 txt, 10~12 는 csv 로 저장됩니다.",
+      },
+      { type: "heading", text: "02 · Nodal Mass", id: "nodal-mass" },
+      {
+        type: "paragraph",
+        text: "Midas Gen 의 Story Mass Table 을 **머리글째 통째로** 복사해 붙여넣습니다. 프로그램은 각 줄의 **뒤쪽 숫자 6개**(Level · X-DIR · Y-DIR · Rotational · X-Coord · Y-Coord)만 골라 읽기 때문에, 앞에 붙은 Story 이름이나 위쪽 머리글·Bedrock 안내줄은 알아서 건너뜁니다. 천 단위 쉼표도 그대로 두면 됩니다.",
+      },
+      {
+        type: "paragraph",
+        text: "붙여넣는 즉시 몇 개 층을 인식했는지 아래에 표시됩니다. 층 수가 예상과 다르면 그 자리에서 알 수 있습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "MGTX 를 함께 지정하면 *STORY 블록에서 층별 우발편심(ECCX·ECCY)을 읽어 질량중심을 옮길 수 있습니다. 방향은 +X+Y / −X+Y / −X−Y / +X−Y 네 가지이고, 지진하중 조합에 맞춰 네 번 돌려 네 벌을 만드는 방식입니다.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "**회전관성 편심축 보정** — 편심 방향을 고르면 함께 켜지는 항목입니다. 질량중심이 d = √(ECCX² + ECCY²) 만큼 옮겨가므로, 옮긴 축을 기준으로 한 회전관성이 커집니다. 그만큼을 **Rot_z += X-mass × (ECCX² + ECCY²)** 로 더해 줍니다. 이동거리의 제곱이라 편심 부호(±)와 무관하게 네 방향 모두 같은 값이 더해집니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "출력은 **건물명-nodal_mass_node.txt** 와 **건물명-nodal_mass.txt** 두 개입니다. Node 파일은 체크를 끄면 만들지 않습니다.",
+          "**PERFORM-3D 에서는 Node 를 먼저 Import 한 뒤 Nodal Mass 를 Import** 합니다. 절점이 없으면 질량이 들어갈 자리가 없습니다.",
+          "질량이 X·Y·회전 모두 0 인 층은 층 수에는 포함되지만 출력에서는 빠집니다.",
+          "자릿수는 좌표·레벨 소수 4자리, 질량 3자리, 회전질량 유효숫자 7자리로 맞춰 나갑니다.",
+        ],
+      },
+      { type: "heading", text: "03 · Wall List 정리", id: "wall-list" },
+      {
+        type: "paragraph",
+        text: "BeST 에서 출력한 Wall List 를 넣으면 두 가지를 만듭니다. 파일을 고르면 원본인지(‘MEMB Name :’), 이미 정리된 TXT 인지(‘Story,Mem_Name’) 자동으로 구분해 표시합니다.",
+      },
+      {
+        type: "table",
+        headers: ["출력", "내용"],
+        rows: [
+          [
+            "건물명-for wall_list_tab.txt",
+            "부재별 정리표. Story, Mem_Name, fck, Thk, V-Rebar, H-Rebar 순서이고 배근의 괄호 부분은 지웁니다",
+          ],
+          [
+            "건물명-wall_list.csv",
+            "단면 조합 목록. fck·SD·두께·수직배근 조합에서 중복을 없애고 정렬한 뒤, 이름(C24_SD500_T200_D10@450)과 As/Ag·두께(cm)·Ec 계산식을 넣어 둡니다",
+          ],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "철근 강도는 수직배근 직경으로 판정합니다. **D16 이상이면 큰 강도, 미만이면 작은 강도**를 쓰고, 그 값은 Wall List 머리글의 fy,D13↓ · fy,D16↑ 에서 읽습니다(못 읽으면 400 / 700). CSV 는 원본이 아니라 위 TXT 결과를 입력으로 쓰기 때문에 두 항목을 함께 체크해도 됩니다.",
+      },
+      { type: "heading", text: "출력 파일이 PERFORM-3D 어디로 들어가나", id: "mapping" },
+      {
+        type: "paragraph",
+        text: "전처리 프로그램이 뽑아낸 파일 하나하나가 PERFORM-3D 안에서 정확히 어느 Task, 어느 탭으로 들어가는지 정리했습니다. **확인 필요**라고 적어둔 줄은 아직 어디에 쓰는지 못 정한 항목이니, 나중에 확인되면 채워 넣으면 됩니다.",
+      },
+      {
+        type: "table",
+        headers: ["출력 파일", "어디에 쓰나(PF3D)"],
+        rows: [
+          [
+            "-01.node.txt",
+            "IMPORT 작업의 Nodes Only 탭에서 이 파일 그대로 절점을 불러옵니다.",
+          ],
+          [
+            "-02.beam.txt · -03.column.txt · -04.wall.txt",
+            "같은 IMPORT 작업이지만 Elements (+Nodes) 탭에서 불러와 보·기둥·벽을 실제로 모델링합니다.",
+          ],
+          [
+            "-05.rotgage.txt · -06.axgage.txt",
+            "탭은 똑같이 Elements (+Nodes) 인데 성격이 달라요 — 부재를 새로 만드는 게 아니라, 이미 있는 벽에 Gage 를 붙여 주는 용도입니다.",
+          ],
+          ["-07.embbeam.txt", "확인 필요"],
+          ["-08.dlnodal.txt · -09.llnodal.txt", "확인 필요 (아마 Nodal Loads 쪽)"],
+          ["-10.frame.csv", "FRAMES 작업에서 Frame 항목을 만들 때 이름 목록으로 씁니다."],
+          [
+            "-11.section.csv",
+            "STRUCTURE SECTIONS 작업의 Define Sections 탭에서 Section 을 만들 때 씁니다.",
+          ],
+          [
+            "-12.slaving.csv",
+            "NODES 작업의 Slaving 탭에서 층별 다이어프레임(강막)을 만들 때 씁니다.",
+          ],
+          [
+            "건물명-nodal_mass_node.txt",
+            "NODES 작업의 Masses 탭에서 Nodal Mass 전용 절점을 새로 만들 때 씁니다.",
+          ],
+          [
+            "건물명-nodal_mass.txt",
+            "IMPORT 작업의 Masses 탭에서, 방금 만든 그 절점에 실제 질량 값을 입혀 줍니다.",
+          ],
+          [
+            "-for wall_list_tab.txt · -wall_list.csv",
+            "PF3D 에 넣는 파일이 아니라 후처리·물성치 정리용입니다.",
+          ],
+        ],
+      },
+      { type: "heading", text: "저장이 안 될 때", id: "validation" },
+      {
+        type: "paragraph",
+        text: "프로그램은 잘못된 자료를 조용히 저장하지 않습니다. 막히는 경우는 대부분 아래 넷 중 하나입니다.",
+      },
+      {
+        type: "table",
+        headers: ["증상", "원인", "조치"],
+        rows: [
+          [
+            "‘건물명을 입력하세요’",
+            "건물명이 비어 있음",
+            "모든 출력 파일의 앞머리라 필수입니다",
+          ],
+          [
+            "파일 이름 옆에 ⚠",
+            "MGTX 에 *NODE 가 없거나, Wall List 가 두 형식 중 어느 쪽도 아님",
+            "확장자만 같은 다른 파일일 수 있습니다. 그대로 실행은 되지만 결과를 확인하세요",
+          ],
+          [
+            "**‘층 정보 불일치 — 진행 중단’**",
+            "붙여넣은 층 수가 MGTX 층 수와 다르거나, Level 값이 MGTX 층 레벨과 맞지 않음",
+            "저장하지 않고 멈춥니다. Mass Table 을 다시 복사하거나 MGTX 가 같은 모델인지 확인하세요",
+          ],
+          [
+            "‘결과 없음’",
+            "체크한 항목에 해당하는 데이터가 모델에 없음",
+            "진행/결과 로그에 어떤 항목이 비었는지 나옵니다",
+          ],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "같은 이름의 파일이 이미 있으면 덮어쓸지 먼저 묻습니다. 여러 파일 중 하나가 다른 프로그램에 열려 있어 실패해도 나머지는 계속 저장하고, 실패한 것만 따로 알려 줍니다.",
+      },
+      { type: "heading", text: "설정 저장 · 불러오기", id: "preset" },
+      {
+        type: "list",
+        items: [
+          "화면에 넣은 입력 전부(고른 파일 경로 · 체크 항목 · 붙여넣은 원문 · 편심 설정)를 **건물명 이름으로** 저장합니다.",
+          "저장 위치는 **프로그램 폴더\\_설정\\건물명.json** 이고, 그 폴더에 쓸 수 없으면 %LOCALAPPDATA%\\PF3D_pre\\_설정 으로 넘어갑니다.",
+          "**RUN 이 성공하면 조용히 자동 저장**됩니다. 같은 건물을 다시 뽑을 때는 불러오기만 누르면 됩니다.",
+          "불러올 때 없어진 파일은 지우지 않고 ‘⚠ 파일 없음’ 으로 남겨 어떤 파일을 다시 골라야 하는지 보여 줍니다.",
+          "‘초기화’ 는 지금 화면만 비웁니다. **저장해 둔 설정 파일은 지우지 않습니다.**",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "해석이 끝난 뒤 결과를 정리·검토하는 후처리 프로그램은 별도 문서로 다룹니다.",
+      },
+    ],
+    related: ["pf3d-ads-to-gen", "pf3d-perform3d-modeling"],
+  },
+  {
+    slug: "pf3d-perform3d-modeling",
+    category: "PF3D 매뉴얼",
+    title: "03 · PERFORM-3D 모델링 설정",
+    summary:
+      "Gen에서 넘어온 모델을 PERFORM-3D에서 비선형 해석이 돌아가는 상태로 만드는 과정입니다. 물성치·유효강성 입력부터 Gage, Limit State, 지진파, Load Case, Damping, 횡하중 분포까지 16단계로 정리했습니다.",
+    updatedAt: "2026-09-02",
+    body: [
+      {
+        type: "paragraph",
+        text: "01편에서 만든 입력 파일을 PERFORM-3D 로 가져오면, 그때부터는 해석이 돌아가도록 모델을 채워 넣는 작업입니다. 재료 물성치와 유효강성을 넣고, 벽체에 Gage 를 달고, 층간변위·Limit State·지진파·Load Case·Damping 을 설정하는 순서로 진행합니다. 이 문서는 원본 설명서의 16단계를 그 순서 그대로 따라갑니다.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "원본 설명서를 옮긴 **초안**입니다. 순서와 설정값은 원본 그대로이며, 화면 캡처는 아직 옮기지 않았습니다.",
+      },
+      { type: "heading", text: "작업 전 유의사항", id: "before-start" },
+      {
+        type: "list",
+        items: [
+          "파일 이름은 00_P3D 형식으로 짓습니다. 예) 103동 P3D 파일 → **103_P3D**",
+          "Macro 를 쓰는 작업은 'Macro 작업 파일' 을 함께 봅니다.",
+          "**이 문서에서 정한 이름은 그대로 사용합니다.** 다른 직원이 열어봐도 무엇인지 알 수 있어야 하기 때문입니다.",
+          "부재별 Section Cut 작업(Auto Hot Key 이용)은 'Kdesign 사용법' 을 참고합니다.",
+          "Section Cut 은 1~16장 중 어느 시점에 해도 되지만 **소요시간이 매우 길기 때문에** 프로젝트 일정에 맞춰 언제 할지 미리 정해둡니다.",
+        ],
+      },
+      { type: "heading", text: "1. Node 관련사항 확인", id: "nodes" },
+      {
+        type: "paragraph",
+        text: "NODES 아이콘을 누르면 지점(Supports)·질량(Masses)·강막(Slaving) 세 탭을 확인할 수 있습니다. 세 가지가 Gen 에서 넘어온 그대로인지 먼저 봅니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "**지점 확인** — 지점이 설정된 노드는 X 로 표시됩니다. 화면의 H1·H2 뷰 기능으로 옆에서 보면서, 최하부층 이외에 지점으로 잡힌 곳이 없는지 확인합니다.",
+          "**질량 확인** — Masses 탭. Gen 에서 모델링한 지하층까지 질량이 모두 들어갔는지 확인합니다.",
+          "**강막 확인** — Slaving 탭. 지하외벽까지 층별 강막이 설정되었는지 확인합니다.",
+        ],
+      },
+      { type: "heading", text: "2. 재료·Gage 물성치 입력", id: "materials" },
+      {
+        type: "paragraph",
+        text: "2장부터 5장까지는 모두 Component Properties 에서 하는 작업입니다. 물성치는 직접 입력하지 않고 Import 기능으로 불러옵니다. Import 목록에 없는 물성치만 '공동주택 성능기반 내진설계 지침' 의 [표4.1], [표4.2] 를 참고해 직접 입력합니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "① Materials 탭에서 [Import] 를 누르고, User Defined 로 물성치 파일이 있는 폴더를 지정합니다.",
+          "② 불러올 물성치 파일을 고릅니다. 예) 콘크리트는 Con'c.PF3CMP",
+          "③ 파일 안의 물성치를 모두 가져오려면 [Select All] 을 선택합니다. (필요한 것만 골라도 무방)",
+          "④ 이름이 겹칠 때의 처리로 [Read component from file (replace current component)] 을 선택합니다.",
+        ],
+      },
+      {
+        type: "table",
+        headers: ["구분", "PERFORM-3D 물성치 타입"],
+        rows: [
+          ["콘크리트", "Inelastic 1D Concrete Material"],
+          ["철근", "Inelastic Steel Material, Non-Buckling"],
+          ["비선형 전단", "Inelastic Shear Material for a Wall"],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "Gage 물성치(Axial·Rotation·Shear)도 같은 방법으로 Import 하지만 **④만 다릅니다.** Gage 는 [Keep current component (ignore component in file)] 을 선택합니다.",
+      },
+      { type: "heading", text: "3. 전단벽(비선형) 물성치 설정", id: "shear-wall" },
+      {
+        type: "paragraph",
+        text: "Cross Sects. 탭의 Shear Wall, Inelastic Section 에서 설정합니다. Macro 가 자동으로 채우는 부분과 사용자가 직접 고쳐야 하는 부분이 나뉩니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "**직접 수정** — 철근 재질(Material Name)은 벽체 이름에 적힌 철근 종류에 맞춰 사용자가 직접 고칩니다. 예) 벽체 이름이 XecWallclneV-C24_SD500_T200_D10@450 이면 SD500 철근으로 수정합니다.",
+          "**Macro 자동 설정** — 그 외 단면 정보와 면외강성은 Macro 가 채웁니다.",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "면외강성(Out-of-Plane)은 면내강성의 25%(0.25EI) 로 가정하며, Macro 사용 시 Young's Modulus = 632 로 자동 설정됩니다. 원칙대로면 벽체별 콘크리트 강도에 맞춰 조절해야 하지만, 강도에 따른 탄성계수 차이가 매우 작고 면외강성은 그중 25%만 고려하므로 해석 결과에 미치는 영향이 거의 없다고 보아 모든 벽체를 632 로 통일합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "비선형 전단은 Compound 탭에서 설정합니다. Shear Material Type 을 Elastic Shear Material for a Wall 에서 **Inelastic Shear Material for a Wall** 로 바꾸고, Shear Material Name 을 해당 벽체의 fck 와 같은 값으로 맞춥니다.",
+      },
+      {
+        type: "heading",
+        text: "4. 탄성 부재(보·기둥·전이보) 유효강성 입력",
+        id: "effective-stiffness",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "유효강성은 **Gen 에 설정된 부재명과 같은 부재에만** 입력합니다. Gen 에서 Assign 되지 않은 부재는 P3D 모델에도 Assign 되어 있지 않기 때문입니다. 예) Gen 에서 기둥명을 층별로 재설정해 B5_1TC1 이 되었다면, 그 이름을 가진 기둥의 유효강성만 입력합니다.",
+      },
+      {
+        type: "table",
+        headers: ["부재", "부재명 형식", "선택하는 탭"],
+        rows: [
+          ["보 요소", "XecBmC-부재명", "Beam, RC Section"],
+          ["기둥 요소", "XecColC-부재명", "Column, RC Section"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "기둥인데도 Beam, RC Section 탭의 XecBmC-기둥명 부재에 값을 넣는 것이 가장 흔한 실수입니다. 기둥은 반드시 Column, RC Section 탭에서 고릅니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "**보(일반보·전이보)** — Macro 로 2·3축 I 값을 수정합니다.",
+          "**기둥 1차 수정** — 기둥은 I 값을 바로 못 고칩니다. 먼저 Inelastic 탭의 FEMA Column, Concrete Type 에서 'Use Cross Section' 을 **No** 로 바꿉니다(Macro 사용, 유효강성을 넣을 부재만).",
+          "**기둥 유효강성** — 1차 수정을 마치면 2·3축 I 값을 고칠 수 있습니다. 보와 같은 방법으로 Macro 로 수정합니다.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "5. 연결보(인방보) FEMA 비선형 물성치 입력",
+        id: "coupling-beam",
+      },
+      {
+        type: "paragraph",
+        text: "연결보는 SMATH 로 부재별 FEMA 물성치를 계산한 뒤, 그 결과를 Macro 입력자료로 만들어 넣습니다. 준비물은 SMATH 파일(#36_Coupling Beam Nonlinear Model Ver5.0.sm)과 SMATH 가 읽는 Excel 파일(연결보 단면·배근, 예: 103_104_BEAM LIST NAME_MODIFY.xlsx) 두 개입니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "① Excel 파일을 엽니다.",
+          "② 초록색으로 표시된 칸을 수정합니다. 부재명·단면치수는 **mgt 파일**, 부재길이(Lbeam)는 **Gen**, 배근정보는 **부재리스트**를 보고 채웁니다.",
+          "③ SMATH 파일을 엽니다. Excel 에 입력한 부재명별로 선택할 수 있고, 단면·배근을 읽어 부재별 FEMA 물성치를 자동 계산합니다.",
+          "④ 계산 후 새로고침 아이콘을 누르면 SMATH 폴더에 부재명별 Excel 파일이 생성됩니다.",
+          "⑤ 생성된 파일을 새 폴더로 복사합니다. **SMATH 의 부재 순서대로** 복사해야 뒤에서 합칠 때 순서가 맞습니다.",
+          "⑥ Excel 에서 '저녁이있는엑셀(VBA)' 의 내용합치기로 그 폴더의 파일을 하나로 합칩니다.",
+          "⑦ 합쳐진 내용을 'Macro Excel 파일 - 3. 연결보 FEMA Macro' 시트에 붙여넣으면 Macro 입력자료가 완성됩니다.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "단면치수 단위와 순서를 주의합니다. **MGT 는 H × B (cm)** 이고 **Excel 입력 순서는 B × H (mm)** 입니다. 부재길이(Lbeam)는 가장 짧은 부재를 기준으로 m 단위로 입력합니다.",
+      },
+      {
+        type: "link",
+        label: "저녁이있는엑셀(VBA) 내용합치기 사용법",
+        url: "https://exceltool.tistory.com/24",
+        description: "⑥번 단계에서 쓰는 Excel 추가기능의 사용법",
+      },
+      {
+        type: "paragraph",
+        text: "입력자료가 준비되면 Macro 로 FEMA 물성치를 넣습니다. Type 과 Name(부재명)을 확인해 입력 대상 부재에만 넣고, Gen 에서 새로 설정한 연결보(강도부재명, 예: 35aB1)만 입력합니다.",
+      },
+      { type: "heading", text: "6. 층간변위 설정", id: "drift" },
+      {
+        type: "paragraph",
+        text: "PERFORM-3D 는 MIDAS 와 달리 **설정해 둔 층간변위만** 해석 후 TEXT 로 뽑을 수 있습니다. 그래서 어느 위치의 층간변위를 볼지 미리 정해 두는 작업이 필요합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "먼저 고유치 해석(Mode 해석)으로 모드별 최대 층간변위 발생 위치를 확인합니다. Load Case Type 은 Gravity, Load Case Name 은 test, Linear 로 두고 Pattern Name 에 LoadNode-DL 을 Add 합니다. 이어서 Analysis Series 에서 [Check Structure] 를 눌러 구조를 확인하고, 'Start a new series' 이름에 **Mode** 를 입력합니다. 모드 개수는 20, Mass Pattern 은 Nodal Mass, Scale Factor 는 1 로 두고 [OK] → [GO] 로 해석합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "해석이 끝나면 모드 차수별 질량참여율을 볼 수 있고, [Plot] 으로 각 모드의 변형 형상을 확인할 수 있습니다. **변위가 가장 크게 발생하는 부위**를 층간변위 지점으로 잡습니다.",
+      },
+      {
+        type: "table",
+        headers: ["모드", "T (주기)", "질량참여율 H1", "질량참여율 H2"],
+        rows: [
+          ["1차", "1.681", "17.3", "11.21"],
+          ["2차 → P1", "1.643", "44.81", "13.88"],
+          ["3차 → P2", "1.244", "3.01", "45.49"],
+          ["4차", "0.4532", "1.53", "4.28"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "위 표는 이름 정의를 이해하기 위한 예시입니다. X 방향 질량참여율이 가장 큰 2차 모드에서 X 변위가 가장 큰 위치를 P1, Y 방향이 큰 3차 모드에서 Y 변위가 가장 큰 위치를 P2 로 정합니다.",
+      },
+      {
+        type: "table",
+        headers: ["이름", "위치", "설정 범위"],
+        rows: [
+          ["P1 / P2", "X·Y 변위가 가장 크게 발생하는 위치", "각 방향·층별 전부"],
+          [
+            "RH1 / RH2",
+            "질량중심(Mass_D_0.25L_5%)에서 X(RH1)·Y(RH2)",
+            "최상층·최하층 절점만",
+          ],
+          ["MC", "질량중심(Mass_D_0.25L_5%)", "각 방향·층별 전부"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "위치를 정했으면 Frame 을 만듭니다. 이름은 Drift_P1, Drift_P2 로 하고 해당 위치를 드래그해 지정합니다. Mass_D_0.25L_5% Frame 은 이미 만들어져 있으므로 RH1·RH2·MC 는 따로 만들지 않아도 됩니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "**Frame 설정 시 두 가지를 확인합니다.** ① 층간변위는 최상층부터 최하층까지 모든 층에 대해 출력해야 하므로, P1·P2 가 최상층까지 이어지는 절점인지 옆에서 확인합니다. 전이층이 있는 건물이 대부분이라 끊기는 경우가 많고, 그때는 인접한 다른 위치로 옮깁니다. ② Setback 되는 부분을 P1·P2 로 잡으면 층간변위가 튀므로 인접한 다른 위치로 잡습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "층간변위 이름은 '위치_방향_층수' 로 짓고 최상층은 RF 로 씁니다. 예) P1_X_RF, P1_X_20F … 지하 5층까지 있는 건물이면 마지막은 P1_X_B4F 가 되어야 정상입니다(최상층을 RF 로 쓰기 때문에 한 칸씩 밀립니다). P1·P2 모두 최상층~최하층, X·Y 두 방향을 다 만듭니다. Y 방향은 H2 로 설정한 뒤 상·하부 절점을 입력합니다. 질량중심은 Mass_D_0.25L_5% Frame 만 활성화한 뒤 MC_X_RF ~ MC_X_최하부층, MC_Y_… 로 같은 규칙으로 만들고, RH_X(H1)·RH_Y(H2) 는 최상층·최하층만 잡습니다.",
+      },
+      {
+        type: "heading",
+        text: "7. 층별 Structure Section 설정",
+        id: "structure-section",
+      },
+      {
+        type: "paragraph",
+        text: "층 전단력과 밑면 전단력을 보기 위한 설정입니다. 층별 이름은 Macro 로 만들며, 층전단력을 보기 위한 것이므로 **최상층 이름은 RF 가 아니라 20F**, 최하층은 B5F 로 지정합니다(지하 5층~21층 건물 기준).",
+      },
+      {
+        type: "list",
+        items: [
+          "element group 을 ElemConcWall 로 두고 벽체를 드래그해 층별로 Structure Section 을 설정합니다.",
+          "전이층 하부는 벽체 말고도 기둥(ElemConcCol)과 지하외벽(ElemConcEWall)이 있으므로, element group 을 바꿔가며 그 층의 Structure Section 을 추가로 설정합니다.",
+          "각 층 전단력을 보기 위한 작업이라는 점을 생각하면서, **해당 층의 모든 수직부재**에 대해 설정합니다.",
+        ],
+      },
+      { type: "heading", text: "8. Gage 입력", id: "gage" },
+      {
+        type: "paragraph",
+        text: "먼저 Gage 를 담을 element group 을 만듭니다. Element Type 은 Deformation Gage 이고, Gage Type 은 종류에 따라 다릅니다.",
+      },
+      {
+        type: "table",
+        headers: ["Gage", "Gage Type"],
+        rows: [
+          ["Rotation · Shear gage", "Wall type, rotation or shear"],
+          ["Axial gage", "Bar type, axial strain"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Rotation·Shear gage 는 s2k file 생성 후 만든 **Rotation gage 파일 하나로** 설정합니다. 그 파일을 노트패드로 열어 줄의 끝문자(EOL)를 Windows(CR LF) 로 변환한 뒤, element group 을 지정하고 파일 위치를 잡아 Import 합니다. 설정에는 시간이 다소 걸리고, 끝나면 Import 된 요소가 노란색으로 표시됩니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "Import 후 **반드시 확인**합니다. Gage 는 전이층 상·하부와 Setback 부분에 설정되지 않을 확률이 있으므로 그 부위만 활성화해 육안으로 봅니다. 빠진 벽체는 [Add element] 로 추가합니다. 뒤에서 Axial gage 를 Rotation gage 로 만들기 때문에 Rotation gage 확인은 특히 중요합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "전이부재와의 Link 때문에 나눠 놓은 벽체는 실제로는 하나의 벽체입니다. 나눠진 각각에 모두 gage 를 달지 않습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "Axial gage 는 Rotation gage 를 Export 한 뒤 Kdesign 의 [Rot Gage To Axial Gage] 로 파일을 만들어 씁니다. element group 을 Rotation gage 로 두고 Export → Kdesign 에서 그 파일을 열어 이름을 Axial gage 로 저장 → 앞과 같은 방법으로 Import 합니다. 이때는 노트패드로 줄 끝문자를 바꾸지 않아도 됩니다.",
+      },
+      {
+        type: "paragraph",
+        text: "여기까지가 gage 를 벽체에 붙이는 작업이고, 마지막으로 gage 물성치를 assign 합니다. 벽체를 더블클릭하거나 드래그해 선택하면 빨간색으로 표시되고, [Assign Component] 에서 해당 gage 타입과 이름을 골라 [Assign] 합니다. Rotation·Shear·Axial 모두 같은 방법으로 수행합니다.",
+      },
+      { type: "heading", text: "9. 연결보(인방보) 분리", id: "lintel-split" },
+      {
+        type: "paragraph",
+        text: "나중에 탄성부재(보·전이보·기둥) 부재력을 출력할 때 연결보 부재력이 섞여 나오지 않게 하기 위한 작업입니다. ElemConcBeam 에서 [New] 를 눌러 Element Type = Beam, Group Name = ElemConcLintelBeam 그룹을 만들고 Geometric Nonlinearity 는 P-delta 로 둡니다. 그다음 [Change Group] 으로 연결보만 새 그룹으로 옮깁니다. 이때 **전이층 상부에 있는 연결보만** 선택합니다.",
+      },
+      { type: "heading", text: "10. Limit State 설정", id: "limit-state" },
+      {
+        type: "paragraph",
+        text: "해석 후 결과치를 직관적으로 보기 위한 설정입니다. Deformation 과 Drift 두 종류를 만듭니다.",
+      },
+      {
+        type: "table",
+        headers: ["Name", "Element Group", "Element Type", "Component Type"],
+        rows: [
+          ["W_comp_Strain_0.002", "Axial gage", "Deformation gage", "Axial Strain gage"],
+          ["FEMA_Beam[IO]", "ElemConcLintelBeam", "Beam", "FEMA Beam ~"],
+          ["FEMA_Beam[LS]", "ElemConcLintelBeam", "Beam", "FEMA Beam ~"],
+          ["FEMA_Beam[CP]", "ElemConcLintelBeam", "Beam", "FEMA Beam ~"],
+          ["Wall_Rotation[IO]", "Rotation gage", "Deformation gage", "Rotation Gage~"],
+          ["Wall_Rotation[LS]", "Rotation gage", "Deformation gage", "Rotation Gage~"],
+          ["Wall_Rotation[CP]", "Rotation gage", "Deformation gage", "Rotation Gage~"],
+          ["Wall_Shear[CP]", "Shear gage", "Deformation gage", "Shear Strain Gage~"],
+        ],
+      },
+      {
+        type: "table",
+        headers: ["Name", "Deformation Type", "Level", "D/C Limit"],
+        rows: [
+          ["W_comp_Strain_0.002", "Strain, Compression", "2", "1"],
+          ["FEMA_Beam[IO]", "~, Pos or Neg", "2", "1"],
+          ["FEMA_Beam[LS]", "~, Pos or Neg", "3", "1"],
+          ["FEMA_Beam[CP]", "~, Pos or Neg", "4", "1"],
+          ["Wall_Rotation[IO]", "~, Pos or Neg", "1", "1"],
+          ["Wall_Rotation[LS]", "~, Pos or Neg", "2", "1"],
+          ["Wall_Rotation[CP]", "~, Pos or Neg", "4", "1"],
+          ["Wall_Shear[CP]", "~, Pos or Neg", "1", "1"],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "원본 설명서는 Deformation Limit State 를 **총 10개** 만든다고 적고 있으나, 표에는 위 8개만 이름이 적혀 있고 2행이 비어 있습니다. 나머지 2개는 원본 확인 후 채워야 합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "Level 은 기준에서 정한 허용변위를 각 물성치에 입력해 두고, Limit State 의 level 설정으로 그 허용변위를 불러오는 구조입니다. 예) FEMA_Beam[IO] 의 Level = 2 는 물성치에 입력된 허용변위 level 2 를 뜻합니다. 각 level 은 기준의 IO·LS·CP 에 맞게 물성치에 입력됩니다.",
+      },
+      {
+        type: "paragraph",
+        text: "Drift 는 Drift, Drift [IO], Drift [LS], Drift [CP] 총 4개를 만듭니다. Drift [IO]~[CP] 는 'All drifts' 로 두고, 'Drift' 만 'Highlighted drifts only' 로 두어 RH_X·RH_Y 를 선택합니다.",
+      },
+      {
+        type: "table",
+        headers: ["Name", "Drift limit"],
+        rows: [
+          ["Drift", "0.1"],
+          ["Drift [IO]", "0.005"],
+          ["Drift [LS]", "0.015"],
+          ["Drift [CP]", "0.02"],
+        ],
+      },
+      { type: "heading", text: "11. P-δ 효과 입력", id: "p-delta" },
+      {
+        type: "list",
+        items: [
+          "element group 의 'Geometric Nonlinearity' 를 P-delta 로 바꿉니다. **모든 부재(기둥·보·전단벽 등)에 대해** 수행합니다.",
+          "Analysis Series 의 'Include P-Delta effects?' 를 **Yes** 로 둡니다. 이후 Analysis series 를 만들 때마다 이 설정을 적용해야 합니다.",
+        ],
+      },
+      { type: "heading", text: "12. 지진파 입력", id: "earthquake" },
+      {
+        type: "paragraph",
+        text: "시간이력해석에 쓸 지진파를 P3D 에 넣는 작업입니다. Load Case Type 을 Dynamic Earthquake 로 바꾼 뒤 [Add/Review/Delete Earthquakes] 로 들어갑니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "① 지진파 자료 파일의 위치를 지정합니다. 자료는 **.txt 형식**이어야 합니다.",
+          "② 자료 형식에 맞게 Time Interval·Duration 등을 조정합니다. 보통 Duration 을 뺀 나머지는 기본값으로 문제없지만 **꼭 확인**합니다.",
+          "③ 저장할 Earthquake Group 과 이름을 입력합니다. Group 은 프로젝트 이름으로 만듭니다. 예) 선화동 프로젝트 → seonhwadong. File Name 은 7개 지진파의 X·Y 방향을 각각 넣어 EQ1-1, EQ1-2 ~ EQ7-2 까지 **총 14개**가 됩니다. (EQ1-1 = 1번 지진파의 X방향)",
+          "④ [Review] 로 입력한 지진파를 그림으로 확인합니다.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "입력한 지진파는 '내 PC - 문서 - PERFORM - Records' 에 저장됩니다. 이 폴더를 복사해 다른 PC 의 같은 위치에 붙여넣으면 그 PC 에서 곧바로 같은 지진파를 쓸 수 있습니다.",
+      },
+      { type: "heading", text: "13. Load Case 설정", id: "load-case" },
+      {
+        type: "paragraph",
+        text: "**Vertical Load** 는 1.0D.L + 0.25L.L 를 만들기 위한 Load Case 입니다. Load Case Type 은 Gravity, 이름은 Vertical Load, Analysis Method 는 Nonlinear 로 두고 No. of Load Steps 50, Max Events in any Step 1000, Limit State to Stop Analysis 는 Drift 로 설정합니다. 하중 패턴은 LoadNode-DL·LoadFrame-DL·SelfWeight-DL 을 각 1, LoadNode-LL·LoadFrame-LL 을 각 0.25 로 넣습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "**Push-Over Load** 는 P_X_P / P_X_N / P_Y_P / P_Y_N 네 개를 만듭니다(P_X_P = Pushover_X방향_Positive). Static Push-Over 타입에 No. of Load Steps 100, Max Events 1000, Maximum Allowable Drift 0.1 로 두고, 이름의 뜻에 맞게 Reference Drift 와 Nodal Load Pattern 의 Name·Scale Factor 를 맞춥니다.",
+      },
+      {
+        type: "table",
+        headers: ["Load Case Name", "Reference Drift", "Pattern Name", "Scale Factor"],
+        rows: [
+          ["P_X_P", "RH_X", "AccelUX", "1"],
+          ["P_X_N", "RH_X", "AccelUX", "-1"],
+          ["P_Y_P", "RH_Y", "AccelUY", "1"],
+          ["P_Y_N", "RH_Y", "AccelUY", "-1"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "**Dynamic Load** 는 EQ1-X, EQ1-Y ~ EQ7-Y 까지 총 14개를 만듭니다. Total Time 에는 Q1 Earthquake 의 Duration 값을 넣고, Time Step 은 지진파 자료와 일치시킵니다.",
+      },
+      {
+        type: "table",
+        headers: [
+          "Load Case Name",
+          "Reference Drift",
+          "Angle (degrees)",
+          "Q1 / Q2 Earthquake",
+        ],
+        rows: [
+          ["EQ1-X ~ EQ7-X", "RH_X", "0", "EQn-1 / EQn-2"],
+          ["EQ1-Y ~ EQ7-Y", "RH_Y", "90", "EQn-1 / EQn-2"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "n 은 지진파 번호(1~7)입니다. 예) EQ3-Y 는 Reference Drift RH_Y, Angle 90, Q1 = EQ3-1, Q2 = EQ3-2 입니다.",
+      },
+      { type: "heading", text: "14. Analysis 설정", id: "analysis" },
+      {
+        type: "paragraph",
+        text: "Analysis 이름은 Load Case 이름과 똑같이 짓습니다. Push-over 4개(P_X_P, P_X_N, P_Y_P, P_Y_N), Dynamic 14개(EQ1-X ~ EQ7-Y)입니다. 15장의 Damping 을 먼저 설정해 두면 여기서 편합니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "**꼭 Vertical Load 를 선행하중으로 넣어야 합니다.** 먼저 Load Case Type = Gravity, Name = Vertical Load, Preceding Analysis Number = **0** 으로 Add 한 뒤, 해당 Push-over·Dynamic Load Case 를 Preceding Analysis Number = **1** 로 Add 합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "Basic + Masses 탭은 모드 개수 20, Mass Pattern 은 Nodal Mass, Scale Factor 1, Include P-Delta effects 는 Yes 로 둡니다.",
+      },
+      { type: "heading", text: "15. Damping 설정", id: "damping" },
+      {
+        type: "list",
+        items: [
+          "**Modal Damping** — Same damping ratio for all modes 에 **1.5 %** 를 입력합니다.",
+          "**Rayleigh Damping** — **1 %** 를 입력합니다. Point A 의 T/T1 은 고유치 해석 결과의 주기로 T4 / T1 을 계산해 넣고, Point B 는 T1 / T1 = 1 을 넣습니다.",
+          "**모든 Analysis 에** Damping 을 설정해야 합니다.",
+        ],
+      },
+      { type: "heading", text: "16. 횡하중 수직분포 입력", id: "lateral-load" },
+      {
+        type: "paragraph",
+        text: "Pushover 해석에 쓸 횡하중 분포를 넣는 작업입니다. 먼저 AccelUX 는 H1 Force = 1, AccelUY 는 H2 Force = 1 로 초기화합니다. 이때 Mass_D_0.25L_5% 만 활성화하고 **최하층 노드는 제외**합니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "① Nodal Loads 에서 AccelUX·AccelUY 를 각각 Export 합니다.",
+          "② 내보낸 TEXT 파일을 '횡하중 가력패턴' 엑셀 파일에 복사합니다. A1 열에 붙여넣은 뒤 데이터 → 텍스트 나누기 → 구분 기호로 분리됨 → 쉼표 체크로 열을 나눕니다.",
+          "③ 해당 구조물의 Gen 파일을 열어 응답스펙트럼 해석(Response Spectrum)을 수행합니다. 모드조합은 **질량참여율 90% 이상**이 되는 모드차수까지 설정합니다.",
+          "④ Gen Result Tables - Story - Story Shear(Response Spectrum Analysis) 에서 Inertia Force 의 각 방향 하중만 복사해 엑셀의 노란색 칸에 붙여넣습니다. UX 는 RX 로, UY 는 RY 로 복사합니다. 예) Roof ~ B4F 구조물이면 하중은 Roof ~ B3F 까지만 복사합니다.",
+          "⑤ 수정한 값을 AccelUX·AccelUY TEXT 파일에 붙여넣습니다.",
+          "⑥ 그 TEXT 파일을 PERFORM-3D 에서 Import 합니다. 각 load pattern(AccelUX / AccelUY)을 고르고 Skip 은 1 line 으로 둡니다.",
+        ],
+      },
+    ],
+    related: ["pf3d-ads-to-gen", "pf3d-pre-processor"],
+  },
+  {
     slug: "ai-adoption-concept",
     category: "기술 가이드",
-    title: "개발이란 무엇인가",
+    title: "01. 개발이란 무엇인가",
     summary:
-      "한 번도 개발을 해보지 않은 사람을 위한 첫 번째 이야기 — 개발이 왜 잘게 쪼개는 일인지, 에러 메시지를 어떻게 다뤄야 하는지 정리했습니다. (개발 입문 01)",
+      "한 번도 개발을 해보지 않은 사람을 위한 첫 번째 이야기 — 개발이 왜 잘게 쪼개는 일인지, 에러 메시지를 어떻게 다뤄야 하는지 정리했습니다.",
     updatedAt: "2026-08-31",
     body: [
       {
@@ -1123,7 +1815,7 @@ export const resources: Resource[] = [
   {
     slug: "ai-adoption-practice",
     category: "기술 가이드",
-    title: "AI로 실무 시작하기",
+    title: "02. AI로 실무 시작하기",
     summary:
       "설계기준 조회, 보고서 초안, 검토 시트 자동화까지 — AI를 우리 업무에 붙이는 실전 가이드입니다.",
     updatedAt: "2026-08-31",
@@ -1134,7 +1826,7 @@ export const resources: Resource[] = [
       },
       {
         type: "link",
-        label: "이전 글 · 개발이란 무엇인가",
+        label: "이전 글 · 01. 개발이란 무엇인가",
         url: "/resources/ai-adoption-concept",
         description: "일을 잘게 쪼개고 확인하는 기본 원리를 먼저 다룬 글입니다.",
       },
@@ -1171,30 +1863,40 @@ export const resources: Resource[] = [
       {
         type: "list",
         items: [
+          "이유부터 말하세요 — 왜 지금 이 작업이 필요한지, 누가 무엇을 궁금해하는지, 현재 어떤 문제가 있는지 먼저 설명하세요. 그다음 결과의 목적과 지시사항을 말하면 AI가 무엇을 강조하고 생략해야 하는지 판단하기 쉬워집니다.",
           "명시적으로 지시하세요 — '알아서 잘 해줘'는 통하지 않습니다. 원하는 형식, 분량, 기준을 구체적으로 적을수록 결과가 정확해집니다.",
           "자료부터 쥐어주세요 — 도면, 기준 조문, 이전 검토 결과를 먼저 붙여넣으세요. AI는 우리 사무실 관행을 모릅니다. 후배와 달리 '알아서' 채워 넣지 못합니다.",
-          "긴 작업은 쪼개서 시키세요 — 앞선 글의 '단계 / 입력 / 출력 / 확인' 표처럼, 큰 작업을 한 번에 맡기지 말고 단계별로 나눠 결과를 확인하며 진행하세요.",
-          "한 대화는 한 가지 일만 — 이전 시도가 실패한 기록이 대화에 남아있으면 AI가 계속 그 영향을 받습니다. 방향을 완전히 바꿀 땐 새 대화로 시작하세요.",
+          "긴 작업은 쪼개서 한 대화에서 한 가지 일만 시키세요 — 앞선 글의 '단계 / 입력 / 출력 / 확인' 표처럼 단계마다 결과를 확인하며 진행하세요. 작업이나 방향이 완전히 바뀌면 새 대화로 시작하세요.",
           "칭찬은 검증이 아닙니다 — AI에게 아이디어를 물으면 대체로 좋다고 답합니다. 중요한 판단은 '이 방법의 허점을 비판적으로 짚어줘'처럼 반대로도 물어보고, 가능하면 다른 대화나 다른 AI에도 같은 질문을 던져 답을 교차검증하세요.",
         ],
       },
       {
         type: "paragraph",
-        text: "첫 번째 습관을 예시로 보면 이렇습니다. 같은 요청도 지시가 구체적일수록 결과가 달라집니다.",
+        text: "예를 들어 '보고서 정리해줘'에 분량과 형식만 덧붙이는 것은 지시를 구체화한 것이지 이유를 설명한 것은 아닙니다. 작업이 생긴 배경부터 다음 순서로 알려주세요.",
       },
       {
         type: "table",
-        headers: ["애매한 지시", "명확한 지시"],
+        headers: ["구분", "내용"],
         rows: [
           [
-            "보고서 정리해줘",
-            "정밀안전점검 보고서 결론부를 800자 이내로 요약해줘. 기존 문체를 유지하고, 수치는 첨부한 표를 그대로 인용해줘.",
+            "이유",
+            "발주처에 정밀안전점검 중간보고를 해야 합니다. 발주처는 주요 구조부재의 점검 결과가 어떻게 나왔는지 궁금해합니다.",
           ],
           [
-            "이 표 좀 만들어줘",
-            "첨부한 도면에서 기둥만 뽑아 표로 만들어줘. 열은 '부재명 / 단면 / 층'만 넣어줘.",
+            "목적",
+            "발주처가 주요 결과를 빠르게 확인할 수 있는 중간보고 자료를 만들려고 합니다.",
+          ],
+          ["지시사항", "정밀안전점검 보고서 결론부를 800자 이내로 요약해 주세요."],
+          [
+            "세부사항",
+            "주요 구조부재의 결과를 먼저 배치하고, 기존 문체를 유지해 주세요. 수치는 첨부한 표를 그대로 인용하고 새로운 판단은 추가하지 마세요.",
           ],
         ],
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "**이유는 작업이 생긴 배경**, **목적은 결과를 어디에 사용할지**, **지시사항은 AI가 할 일**, **세부사항은 지켜야 할 조건**입니다.",
       },
       { type: "heading", text: "우리 업무에서 바로 써볼 것", id: "use-cases" },
       {
@@ -1251,7 +1953,679 @@ export const resources: Resource[] = [
         text: "본인 업무에서 가장 짜증나는 반복 작업 하나를 정하고, 앞선 글의 '단계 / 입력 / 출력 / 확인' 표를 채워보세요. 거창할 필요 없습니다 — 작을수록 좋습니다.",
       },
     ],
-    related: ["ai-adoption-concept"],
+    related: ["ai-adoption-concept", "ai-output-verification"],
+  },
+  {
+    slug: "ai-output-verification",
+    category: "기술 가이드",
+    title: "03. AI 결과를 검증하는 법",
+    summary:
+      "기준 원문, 재현 가능한 코드, 검증된 도구를 이용해 AI의 그럴듯한 답을 실무에 쓸 수 있는 결과로 바꾸는 방법입니다.",
+    updatedAt: "2026-09-04",
+    body: [
+      {
+        type: "paragraph",
+        text: "앞선 글에서는 AI를 실무에 붙이는 기본 방법을 다뤘습니다. 하지만 AI를 잘 시키는 것만으로 일은 끝나지 않습니다. AI가 내놓은 답은 빠르고 그럴듯하지만, 그 자체로는 설계기준도 계산서도 검토 결과도 아닙니다. 실무에 반영하려면 우리가 다시 확인할 수 있는 형태로 바꿔야 합니다.",
+      },
+      {
+        type: "link",
+        label: "이전 글 · 02. AI로 실무 시작하기",
+        url: "/resources/ai-adoption-practice",
+        description: "AI와 사람의 역할, 실전에서 필요한 기본 습관을 먼저 다룬 글입니다.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "**계산은 코드가 하고, 기준은 정리된 자료가 말하고, 수정은 검증된 도구가 수행합니다.** AI는 그 코드와 자료와 도구를 만드는 데 참여하지만, 결과를 사용할 수 있다고 판단하는 일은 사람의 몫입니다.",
+      },
+      {
+        type: "heading",
+        text: "그럴듯함은 정확함이 아닙니다",
+        id: "plausible-not-correct",
+      },
+      {
+        type: "paragraph",
+        text: "AI의 답은 문장이 자연스럽고 설명도 논리적으로 이어집니다. 그래서 틀린 답도 맞는 답처럼 보입니다. 존재하지 않는 설계기준 조항을 제시하거나, 익숙한 식의 일부를 바꾸거나, 계산 과정에서 단위를 섞고도 확신 있게 결론을 내릴 수 있습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "말투의 확신은 정확성의 증거가 아닙니다. 답이 자세하거나 표가 깔끔한 것도 마찬가지입니다. AI가 '검토했습니다'라고 말하더라도 그것은 완료의 증거가 아니라 하나의 주장입니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "AI에게 근거를 적게 하는 것은 **검증이 아니라 검증할 위치를 표시하게 하는 것**입니다. 기준명과 조항 번호를 받았다면, 그때부터 사람의 확인이 시작됩니다.",
+      },
+      { type: "heading", text: "검증은 AI 바깥에서 시작됩니다", id: "external-evidence" },
+      {
+        type: "paragraph",
+        text: "검증하려면 AI의 답과 독립된 기준이 필요합니다. 같은 질문을 다시 하거나 '정말 맞아?'라고 묻는 것만으로는 부족합니다. 설계기준 원문, 이미 답을 알고 있는 예제, 직접 실행한 코드, 기존에 검증된 프로그램처럼 결과와 대조할 수 있는 것이 있어야 합니다.",
+      },
+      {
+        type: "table",
+        headers: ["AI가 만든 것", "확인할 기준"],
+        rows: [
+          ["설계기준 설명", "공식 원문의 판본·조항·식·적용 조건"],
+          ["계산식과 수치", "단위 검토, 손계산 또는 독립된 단순 계산"],
+          ["Python·VBA·Excel 코드", "정답을 알고 있는 예제, 경계값, 기존 계산 결과"],
+          ["보고서 문장", "현장 기록, 도면, 계산서, 담당자가 제공한 원자료"],
+          ["표와 데이터 변환", "원본 건수, 합계, 누락·중복 표본 검사"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "다른 AI에 같은 질문을 던지는 것도 오류를 발견하는 보조 수단은 될 수 있습니다. 그러나 두 AI가 같은 답을 했다는 사실이 정답을 보장하지는 않습니다. 같은 자료나 같은 기반 모델에서 비롯된 공통의 오류를 반복할 수 있기 때문입니다. 최종 확인은 언제나 AI 바깥의 근거로 합니다.",
+      },
+      { type: "heading", text: "기준은 원문에서 확인합니다", id: "standards" },
+      {
+        type: "paragraph",
+        text: "AI는 기준서를 찾고 긴 조항을 비교하며 필요한 부분을 정리하는 데 유용합니다. 다만 AI가 정리한 문장을 기준 자체로 사용하면 안 됩니다. 기준명, 판본, 조항 번호, 식 번호를 표시하게 하고 공식 원문을 직접 열어 대조합니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "조항이 실제로 존재하는가 — 번호가 비슷한 다른 조항을 잘못 가져오지 않았는지 봅니다.",
+          "적용한 판본이 맞는가 — 개정 전 조항이나 폐지된 내용을 섞지 않았는지 확인합니다.",
+          "식과 기호를 정확히 옮겼는가 — 아래첨자, 계수, 괄호와 단위를 원문과 비교합니다.",
+          "적용 조건이 맞는가 — 대상 구조, 재료, 하중 조건과 제한사항을 함께 확인합니다.",
+          "예외를 빠뜨리지 않았는가 — 본문뿐 아니라 표의 주석과 단서 조항까지 봅니다.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "AI가 기준을 대신 말하게 하지 마세요. **AI는 기준을 찾고 비교하고 정리하며, 최종 근거는 공식 원문이 제공합니다.**",
+      },
+      { type: "heading", text: "계산은 재현 가능한 코드로 옮깁니다", id: "code" },
+      {
+        type: "paragraph",
+        text: "긴 계산을 대화창 안에서 계속 수행하게 하면 중간값과 단위가 바뀌어도 알아차리기 어렵습니다. AI에게는 계산 절차를 코드로 옮기게 하고, 실제 계산은 Python, Excel 수식, VBA처럼 같은 입력에 같은 결과를 내며 다시 실행할 수 있는 형태로 수행하게 합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "코드로 계산한다고 자동으로 맞는 것은 아닙니다. AI가 만든 코드는 잘못된 식을 정확하고 빠르게 반복할 수도 있습니다. 따라서 코드를 업무에 사용하기 전에 검증된 도구로 만드는 과정이 필요합니다.",
+      },
+      {
+        type: "table",
+        headers: ["시험", "확인하는 것"],
+        rows: [
+          ["알려진 정답", "기존 계산서나 공식 예제와 같은 결과가 나오는가"],
+          ["단순한 값", "손으로 확인할 수 있는 입력에서 계산 과정이 맞는가"],
+          ["경계값", "0, 빈칸, 최소·최대값과 적용 한계에서 안전하게 멈추는가"],
+          ["단위 변경", "N·kN, mm·m처럼 단위가 달라질 때 오류를 잡는가"],
+          ["회귀 시험", "코드를 수정한 뒤 기존에 맞았던 결과가 그대로 유지되는가"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "시험을 통과한 입력과 기대 결과는 함께 보관합니다. 코드를 고칠 때마다 같은 시험을 다시 실행하면, 한 부분의 수정이 다른 계산을 망가뜨리는 일을 줄일 수 있습니다. 이렇게 검증 절차와 사용 범위가 정해져야 개인이 만든 코드가 반복해서 사용할 수 있는 업무 도구가 됩니다.",
+      },
+      { type: "heading", text: "하나의 업무를 이렇게 나눕니다", id: "workflow" },
+      {
+        type: "paragraph",
+        text: "예를 들어 반복되는 부재 검토를 자동화한다면 AI에게 처음부터 최종 판정을 요구하지 않습니다. 자료, 코드, 도구, 판단을 다음 순서로 분리합니다.",
+      },
+      {
+        type: "table",
+        headers: ["단계", "수행", "확인"],
+        rows: [
+          [
+            "1. 기준 수집",
+            "AI가 관련 조항과 적용 조건 후보를 정리",
+            "담당자가 공식 원문과 판본 대조",
+          ],
+          [
+            "2. 계산 정의",
+            "입력·출력·단위·적용 범위를 문서화",
+            "담당자가 계산 의도와 가정 확인",
+          ],
+          [
+            "3. 코드 작성",
+            "AI가 Python·VBA·Excel 수식 초안 작성",
+            "알려진 정답과 단순 예제로 시험",
+          ],
+          ["4. 도구 검증", "오류 처리와 결과 표시를 보완", "경계값·단위·회귀 시험 수행"],
+          [
+            "5. 실무 적용",
+            "검증된 버전으로 실제 입력 계산",
+            "중간값과 독립된 단순 계산 확인",
+          ],
+          [
+            "6. 최종 판단",
+            "기술자가 결과와 적용 가능성 검토",
+            "검토자·근거·도구 버전을 기록",
+          ],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "AI가 만든 코드가 한 번 원하는 값을 냈다는 이유만으로 검증된 도구가 되지는 않습니다. **어떤 조건에서 시험했고 어디까지 사용할 수 있는지** 설명할 수 있어야 합니다.",
+      },
+      {
+        type: "heading",
+        text: "AI는 독립 검토자가 아닙니다",
+        id: "not-independent-checker",
+      },
+      {
+        type: "paragraph",
+        text: "AI는 문장의 누락을 찾거나 계산 과정에서 의심스러운 부분을 표시하는 보조 검토에는 쓸 수 있습니다. 그러나 설계에 참여한 AI에게 같은 결과를 다시 보여주고 승인받는 방식은 독립 검토가 아닙니다. 새 대화를 열거나 이름이 다른 AI 서비스를 이용해도 같은 기반 모델을 사용한다면 비슷한 맹점을 공유할 수 있습니다.",
+      },
+      {
+        type: "paragraph",
+        text: "특히 구조 안전과 최종 판정처럼 오류의 영향이 큰 업무는 해당 계산을 이해하는 사람이 검토해야 합니다. AI가 검토를 도왔더라도 담당자는 결과의 논리, 근거와 적용 조건을 직접 설명할 수 있어야 합니다.",
+      },
+      {
+        type: "table",
+        headers: ["오류 영향", "예시", "검토 수준"],
+        rows: [
+          ["낮음", "내부 문장 다듬기, 표 서식 정리", "원문 대조와 담당자 확인"],
+          [
+            "중간",
+            "데이터 취합, 반복 계산 코드",
+            "표본 검사, 알려진 정답 시험, 다른 도구와 비교",
+          ],
+          [
+            "높음",
+            "구조 계산, 기준 적용, 안전 관련 판단",
+            "전체 근거 확인, 검증된 도구, 자격과 경험을 갖춘 사람의 검토",
+          ],
+        ],
+      },
+      { type: "heading", text: "검증한 흔적을 남깁니다", id: "records" },
+      {
+        type: "paragraph",
+        text: "나중에 결과를 다시 설명할 수 있도록 AI 사용과 검증 과정을 남깁니다. 모든 대화를 보관하라는 뜻은 아닙니다. 결과에 영향을 준 정보만 기존 계산서와 검토 기록의 방식에 맞춰 정리하면 됩니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "사용한 기준의 이름과 판본, 확인한 조항",
+          "계산 코드 또는 도구의 이름과 버전",
+          "검증에 사용한 예제와 기대 결과",
+          "AI가 작성하거나 수정한 범위",
+          "사람이 직접 확인한 항목과 확인 날짜",
+          "도구의 적용 범위와 알려진 제한사항",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "AI 사용 여부보다 중요한 것은 **결과가 어디에서 왔고, 무엇으로 확인했으며, 누가 책임지고 판단했는지** 설명할 수 있는가입니다.",
+      },
+      { type: "heading", text: "실무에서 기억할 한 문장", id: "one-sentence" },
+      {
+        type: "paragraph",
+        text: "AI는 빠르게 초안을 만들고, 기준을 찾아 정리하고, 코드를 작성할 수 있습니다. 우리는 그 결과를 공식 원문과 대조하고, 코드로 재현하고, 검증된 도구로 반복하며, 공학적으로 타당한지 최종 판단합니다. 이 역할이 분리되어야 AI의 속도를 얻으면서도 기술자의 책임을 지킬 수 있습니다.",
+      },
+      {
+        type: "link",
+        label:
+          "참고 · IStructE — Calculation models: artificial intelligence - large language models",
+        url: "https://www.istructe.org/resources/technology-digital/calculation-models-artificial-intelligence-large-l/",
+        description:
+          "구조기술자가 LLM을 계산 업무에 활용하고 검토할 때 지켜야 할 원칙을 정리한 자료입니다.",
+      },
+      {
+        type: "link",
+        label:
+          "참고 · Google DeepMind — Large Language Models Cannot Self-Correct Reasoning Yet",
+        url: "https://deepmind.google/research/publications/48252/",
+        description:
+          "외부 피드백 없는 LLM의 자기 검토와 수정이 가진 한계를 다룬 연구입니다.",
+      },
+    ],
+    related: ["ai-adoption-practice", "ai-workflow-standardization"],
+  },
+  {
+    slug: "ai-workflow-standardization",
+    category: "기술 가이드",
+    title: "04. 반복 업무를 AI 작업 절차로 만들기",
+    summary:
+      "한 번 잘 나온 AI 답변을 입력·출력·검증 방법이 정해진 반복 가능한 업무 절차로 바꾸는 방법입니다.",
+    updatedAt: "2026-09-04",
+    body: [
+      {
+        type: "paragraph",
+        text: "AI로 한 번 일을 끝냈다고 자동화가 된 것은 아닙니다. 다음 프로젝트에서도 같은 방식으로 실행되고, 담당자가 바뀌어도 결과를 확인할 수 있어야 반복 업무에 사용할 수 있습니다.",
+      },
+      {
+        type: "link",
+        label: "이전 글 · 03. AI 결과를 검증하는 법",
+        url: "/resources/ai-output-verification",
+        description: "AI가 만든 기준 정리와 코드를 검증하는 방법을 먼저 다룬 글입니다.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "저장해야 할 것은 프롬프트 한 줄이 아니라 **입력·처리 순서·출력·확인 방법**입니다.",
+      },
+      {
+        type: "heading",
+        text: "자동화할 업무부터 잘 고릅니다",
+        id: "choose-task",
+      },
+      {
+        type: "paragraph",
+        text: "처음에는 작고 반복적인 업무 하나를 고릅니다. 아래 네 질문에 모두 '예'라고 답할 수 있는 업무가 적합합니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "같은 형태로 반복되는가",
+          "필요한 입력 자료를 정할 수 있는가",
+          "처리 순서를 말로 설명할 수 있는가",
+          "결과가 맞는지 확인할 방법이 있는가",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "최종 구조 판단, 현장 상태 평가처럼 경험과 책임이 필요한 업무 전체를 자동화 대상으로 잡지 않습니다. 이런 업무에서는 자료 추출, 표 정리, 검토 항목 작성처럼 경계가 분명한 일부 단계만 떼어냅니다.",
+      },
+      {
+        type: "heading",
+        text: "업무를 다섯 칸으로 적습니다",
+        id: "five-fields",
+      },
+      {
+        type: "paragraph",
+        text: "AI를 열기 전에 아래 다섯 칸을 먼저 채웁니다. 이 표를 채울 수 없다면 아직 자동화할 업무가 명확하지 않은 것입니다.",
+      },
+      {
+        type: "table",
+        headers: ["항목", "적을 내용"],
+        rows: [
+          ["목적", "무엇을 줄이거나 빠르게 하려는가"],
+          ["입력", "필수 파일, 열 이름, 단위와 기준 판본은 무엇인가"],
+          ["처리", "어떤 순서와 규칙으로 자료를 바꾸거나 계산하는가"],
+          ["출력", "파일 형식, 표의 열, 정렬과 표시 방법은 무엇인가"],
+          ["확인", "건수, 합계, 예제 계산과 원문 중 무엇으로 검증하는가"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "예를 들어 해석 결과를 부재 검토표로 정리하는 업무라면 다음 정도로 나눌 수 있습니다.",
+      },
+      {
+        type: "table",
+        headers: ["단계", "입력", "출력", "확인"],
+        rows: [
+          ["1. 추출", "원본 결과 파일", "필요한 열만 남긴 표", "원본과 행 개수 비교"],
+          ["2. 정리", "추출한 표", "이름·단위를 통일한 표", "빈칸·중복·단위 검사"],
+          ["3. 계산", "정리한 표", "코드가 계산한 결과", "알려진 예제와 비교"],
+          ["4. 작성", "계산 결과", "정해진 양식의 검토표", "담당자가 원본과 최종 대조"],
+        ],
+      },
+      {
+        type: "heading",
+        text: "AI와 코드의 역할을 분리합니다",
+        id: "separate-roles",
+      },
+      {
+        type: "paragraph",
+        text: "AI 대화 안에서 자료 정리와 계산과 판단을 한꺼번에 끝내지 않습니다. 결과를 다시 실행하고 확인할 수 있도록 역할을 나눕니다.",
+      },
+      {
+        type: "table",
+        headers: ["담당", "역할"],
+        rows: [
+          ["사람", "목적, 적용 범위, 예외와 최종 판단을 정함"],
+          ["AI", "기준 후보를 정리하고 코드와 문서의 초안을 작성"],
+          ["공식 자료", "기준 조항과 적용 조건의 근거를 제공"],
+          ["코드", "정해진 규칙에 따라 반복 계산과 데이터 변환을 수행"],
+          ["검증된 도구", "시험을 통과한 범위 안에서 같은 절차를 반복 실행"],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "AI가 코드를 작성해도 그 코드가 곧 검증된 도구는 아닙니다. **시험을 통과한 코드만 정해진 적용 범위에서 사용합니다.**",
+      },
+      {
+        type: "heading",
+        text: "모르는 입력에서는 멈추게 합니다",
+        id: "stop-conditions",
+      },
+      {
+        type: "paragraph",
+        text: "오류 메시지를 내고 멈추는 도구가 조용히 잘못된 결과를 만드는 도구보다 안전합니다. 다음 조건에서는 결과를 만들지 말고 담당자 확인 대상으로 돌립니다.",
+      },
+      {
+        type: "list",
+        items: [
+          "필수 파일이나 값이 없음",
+          "열 이름 또는 파일 형식이 예상과 다름",
+          "지원하지 않는 단위가 들어옴",
+          "적용 범위를 벗어난 값이 들어옴",
+          "사용할 기준 판본을 확인할 수 없음",
+          "기존 결과와 차이가 정한 범위를 넘음",
+        ],
+      },
+      {
+        type: "heading",
+        text: "세 가지 입력으로 시험합니다",
+        id: "three-tests",
+      },
+      {
+        type: "paragraph",
+        text: "실무 자료를 넣기 전에 최소한 세 종류의 입력으로 시험합니다.",
+      },
+      {
+        type: "table",
+        headers: ["시험", "확인할 내용"],
+        rows: [
+          ["정상 입력", "일반적인 자료에서 기대한 파일과 결과가 나오는가"],
+          ["정답을 아는 입력", "기존 계산서나 손계산과 같은 결과가 나오는가"],
+          ["잘못된 입력", "빈칸, 잘못된 단위와 형식에서 멈추고 원인을 알려주는가"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "코드를 수정한 뒤에도 같은 시험을 다시 실행합니다. 이전에 맞았던 결과가 달라졌다면 수정한 부분과 상관없어 보여도 원인을 확인해야 합니다.",
+      },
+      {
+        type: "heading",
+        text: "팀에 공유할 때 필요한 것은 여섯 가지입니다",
+        id: "share-package",
+      },
+      {
+        type: "list",
+        items: [
+          "한 페이지 이내의 사용 순서",
+          "사용할 수 있는 입력 형식과 예제 파일",
+          "기대하는 출력 예제",
+          "실행할 코드 또는 도구",
+          "정상·정답·오류 시험 자료",
+          "버전, 수정 내용, 담당자와 적용 범위",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "이 여섯 가지가 있어야 다른 사람이 같은 절차를 실행하고 결과를 확인할 수 있습니다. 프롬프트만 전달하고 사용법과 시험 자료를 말로 설명해야 한다면 아직 팀의 업무 도구가 아닙니다.",
+      },
+      {
+        type: "heading",
+        text: "Skill은 절차가 안정된 뒤에 만듭니다",
+        id: "skill-last",
+      },
+      {
+        type: "paragraph",
+        text: "처음부터 AI Skill을 만들 필요는 없습니다. 먼저 같은 절차를 여러 번 실행해 입력 형식, 예외와 확인 방법을 고정합니다. 그다음 지시문, 참고자료, 코드와 시험 방법을 하나로 묶어야 실제 업무에 도움이 되는 Skill이 됩니다.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "**반복해서 성공한 절차를 Skill로 만듭니다. Skill을 만들기 위해 업무 절차를 억지로 만들지 않습니다.**",
+      },
+      {
+        type: "heading",
+        text: "오늘 할 일",
+        id: "today",
+      },
+      {
+        type: "paragraph",
+        text: "이번 주에 두 번 이상 한 반복 작업 하나를 고릅니다. 아직 AI를 켜지 말고 목적·입력·처리·출력·확인 다섯 칸부터 적어보세요. 다섯 칸이 채워지면 그때 가장 단순한 한 단계만 AI와 코드로 옮깁니다.",
+      },
+    ],
+    related: ["ai-output-verification", "ai-tools-for-work"],
+  },
+  {
+    slug: "ai-tools-for-work",
+    category: "기술 가이드",
+    title: "05. 실무에서 사용하는 AI와 개발 도구",
+    summary:
+      "Python부터 터미널, AI 코딩, 디자인, Git과 배포까지 — 실제 작업에 사용하는 도구의 역할과 연결 순서를 정리했습니다.",
+    updatedAt: "2026-09-04",
+    body: [
+      {
+        type: "paragraph",
+        text: "AI에게 프로그램을 만들어달라고 해도 컴퓨터에는 코드를 작성하고 실행하고 보관할 도구가 필요합니다. 처음에는 이름이 비슷해 보여도 역할은 서로 다릅니다. 모두 능숙하게 다룰 필요는 없지만, 어떤 도구가 어느 단계에서 쓰이는지는 알아두는 것이 좋습니다.",
+      },
+      {
+        type: "link",
+        label: "이전 글 · 04. 반복 업무를 AI 작업 절차로 만들기",
+        url: "/resources/ai-workflow-standardization",
+        description:
+          "반복 업무의 입력·출력·검증 방법을 정하는 과정을 먼저 다룬 글입니다.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "도구를 많이 설치하는 것이 목적은 아닙니다. **작성·실행·검증·기록·배포에 필요한 역할만 골라서 사용합니다.**",
+      },
+      {
+        type: "heading",
+        text: "도구를 역할별로 나눠봅니다",
+        id: "overview",
+      },
+      {
+        type: "table",
+        headers: ["분류", "용도", "사용하는 도구"],
+        rows: [
+          ["기획", "무엇을 만들지 정리", "ChatGPT"],
+          ["조사", "웹과 보유 자료에서 근거 확인", "Gemini, NotebookLM"],
+          ["디자인", "참고 사례를 찾고 화면 시안 제작", "Godly, Dribbble, Claude Design"],
+          [
+            "편집기·IDE",
+            "코드와 텍스트 파일을 직접 열고 수정",
+            "Notepad++, VS Code, Antigravity IDE",
+          ],
+          [
+            "AI 작업",
+            "AI에 코드·문서 작업을 맡기고 결과 확인",
+            "Claude Code, Codex, Cowork",
+          ],
+          ["실행환경", "Python·JavaScript 코드 실행", "Python, Python Launcher, Node.js"],
+          ["CLI", "명령 입력과 터미널 작업 관리", "PowerShell, Herdr"],
+          ["검증", "정답과 오류 처리 시험", "pytest, 기존 계산서, 검증된 도구"],
+          ["관리", "변경 이력 기록과 온라인 보관", "Git, GitHub"],
+          ["배포", "완성한 웹사이트·프로그램과 파일을 배포", "Vercel, NAS"],
+        ],
+      },
+      {
+        type: "heading",
+        text: "코드를 실행하는 기본 환경",
+        id: "runtime",
+      },
+      {
+        type: "table",
+        headers: ["도구", "역할"],
+        rows: [
+          ["Python", "계산, 데이터 정리와 반복 업무 자동화에 사용하는 언어와 실행환경"],
+          [
+            "Python Launcher",
+            "Windows에서 .py 파일을 더블클릭하거나 py 명령으로 실행할 Python을 찾아주는 실행기",
+          ],
+          [
+            "Node.js",
+            "JavaScript·TypeScript 코드와 웹 프로젝트를 컴퓨터에서 실행하는 환경",
+          ],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Python 파일을 더블클릭하면 Python Launcher가 연결된 Python을 찾아 실행합니다. 다만 실행이 끝나거나 오류가 나면 창이 바로 닫힐 수 있습니다. 결과와 오류를 확인하면서 개발할 때는 PowerShell에서 실행하는 편이 좋습니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "Python과 Node.js는 서로를 대신하는 프로그램이 아닙니다. Python 자동화에는 Python이, 현재 웹사이트와 같은 JavaScript·TypeScript 프로젝트에는 Node.js가 필요합니다.",
+      },
+      {
+        type: "heading",
+        text: "파일과 코드를 작성하는 도구",
+        id: "editors",
+      },
+      {
+        type: "table",
+        headers: ["도구", "사용할 때"],
+        rows: [
+          [
+            "Notepad++",
+            "텍스트, 설정과 코드 파일 하나를 빠르게 열어 확인하거나 간단히 수정할 때",
+          ],
+          [
+            "VS Code",
+            "폴더 전체를 열고 여러 파일, 검색, 터미널과 확장 기능을 함께 사용할 때",
+          ],
+          ["Antigravity IDE", "코드를 직접 보면서 AI 에이전트와 프로그램을 개발할 때"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Notepad++와 VS Code를 모두 배울 필요는 없습니다. 단순한 파일 확인에는 Notepad++가 가볍고, 프로그램을 만들 때는 프로젝트 전체를 다룰 수 있는 VS Code나 Antigravity IDE가 적합합니다.",
+      },
+      {
+        type: "heading",
+        text: "명령을 실행하는 도구",
+        id: "terminal",
+      },
+      {
+        type: "table",
+        headers: ["도구", "역할"],
+        rows: [
+          ["PowerShell", "파일 이동, 프로그램 실행, 설치와 검사 명령을 해석하고 실행"],
+          ["Herdr", "프로젝트별로 여러 터미널과 AI 에이전트 작업을 한 화면에서 관리"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "PowerShell은 명령을 실행하는 셸이고 Herdr는 그 터미널과 작업공간을 정리하는 프로그램입니다. Herdr 안에서도 PowerShell을 사용할 수 있습니다.",
+      },
+      {
+        type: "heading",
+        text: "AI는 역할에 따라 나눠 씁니다",
+        id: "ai-tools",
+      },
+      {
+        type: "table",
+        headers: ["도구", "주로 맡기는 일"],
+        rows: [
+          ["ChatGPT", "아이디어 발굴, 기획, 계획과 전체 작업 방향 정리"],
+          ["Gemini", "웹 검색을 이용한 최신 자료와 참고 정보 조사"],
+          ["NotebookLM", "미리 넣어둔 자료 안에서 근거를 찾고 내용을 정리"],
+          ["Claude Code", "프로젝트의 코드를 읽고 작성·수정하며 명령을 실행"],
+          [
+            "Codex",
+            "저장소를 직접 확인하고 여러 파일을 수정한 뒤 검사·빌드·Git 작업까지 수행",
+          ],
+          ["Cowork", "폴더의 문서와 파일을 바탕으로 여러 단계의 일반 업무를 이어서 수행"],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "같은 질문을 모든 AI에 반복해서 던질 필요는 없습니다. 아이디어와 계획은 ChatGPT, 공개 자료 검색은 Gemini, 지정한 자료 안의 확인은 NotebookLM, 문서와 파일을 다루는 여러 단계의 일반 업무는 Cowork, 실제 코드 작업은 Claude Code·Codex·Antigravity처럼 역할을 정해두면 작업 흐름이 단순해집니다.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        text: "어떤 AI를 사용하더라도 발주처 원본 도면·계약서·미공개 성과품과 개인정보는 입력하지 않습니다. 공개 자료나 사용이 허용된 자료만 사용합니다.",
+      },
+      {
+        type: "heading",
+        text: "디자인은 참고·시안·구현을 나눕니다",
+        id: "design-tools",
+      },
+      {
+        type: "table",
+        headers: ["구분", "도구", "역할"],
+        rows: [
+          ["참고", "Godly", "실제로 공개된 웹사이트의 전체 구성과 흐름 탐색"],
+          ["참고", "Dribbble", "UI, 타이포그래피, 카드와 화면 세부 표현 탐색"],
+          ["시안", "Claude Design", "대화로 디자인 방향, 화면 시안과 프로토타입 제작"],
+          ["UI 구현", "v0", "자연어와 시안을 실행 가능한 웹 화면과 초기 코드로 변환"],
+          [
+            "자료 수집",
+            "Firecrawl",
+            "공개 웹페이지의 내용과 구조를 AI가 읽을 수 있는 자료로 정리",
+          ],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Godly에서는 전체 웹사이트의 흐름을 보고 Dribbble에서는 세부적인 시각 표현을 찾습니다. 참고한 사이트의 코드·문구·이미지·로고를 복제하지 않고, 정보 배치와 분위기를 정하는 자료로만 사용합니다.",
+      },
+      {
+        type: "paragraph",
+        text: "동양구조엔지니어링 웹사이트는 v0에서 만든 초기 UI를 기반으로 시작했습니다. 현재는 v0 무료 플랜에서 더 이상 편집하지 않고, 로컬 개발환경과 AI 코딩 도구에서 디자인과 기능을 수정합니다. Firecrawl도 디자인을 만드는 도구가 아니라 공개 웹 자료를 조사하고 구조화하는 보조 도구입니다.",
+      },
+      {
+        type: "heading",
+        text: "변경을 기록하고 결과를 검증합니다",
+        id: "manage-and-test",
+      },
+      {
+        type: "table",
+        headers: ["도구", "역할"],
+        rows: [
+          [
+            "Git",
+            "AI와 사람이 수정한 내용을 비교하고 기록하며 문제가 생기면 이전 상태로 복구",
+          ],
+          ["GitHub 계정", "Git 저장소를 온라인에 보관하고 다른 서비스와 연결"],
+          [
+            "pytest",
+            "Python 코드가 정답을 내고 잘못된 입력에서 안전하게 멈추는지 자동 시험",
+          ],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "GitHub Desktop은 필수로 사용하지 않습니다. Git 명령을 직접 외우지 않아도 Claude Code, Codex와 Antigravity가 작업을 도울 수 있습니다. 다만 변경 내용을 확인한 뒤 기록한다는 원칙은 그대로 지킵니다.",
+      },
+      {
+        type: "heading",
+        text: "완성한 결과를 배포합니다",
+        id: "deployment",
+      },
+      {
+        type: "paragraph",
+        text: "Vercel은 만든 웹사이트를 외부에서 접속할 수 있도록 인터넷에 배포하는 서비스입니다. GitHub 저장소와 연결하면 새 코드가 올라왔을 때 웹사이트를 다시 만들고 배포할 수 있습니다. NAS는 사내망에서 프로그램, 실행 파일과 업무 자료를 구성원에게 배포하고 함께 사용할 때 활용합니다.",
+      },
+      {
+        type: "heading",
+        text: "처음 준비할 때의 순서",
+        id: "setup-order",
+      },
+      {
+        type: "list",
+        items: [
+          "하나 · GitHub 계정을 만듭니다.",
+          "둘 · Python과 Python Launcher를 설치하고 .py 파일이 실행되는지 확인합니다.",
+          "셋 · 웹 프로젝트를 다룬다면 Node.js를 설치합니다.",
+          "넷 · VS Code 또는 Antigravity IDE에서 작업 폴더를 엽니다.",
+          "다섯 · PowerShell이나 Herdr에서 실행·검사 명령을 사용합니다.",
+          "여섯 · AI가 만든 코드를 시험한 뒤 Git에 기록하고 GitHub에 올립니다.",
+          "일곱 · 외부 웹사이트는 Vercel에, 사내 프로그램과 파일은 NAS에 배포합니다.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "info",
+        text: "처음부터 모든 도구를 배울 필요는 없습니다. **AI에게 일을 맡기더라도 지금 어느 단계이며 결과를 무엇으로 확인해야 하는지만 알고 있으면 됩니다.**",
+      },
+      {
+        type: "link",
+        label: "디자인 참고 · Godly",
+        url: "https://godly.design/websites/",
+        description:
+          "완성된 웹사이트 사례를 중심으로 전체 구성과 흐름을 찾아볼 수 있습니다.",
+      },
+      {
+        type: "link",
+        label: "디자인 참고 · Dribbble",
+        url: "https://dribbble.com/",
+        description: "웹·모바일·브랜드와 UI 세부 표현을 폭넓게 찾아볼 수 있습니다.",
+      },
+      {
+        type: "link",
+        label: "웹 자료 수집 · Firecrawl",
+        url: "https://www.firecrawl.dev/",
+        description:
+          "공개 웹페이지를 검색하고 AI가 처리할 수 있는 자료로 구조화하는 도구입니다.",
+      },
+    ],
+    related: ["ai-workflow-standardization", "ai-output-verification"],
   },
 ];
 

@@ -5,3 +5,6 @@ public/logo
 app/fonts
 components/ui
 *.md
+.ua
+.vscode
+.impeccable
