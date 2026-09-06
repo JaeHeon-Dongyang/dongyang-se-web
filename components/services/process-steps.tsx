@@ -21,19 +21,21 @@ const steps = [
 
 export function ProcessSteps() {
   return (
-    <ol className="border-heading bg-input grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-px border-t">
+    <ol className="flex flex-col gap-[clamp(1.875rem,3.4vw,3.25rem)]">
       {steps.map((step, index) => (
         <li
           key={step.title}
-          className="bg-background flex flex-col gap-3.5 px-[clamp(1.125rem,2vw,1.75rem)] pt-[clamp(1.5rem,2.6vw,2.125rem)] pb-[clamp(1.75rem,3vw,2.5rem)]"
+          className="border-input flex flex-wrap items-baseline gap-x-[clamp(1.5rem,3.4vw,4rem)] gap-y-2.5 border-t pt-[clamp(1.375rem,2.4vw,2rem)]"
         >
-          <span className="text-brand text-[clamp(1.75rem,3vw,2.375rem)] leading-none font-normal tracking-[-0.03em] tabular-nums opacity-80">
+          <span className="text-[clamp(2.125rem,3.6vw,3rem)] leading-none font-extralight tracking-[-0.03em] text-[#cde0d4] tabular-nums">
             {String(index + 1).padStart(2, "0")}
           </span>
-          <h3 className="text-heading text-[17px] font-bold tracking-[-0.025em]">
+          <h3 className="text-heading min-w-0 flex-[0_1_300px] text-[clamp(1.125rem,1.9vw,1.375rem)] leading-[1.3] font-bold tracking-[-0.028em]">
             {step.title}
           </h3>
-          <p className="text-body-text text-sm leading-[1.75]">{step.description}</p>
+          <p className="text-body-text max-w-[44em] min-w-0 flex-[1_1_400px] text-[15.5px] leading-[1.85] text-pretty">
+            {step.description}
+          </p>
         </li>
       ))}
     </ol>

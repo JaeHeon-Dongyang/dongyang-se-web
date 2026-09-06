@@ -17,13 +17,7 @@ export default function ResourcesPage() {
       <PageHero
         eyebrow="TECHNICAL RESOURCES"
         badge="사내 전용"
-        title={
-          <>
-            검토 방식을 문서로
-            <br />
-            정리합니다
-          </>
-        }
+        title="기술자료"
         description="점검 주기와 평가 절차, 구조해석 모델링 과정, AI 도구 활용 기준을 사내 매뉴얼과 기술 가이드로 정리했습니다. 검토자가 달라도 같은 기준으로 판단하고 그 근거를 설명하기 위한 자료입니다."
       />
       <section className="container-site py-16 md:py-20">

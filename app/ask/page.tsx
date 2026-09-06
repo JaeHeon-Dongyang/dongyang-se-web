@@ -24,13 +24,7 @@ export default function AskPage() {
       <PageHero
         eyebrow="AI NOTEBOOKS"
         badge="사내 전용"
-        title={
-          <>
-            분야를 고르면
-            <br />
-            노트북이 답합니다
-          </>
-        }
+        title="질문하기"
         description="사업분야별로 근거 법령과 기준 문서를 학습시킨 AI 노트북을 나누어 두었습니다. 대상 시설물과 점검 목적에 맞는 노트북을 고르면 설계기준·절차·사내 규정을 바로 물어볼 수 있습니다. 노트북은 초대받은 사내 계정만 열람할 수 있으며, AI 답변은 참고용으로 성과품에 반영하기 전 원문을 대조합니다."
       />
 
@@ -58,7 +52,7 @@ export default function AskPage() {
               </p>
             </div>
 
-            <ul className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <ul className="mt-6 grid grid-cols-[repeat(auto-fill,minmax(min(100%,290px),1fr))] gap-4">
               {group.notebooks.map((notebook) => (
                 <li key={notebook.title}>
                   {notebook.url ? (

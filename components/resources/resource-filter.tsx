@@ -28,14 +28,8 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
   const [category, setCategory] = useState<string>("전체");
   const [query, setQuery] = useState("");
 
-  // 연번은 전체 목록 기준으로 고정한다. 필터를 바꿔도 자료마다 같은 번호를 유지한다.
   const indexed = useMemo(
-    () =>
-      resources.map((r, index) => ({
-        resource: r,
-        number: index + 1,
-        text: resourceText(r),
-      })),
+    () => resources.map((r) => ({ resource: r, text: resourceText(r) })),
     [resources],
   );
 
@@ -48,7 +42,7 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
           const qOk = q === "" || text.includes(q);
           return catOk && qOk;
         })
-        .map(({ resource, number }) => ({ resource, number })),
+        .map(({ resource }) => resource),
     [indexed, category, q],
   );
 
@@ -66,7 +60,7 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="자료 검색 (제목·내용·키워드)"
+            placeholder="자료 검색 (제목 · 요약 · 키워드)"
             aria-label="기술자료 검색"
             className="border-input bg-surface text-heading placeholder:text-body-text/70 focus-visible:border-brand h-[46px] w-full border pr-4 pl-10 text-sm transition-colors focus-visible:outline-none"
           />
@@ -122,13 +116,11 @@ export function ResourceFilter({ resources }: { resources: Resource[] }) {
           등록된 기술자료가 아직 없습니다. 준비되는 대로 이곳에 게시됩니다.
         </p>
       ) : filtered.length > 0 ? (
-        <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {filtered.map(({ resource, number }) => (
-              <ResourceCard key={resource.slug} resource={resource} number={number} />
-            ))}
-          </div>
-        </>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,380px),1fr))] gap-4">
+          {filtered.map((resource) => (
+            <ResourceCard key={resource.slug} resource={resource} />
+          ))}
+        </div>
       ) : (
         <p className="text-body-text py-16 text-center text-sm">
           {q

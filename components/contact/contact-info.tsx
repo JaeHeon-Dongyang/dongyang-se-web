@@ -50,7 +50,7 @@ export function ContactInfo() {
         rel="noreferrer"
         className="bg-brand hover:bg-brand-hover focus-visible:ring-focus-ring inline-flex items-center justify-between gap-2 px-5 py-4 text-sm font-semibold text-white transition-colors focus-visible:ring-2 focus-visible:outline-none"
       >
-        네이버 지도에서 위치 보기
+        네이버 지도에서 보기
         <ExternalLink className="size-4" aria-hidden="true" />
       </a>
     </aside>
