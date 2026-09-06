@@ -38,6 +38,7 @@ export function ContactForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const [inquiryType, setInquiryType] = useState<InquiryTypeValue>(inquiryTypes[0].value);
   const [consent, setConsent] = useState(false);
+  const [hasEditedRequiredField, setHasEditedRequiredField] = useState(false);
   const [requiredValues, setRequiredValues] = useState({
     name: "",
     phone: "",
@@ -49,6 +50,8 @@ export function ContactForm() {
     (value) => value.trim().length > 0,
   );
   const canSubmit = requiredFieldsComplete && consent;
+  const showRequiredWarning =
+    (hasEditedRequiredField || consent) && !requiredFieldsComplete;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -96,6 +99,7 @@ export function ContactForm() {
       if (res.ok && data.ok) {
         form.reset();
         setConsent(false);
+        setHasEditedRequiredField(false);
         setInquiryType(inquiryTypes[0].value);
         setRequiredValues({ name: "", phone: "", email: "", message: "" });
         setState("success");
@@ -205,9 +209,13 @@ export function ContactForm() {
               id="name"
               name="name"
               value={requiredValues.name}
-              onChange={(event) =>
-                setRequiredValues((current) => ({ ...current, name: event.target.value }))
-              }
+              onChange={(event) => {
+                setHasEditedRequiredField(true);
+                setRequiredValues((current) => ({
+                  ...current,
+                  name: event.target.value,
+                }));
+              }}
               placeholder="홍길동"
               autoComplete="name"
               required
@@ -257,12 +265,13 @@ export function ContactForm() {
               name="phone"
               type="tel"
               value={requiredValues.phone}
-              onChange={(event) =>
+              onChange={(event) => {
+                setHasEditedRequiredField(true);
                 setRequiredValues((current) => ({
                   ...current,
                   phone: event.target.value,
-                }))
-              }
+                }));
+              }}
               placeholder="010-0000-0000"
               autoComplete="tel"
               required
@@ -288,12 +297,13 @@ export function ContactForm() {
               name="email"
               type="email"
               value={requiredValues.email}
-              onChange={(event) =>
+              onChange={(event) => {
+                setHasEditedRequiredField(true);
                 setRequiredValues((current) => ({
                   ...current,
                   email: event.target.value,
-                }))
-              }
+                }));
+              }}
               placeholder="example@company.com"
               autoComplete="email"
               required
@@ -341,12 +351,13 @@ export function ContactForm() {
             name="message"
             rows={6}
             value={requiredValues.message}
-            onChange={(event) =>
+            onChange={(event) => {
+              setHasEditedRequiredField(true);
               setRequiredValues((current) => ({
                 ...current,
                 message: event.target.value,
-              }))
-            }
+              }));
+            }}
             placeholder="프로젝트 개요, 위치, 규모, 희망 일정 등을 자세히 남겨주시면 상담에 도움이 됩니다."
             required
             aria-invalid={Boolean(errors.message)}
@@ -420,7 +431,7 @@ export function ContactForm() {
           {state === "submitting" ? "전송 중..." : "문의 보내기"}
           {state !== "submitting" ? <ArrowRight data-icon="inline-end" /> : null}
         </Button>
-        {!requiredFieldsComplete ? (
+        {showRequiredWarning ? (
           <p className="text-destructive text-xs">필수 항목을 작성해 주세요.</p>
         ) : !consent ? (
           <p className="text-muted-foreground text-xs">
