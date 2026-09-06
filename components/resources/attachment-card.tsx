@@ -3,7 +3,11 @@ import type { Attachment } from "@/lib/resources-data";
 
 export function AttachmentCard({ attachment }: { attachment: Attachment }) {
   return (
-    <div className="border-border bg-surface flex items-center gap-4 rounded-2xl border p-5">
+    <a
+      href={attachment.href}
+      download
+      className="border-border bg-surface hover:border-brand focus-visible:ring-accent-green flex items-center gap-4 rounded-2xl border p-5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+    >
       <span className="bg-accent-green-light text-brand flex h-11 w-11 shrink-0 items-center justify-center rounded-lg">
         <FileDown className="h-5 w-5" aria-hidden="true" />
       </span>
@@ -13,9 +17,9 @@ export function AttachmentCard({ attachment }: { attachment: Attachment }) {
           {attachment.type} · {attachment.size}
         </span>
       </div>
-      <span className="border-border text-body-text shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold">
-        내부 자료
+      <span className="border-brand text-brand shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-semibold">
+        다운로드
       </span>
-    </div>
+    </a>
   );
 }

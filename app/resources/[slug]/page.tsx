@@ -94,6 +94,7 @@ export default async function ResourceDetailPage({
 
       <div className="container-site grid grid-cols-1 gap-10 md:grid-cols-[1fr_260px] md:gap-14">
         <article className="border-border flex flex-col gap-10 border-t pt-10">
+          <ResourceBody blocks={resource.body} />
           {resource.attachments?.length ? (
             <div className="flex flex-col gap-3">
               {resource.attachments.map((attachment) => (
@@ -101,7 +102,6 @@ export default async function ResourceDetailPage({
               ))}
             </div>
           ) : null}
-          <ResourceBody blocks={resource.body} />
         </article>
 
         <aside className="flex flex-col gap-6 md:sticky md:top-24 md:self-start">
