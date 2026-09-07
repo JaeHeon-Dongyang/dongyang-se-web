@@ -157,7 +157,7 @@ export function ContactForm() {
           className="sr-only"
         />
 
-        <Field className="border-t-heading border-b-border grid gap-3 border-t border-b py-3 md:grid-cols-[150px_1fr] md:items-center md:gap-10">
+        <Field className="border-border grid gap-3 border-y py-3 md:grid-cols-[150px_1fr] md:items-center md:gap-10">
           <FieldLabel
             htmlFor="inquiry-type"
             className="text-heading gap-2.5 text-[13.5px] font-semibold"
