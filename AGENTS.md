@@ -66,7 +66,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 요청 종류로 브랜치를 가르지 않는다. **`design` 브랜치는 2026-08-31 삭제**(모든 커밋이 이미
 `main`·`dev` 에 병합된 상태였음). 상세는 [`docs/workflow.md`](docs/workflow.md).
 브랜치: 디자인·기능 모두 `dev` 에 커밋 → `main` 으로 병합. `main` 직접 커밋 금지.
-`app/about/page.tsx` 를 "2012년 설립/480건+" 같은 가짜 콘텐츠로 되돌리지 않는다.
+`app/page.tsx`(회사소개 통합 홈)를 "2012년 설립/480건+" 같은 가짜 콘텐츠로 되돌리지 않는다.
 
 ## 디자인
 
