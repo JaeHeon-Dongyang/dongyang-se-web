@@ -13,6 +13,10 @@ export const company = {
   fax: "042-482-9782",
   email: "dy8000@daum.net",
   address: "대전광역시 유성구 유성대로654번길 38, 5층",
+  location: {
+    latitude: 36.3516933577864,
+    longitude: 127.331088491817,
+  },
   /** 홈/회사소개 Hero 헤드라인 (content/company/company-introduction.md) */
   tagline: "안전을 설계하고, 신뢰를 쌓습니다",
 } as const;

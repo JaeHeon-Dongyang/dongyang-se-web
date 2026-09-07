@@ -43,7 +43,7 @@ export function ContactInfo() {
           );
         })}
       </dl>
-      <NaverMapEmbed address={company.address} />
+      <NaverMapEmbed address={company.address} location={company.location} />
       <a
         href={naverMapUrl}
         target="_blank"

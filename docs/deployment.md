@@ -23,8 +23,20 @@ Vercel → 프로젝트 → Settings → Environment Variables 에 등록. `.env
 | `CONTACT_FROM_EMAIL` | 문의 폼 사용 시 | 발신 주소. 아래 "Resend 설정" 참고. |
 | `CONTACT_TO_EMAIL` | 선택 | 수신 주소(콤마로 여러 개). 미설정 시 `lib/site.ts` 의 회사 이메일. |
 | `NEXT_PUBLIC_SITE_URL` | 선택 | 절대 URL. 미설정 시 Vercel 이 `VERCEL_PROJECT_PRODUCTION_URL` 을 자동 주입하므로 보통 불필요. 실제 도메인 연결 시에만 지정. |
+| `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID` | 지도 사용 시 | Maps Application의 Client ID. Web Dynamic Map과 배포 도메인 등록 필요. |
 
 `NEXT_PUBLIC_` 접두사 변수는 빌드 시 번들에 포함되므로 **변경 후 재배포** 필요.
+
+## 네이버 지도 설정
+
+네이버 클라우드 플랫폼의 **Application Services > Maps > Application**에서 다음 항목을 확인한다.
+
+1. 사용할 API로 **Web Dynamic Map**을 선택한다.
+2. Web 서비스 URL에 `https://dongyang-se-web-tu.vercel.app`을 등록한다.
+3. 발급된 Client ID를 Vercel의 `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID`에 저장한다.
+4. 환경 변수를 변경한 뒤 Production을 다시 배포한다.
+
+현재 지도는 검증된 회사 위치 좌표로 바로 초기화하므로 Geocoding API는 필요하지 않다.
 
 ## Resend 설정
 
