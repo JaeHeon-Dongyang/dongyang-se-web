@@ -61,8 +61,7 @@
 
 - [x] `/about` — 회사소개 단일 딥페이지 (M0 에서 선진행). M1 후 MDX 이전 + `<link>` 정리
 - [x] 홈 짧은 소개 카피 반영 (`content/company/company-introduction.md`)
-- [ ] `/services` — 4개 분야 딥페이지 + 앵커 네비게이션, 각 분야 카드(업무·상황·범위·CTA)
-      · 콘텐츠 미비 항목은 "콘텐츠 준비 중"
+- [x] `/services` — 4개 분야 딥페이지 + 앵커 네비게이션, 각 분야 카드(업무·상황·범위·CTA)
 - [ ] 홈 세부 카피 반영 (사용자 제공 시)
 - [x] 네이버 지도 연동 (`/contact`) — `NaverMapEmbed`(geocode+marker), 키 없으면 주소 링크만
 - [x] `/contact` — 통합 문의 폼 UI + 회사정보 + 네이버 지도 링크 (V0 + 백엔드 연결)
@@ -105,5 +104,4 @@
 
 원고 미수령으로 보류. 수령 즉시 해당 마일스톤으로 복귀.
 
-- [ ] `content/services/*` — 사업분야 원고 → `lib/services-data.ts` 정교화 / `/services` 반영 (M2)
 - [ ] `content/legal/privacy-policy*` — `/privacy` 실문안 (내비/푸터 링크·색인은 검증 후) (M1.5)

@@ -18,7 +18,7 @@ const allowedIps = (process.env.INTRANET_ALLOWED_IPS ?? "")
 
 type HeadersLike = { get(name: string): string | null };
 
-export function clientIpFrom(headers: HeadersLike): string | null {
+function clientIpFrom(headers: HeadersLike): string | null {
   const forwarded = headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0]?.trim() || null;
   return headers.get("x-real-ip");

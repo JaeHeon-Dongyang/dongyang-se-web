@@ -4,7 +4,7 @@
 
 - 스택: Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4
 - 배포: Vercel · 문의 폼: 트랜잭션 메일(Resend), 별도 DB 없음
-- 현재 상태: **M0 스캐폴드 + 회사소개(`/about`) 구현 완료, M1 승인 대기** (자세히는 [`docs/PLAN.md`](docs/PLAN.md))
+- 현재 상태: 홈(회사소개 통합)·사업분야·문의하기 구현 완료, 기술자료·질문하기는 사내 전용 (자세히는 [`docs/PLAN.md`](docs/PLAN.md))
 
 ## 개발
 
@@ -33,5 +33,5 @@ npm run dev                  # http://localhost:3000
 ## 규칙 요약
 
 - 사용자 노출 텍스트·주석·문서는 한국어, 코드 식별자는 영어.
-- 회사 정보는 `src/lib/site.ts` 가 유일 출처. 제공되지 않은 정보·실적·인증은 만들지 않는다.
+- 회사 정보는 `lib/site.ts` 가 유일 출처. 제공되지 않은 정보·실적·인증은 만들지 않는다.
 - 커밋 전 `npm run lint` + `npm run build` 통과.

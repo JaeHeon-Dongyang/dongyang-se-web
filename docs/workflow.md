@@ -19,4 +19,4 @@ V0 단계는 폐기** (2026-08-31). 디자인·기능을 모두 Claude가 담당
 - 커밋 메시지에 `Co-Authored-By: Claude` 트레일러 **금지** (Vercel Hobby 배포 차단).
 - 커밋 전 `npm run lint && npm run typecheck && npm run build && npm run format:check`.
 - 회사 정보·법령·실적·인증·연혁·수치는 임의 생성 금지 (`AGENTS.md` 참고). 특히
-  `app/about/page.tsx` 가 "2012년 설립 / 480건+" 같은 가짜 콘텐츠로 되돌아가면 안 된다.
+  `app/page.tsx`(회사소개 통합 홈)가 "2012년 설립 / 480건+" 같은 가짜 콘텐츠로 되돌아가면 안 된다.
