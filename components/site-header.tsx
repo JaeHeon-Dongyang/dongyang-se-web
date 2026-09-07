@@ -1,12 +1,30 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoHorizontal } from "@/components/logo";
 import { MobileNav } from "@/components/mobile-nav";
 import { contactNav, type primaryNav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
+
+function NavLinkContent({ label, active }: { label: string; active: boolean }) {
+  const { pending } = useLinkStatus();
+  const selected = active || pending;
+
+  return (
+    <>
+      <span className={cn(selected && "text-brand font-semibold")}>{label}</span>
+      <span
+        aria-hidden="true"
+        className={cn(
+          "bg-brand absolute right-3 bottom-0 left-3 h-0.5 opacity-0 lg:right-4 lg:left-4",
+          selected && "opacity-100",
+        )}
+      />
+    </>
+  );
+}
 
 export function SiteHeader({
   navItems,
@@ -36,11 +54,9 @@ export function SiteHeader({
                   href={item.href}
                   className={cn(
                     "text-body-text hover:text-brand focus-visible:ring-focus-ring relative px-3 py-3 text-[14.5px] font-medium tracking-[-0.015em] transition-colors focus-visible:ring-2 focus-visible:outline-none lg:px-4",
-                    active &&
-                      "text-brand after:bg-brand font-semibold after:absolute after:right-3 after:bottom-0 after:left-3 after:h-0.5 lg:after:right-4 lg:after:left-4",
                   )}
                 >
-                  {item.label}
+                  <NavLinkContent label={item.label} active={active} />
                 </Link>
               );
             })}
