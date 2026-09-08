@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      // /privacy 는 초안이라 색인 제외. /ask·/resources 는 사내 전용(middleware.ts).
+      // /privacy 는 초안이라 색인 제외. /ask·/resources 는 사내 전용(proxy.ts).
       disallow: ["/api/", "/privacy", "/ask", "/resources"],
     },
     sitemap: `${siteUrl}/sitemap.xml`,
