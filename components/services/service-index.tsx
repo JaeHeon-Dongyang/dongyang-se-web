@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { serviceGroups } from "@/lib/services-data";
 import { cn } from "@/lib/utils";
 
@@ -11,33 +11,58 @@ import { cn } from "@/lib/utils";
  */
 export function ServiceIndex() {
   const [active, setActive] = useState<string>(serviceGroups[0].slug);
+  const scrollTargetRef = useRef<string | null>(null);
+  const scrollEndTimerRef = useRef<number | null>(null);
+
+  const updateActive = useCallback(() => {
+    if (scrollTargetRef.current) return;
+
+    const sections = serviceGroups
+      .map((service) => document.getElementById(service.slug))
+      .filter((element): element is HTMLElement => element !== null);
+    if (sections.length === 0) return;
+
+    const current =
+      [...sections]
+        .reverse()
+        .find((section) => section.getBoundingClientRect().top <= 140) ?? sections[0];
+    setActive((previous) => (previous === current.id ? previous : current.id));
+  }, []);
+
+  const scheduleScrollEnd = useCallback(() => {
+    if (scrollEndTimerRef.current !== null) {
+      window.clearTimeout(scrollEndTimerRef.current);
+    }
+
+    scrollEndTimerRef.current = window.setTimeout(() => {
+      scrollTargetRef.current = null;
+      scrollEndTimerRef.current = null;
+      updateActive();
+    }, 180);
+  }, [updateActive]);
 
   function handleAnchorClick(event: MouseEvent<HTMLAnchorElement>, slug: string) {
     const section = document.getElementById(slug);
     if (!section) return;
 
     event.preventDefault();
+    scrollTargetRef.current = slug;
     setActive(slug);
     window.history.pushState(null, "", `#${slug}`);
+    scheduleScrollEnd();
     section.scrollIntoView({ block: "start" });
   }
 
   useEffect(() => {
-    const sections = serviceGroups
-      .map((s) => document.getElementById(s.slug))
-      .filter((el): el is HTMLElement => el !== null);
-    if (sections.length === 0) return;
-
     let animationFrame = 0;
-    const updateActive = () => {
-      const current =
-        [...sections]
-          .reverse()
-          .find((section) => section.getBoundingClientRect().top <= 140) ?? sections[0];
-      setActive((previous) => (previous === current.id ? previous : current.id));
-    };
     const handleScroll = () => {
       window.cancelAnimationFrame(animationFrame);
+
+      if (scrollTargetRef.current) {
+        scheduleScrollEnd();
+        return;
+      }
+
       animationFrame = window.requestAnimationFrame(updateActive);
     };
 
@@ -47,10 +72,13 @@ export function ServiceIndex() {
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
+      if (scrollEndTimerRef.current !== null) {
+        window.clearTimeout(scrollEndTimerRef.current);
+      }
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("hashchange", handleScroll);
     };
-  }, []);
+  }, [scheduleScrollEnd, updateActive]);
 
   return (
     <nav
