@@ -1,6 +1,6 @@
 /**
- * 사내망(사무실 공인 IP) 판별 — middleware.ts(Edge, NextRequest.headers)와
- * app/layout.tsx(Server Component, next/headers) 양쪽에서 같은 로직을 쓰기 위해 분리.
+ * 사내망(사무실 공인 IP) 판별 — proxy.ts 의 접근 차단과 /api/intranet 의 메뉴 노출
+ * 판별에서 같은 로직을 쓰기 위해 분리.
  *
  * INTRANET_ALLOWED_IPS 에 사무실 **공인 IP**를 콤마로 구분해 넣는다.
  * 미설정 시 개발 환경에서는 통과, 운영에서는 차단한다(fail closed).

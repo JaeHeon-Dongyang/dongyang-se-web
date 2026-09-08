@@ -1,13 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { useIntranetAccess } from "@/components/intranet-access-provider";
 import { LogoHorizontal } from "@/components/logo";
-import { footerLegalNav, type primaryNav } from "@/lib/nav";
+import { footerLegalNav, primaryNav } from "@/lib/nav";
 import { company, contactLinks } from "@/lib/site";
 
-export function SiteFooter({
-  navItems,
-}: {
-  navItems: ReadonlyArray<(typeof primaryNav)[number]>;
-}) {
+export function SiteFooter() {
+  const intranet = useIntranetAccess();
+  const navItems = primaryNav.filter((item) => intranet || !item.intranetOnly);
+
   return (
     <footer className="border-input bg-background border-t">
       <div className="container-site">

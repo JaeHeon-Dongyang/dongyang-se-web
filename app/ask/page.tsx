@@ -8,7 +8,7 @@ import { buildMetadata } from "@/lib/seo";
  * 사내 전용 AI 질문 창구.
  * 각 카드는 Google Gemini Notebook(구 NotebookLM) 노트북으로 이동한다.
  * 노트북은 전부 비공개 + 이메일 초대 상태이므로 초대받지 않은 계정은 열리지 않는다.
- * 외부망 접근은 middleware.ts 가 404 로 차단한다.
+ * 외부망 접근은 proxy.ts 가 404 로 차단한다.
  */
 export const metadata: Metadata = buildMetadata({
   title: "질문하기",

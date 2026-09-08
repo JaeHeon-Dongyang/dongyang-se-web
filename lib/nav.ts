@@ -1,7 +1,7 @@
 /**
  * "질문하기"(/ask)와 "기술자료"(/resources)는 사내 전용이다. `intranetOnly` 항목은
- * app/layout.tsx 가 사내망이 아닐 때 메뉴에서 아예 제외한다(middleware.ts 는 직접
- * URL 접근·북마크에 대비한 방어선으로 not-found 를 반환).
+ * 클라이언트가 사내망 여부를 확인한 뒤 메뉴 노출을 결정한다(proxy.ts 는 직접 URL
+ * 접근·북마크에 대비한 방어선으로 not-found 를 반환).
  */
 export const primaryNav = [
   { label: "회사소개", href: "/", intranetOnly: false },

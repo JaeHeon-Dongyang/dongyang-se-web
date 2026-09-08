@@ -3,9 +3,10 @@
 import { ArrowRight } from "lucide-react";
 import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
+import { useIntranetAccess } from "@/components/intranet-access-provider";
 import { LogoHorizontal } from "@/components/logo";
 import { MobileNav } from "@/components/mobile-nav";
-import { contactNav, type primaryNav } from "@/lib/nav";
+import { contactNav, primaryNav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
 function NavLinkContent({ label, active }: { label: string; active: boolean }) {
@@ -26,12 +27,10 @@ function NavLinkContent({ label, active }: { label: string; active: boolean }) {
   );
 }
 
-export function SiteHeader({
-  navItems,
-}: {
-  navItems: ReadonlyArray<(typeof primaryNav)[number]>;
-}) {
+export function SiteHeader() {
   const pathname = usePathname();
+  const intranet = useIntranetAccess();
+  const navItems = primaryNav.filter((item) => intranet || !item.intranetOnly);
 
   return (
     <header className="border-input bg-background/95 sticky top-0 z-40 border-b backdrop-blur-md">
