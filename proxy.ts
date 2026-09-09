@@ -2,8 +2,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isIntranetRequest } from "@/lib/intranet";
 
 /**
- * /ask(질문하기), /resources(기술자료)를 사무실 회선에서만 열리게 한다.
+ * 필요할 때 /ask(질문하기), /resources(기술자료)를 사무실 회선으로 제한한다.
  * IP 판별 로직은 lib/intranet.ts — /api/intranet 의 메뉴 노출 판별에도 같은 로직을 쓴다.
+ * 기본값은 외부 공개이며 INTRANET_LOCK_ENABLED=true 일 때만 제한한다.
  *
  * 차단은 403 이 아니라 not-found 로 응답해 페이지 존재 자체를 노출하지 않는다.
  * (메뉴 자체는 클라이언트에서 숨기지만, 직접 URL 접근·북마크 대비 방어선으로 유지.)

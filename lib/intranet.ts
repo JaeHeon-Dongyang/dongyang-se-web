@@ -1,15 +1,11 @@
 /**
- * 사내망(사무실 공인 IP) 판별 — proxy.ts 의 접근 차단과 /api/intranet 의 메뉴 노출
+ * 제한 페이지 접근 판별 — proxy.ts 의 접근 차단과 /api/intranet 의 메뉴 노출
  * 판별에서 같은 로직을 쓰기 위해 분리.
  *
- * INTRANET_ALLOWED_IPS 에 사무실 **공인 IP**를 콤마로 구분해 넣는다.
- * 미설정 시 개발 환경에서는 통과, 운영에서는 차단한다(fail closed).
- *
- * INTRANET_LOCK_DISABLED=true 면 IP 무관하게 항상 통과시킨다 — 디자인 작업 중
- * 외부 도구(Claude Design 등)로 /ask, /resources 를 열람·편집해야 할 때 임시로 켠다.
- * (dev 브랜치 Vercel 환경변수로만 설정. 작업 끝나면 반드시 지우거나 false 로.)
+ * 기본값은 외부 공개다. INTRANET_LOCK_ENABLED=true 로 설정하면
+ * INTRANET_ALLOWED_IPS 에 등록한 사무실 공인 IP만 통과시킨다.
  */
-const lockDisabled = process.env.INTRANET_LOCK_DISABLED === "true";
+const lockEnabled = process.env.INTRANET_LOCK_ENABLED === "true";
 
 const allowedIps = (process.env.INTRANET_ALLOWED_IPS ?? "")
   .split(",")
@@ -25,9 +21,9 @@ function clientIpFrom(headers: HeadersLike): string | null {
 }
 
 export function isIntranetRequest(headers: HeadersLike): boolean {
-  if (lockDisabled) return true;
+  if (!lockEnabled) return true;
   if (allowedIps.length === 0) {
-    return process.env.NODE_ENV !== "production";
+    return false;
   }
   const ip = clientIpFrom(headers);
   return !!ip && allowedIps.includes(ip);
