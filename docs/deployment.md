@@ -112,7 +112,7 @@ curl -X POST http://localhost:3000/api/contact \
 
 ## 배포 후 확인
 
-- `/` `/services` `/contact` 200 (`/resources` `/ask` 는 사내망에서만 200, 외부는 not-found)
+- `/` `/services` `/contact` `/resources` `/ask` 200
 - `/robots.txt`, `/sitemap.xml` 정상, `sitemap` 의 URL 이 프로덕션 도메인
 - `/contact` 폼: 검증 오류 표시 → 정상 제출 시 수신함 도착
 - Lighthouse (모바일) Performance ≥ 90, Accessibility ≥ 95 목표

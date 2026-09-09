@@ -5,14 +5,14 @@ import { askGroups } from "@/lib/ask-data";
 import { buildMetadata } from "@/lib/seo";
 
 /*
- * 사내 전용 AI 질문 창구.
+ * AI 질문 창구 안내 페이지.
  * 각 카드는 Google Gemini Notebook(구 NotebookLM) 노트북으로 이동한다.
  * 노트북은 전부 비공개 + 이메일 초대 상태이므로 초대받지 않은 계정은 열리지 않는다.
- * 외부망 접근은 proxy.ts 가 404 로 차단한다.
+ * 필요하면 INTRANET_LOCK_ENABLED 로 외부망 접근을 차단한다.
  */
 export const metadata: Metadata = buildMetadata({
   title: "질문하기",
-  description: "사내 전용 AI 질문 창구입니다.",
+  description: "업무 분야별 AI 질문 노트북 안내 페이지입니다.",
   path: "/ask",
   noindex: true,
 });
@@ -22,7 +22,7 @@ export default function AskPage() {
     <div>
       <PageHero
         eyebrow="AI NOTEBOOKS"
-        badge="사내 전용"
+        badge="초대 계정 전용"
         title="질문하기"
         description="사업분야별로 근거 법령과 기준 문서를 학습시킨 AI 노트북을 나누어 두었습니다. 대상 시설물과 점검 목적에 맞는 노트북을 고르면 설계기준·절차·사내 규정을 바로 물어볼 수 있습니다. 노트북은 초대받은 사내 계정만 열람할 수 있으며, AI 답변은 참고용으로 성과품에 반영하기 전 원문을 대조합니다."
       />

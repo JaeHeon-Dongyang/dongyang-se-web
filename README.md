@@ -4,7 +4,7 @@
 
 - 스택: Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4
 - 배포: Vercel · 문의 폼: 트랜잭션 메일(Resend), 별도 DB 없음
-- 현재 상태: 홈(회사소개 통합)·사업분야·문의하기 구현 완료, 기술자료·질문하기는 사내 전용 (자세히는 [`docs/PLAN.md`](docs/PLAN.md))
+- 현재 상태: 홈(회사소개 통합)·사업분야·문의하기·기술자료·질문하기 구현 완료 (자세히는 [`docs/PLAN.md`](docs/PLAN.md))
 
 ## 개발
 

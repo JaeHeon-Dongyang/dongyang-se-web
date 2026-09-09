@@ -1,7 +1,7 @@
 /**
- * "질문하기"(/ask)와 "기술자료"(/resources)는 사내 전용이다. `intranetOnly` 항목은
- * 클라이언트가 사내망 여부를 확인한 뒤 메뉴 노출을 결정한다(proxy.ts 는 직접 URL
- * 접근·북마크에 대비한 방어선으로 not-found 를 반환).
+ * "질문하기"(/ask)와 "기술자료"(/resources)는 접근 제한 대상이다. 기본값은 공개이며,
+ * 제한을 켜면 클라이언트가 사내망 여부를 확인한 뒤 `intranetOnly` 메뉴 노출을 결정한다.
+ * proxy.ts 는 직접 URL 접근·북마크에 대비한 방어선이다.
  */
 export const primaryNav = [
   { label: "회사소개", href: "/", intranetOnly: false },
